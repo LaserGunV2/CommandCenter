@@ -1,0 +1,10 @@
+﻿<Window x:Class="CommandCenter.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:m="clr-namespace:Microsoft.Maps.MapControl.WPF;assembly=Microsoft.Maps.MapControl.WPF"
+        Title="Command Center" Height="527" Width="907">
+    <Grid>
+        <m:Map x:Name="map" CredentialsProvider="AvWJ7o3gamZ5qF8w-S7xZhIVvdJuK6O-Gl1ydDUvwgmCujidkjh5iFk6RAgRSsXn"  Center="-2.548926,118.0148634" ZoomLevel="4" Mode="AerialWithLabels" Margin="0,0,181,0"/>
+        <Button x:Name="showEveryoneButton" Content="Tampilkan Semua Prajurit" HorizontalAlignment="Left" Height="38" Margin="723,10,0,0" VerticalAlignment="Top" Width="166" Click="Button_Click"/>
+    </Grid>
+</Window>
