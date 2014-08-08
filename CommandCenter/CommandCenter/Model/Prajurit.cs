@@ -1,5 +1,6 @@
 ﻿using Microsoft.Maps.MapControl.WPF;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,13 +11,15 @@ namespace CommandCenter.Model
     class Prajurit
     {
         public string nama;
-        public Location currentLocation;
+        public PrajuritState currentState;
+        public ArrayList stateHistory;
         public Pushpin assignedPushPin = null;
 
-        public Prajurit(string nama, Location currentLocation)
+        public Prajurit(string nama, PrajuritState initialState)
         {
             this.nama = nama;
-            this.currentLocation = currentLocation;
+            this.currentState = initialState == null ? new PrajuritState() : initialState;
+            this.stateHistory = new ArrayList();
         }
     }
 }

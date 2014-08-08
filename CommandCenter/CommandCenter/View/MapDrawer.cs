@@ -26,16 +26,16 @@ namespace CommandCenter.View
             foreach (Prajurit prajurit in prajurits)
             {
                 // Create a push pin if not yet done
-                if (prajurit.assignedPushPin == null && prajurit.currentLocation != null)
+                if (prajurit.assignedPushPin == null && prajurit.currentState.location != null)
                 {
                     prajurit.assignedPushPin = new Pushpin();
-                    prajurit.assignedPushPin.Location = prajurit.currentLocation;
+                    prajurit.assignedPushPin.Location = prajurit.currentState.location;
                     map.Children.Add(prajurit.assignedPushPin);
                 }
                 // Update and draw the push pin if available
                 if (prajurit.assignedPushPin != null)
                 {
-                    prajurit.assignedPushPin.Location = prajurit.currentLocation;
+                    prajurit.assignedPushPin.Location = prajurit.currentState.location;
                 }
             }
         }
@@ -45,7 +45,7 @@ namespace CommandCenter.View
             LocationCollection locations = new LocationCollection();
             foreach (Prajurit prajurit in prajurits)
             {
-                locations.Add(prajurit.currentLocation);
+                locations.Add(prajurit.currentState.location);
             }
             LocationRect bounds = new LocationRect(locations);
             map.SetView(bounds);

@@ -35,8 +35,8 @@ namespace CommandCenter
             prajurits = new ArrayList();
 
             // TODO Sample only
-            prajurits.Add(new Prajurit("Letnan FTIS", new Location(-6.87491,107.60643)));
-            prajurits.Add(new Prajurit("Kapten Rektorat", new Location(-6.87503,107.60501)));
+            prajurits.Add(new Prajurit("Pascal", new PrajuritState(new Location(-6.87491,107.60643), 0)));
+            prajurits.Add(new Prajurit("Kristopher", new PrajuritState(new Location(-6.87503,107.60501), 0)));
 
             mapDrawer = new MapDrawer(map, prajurits);
             mapDrawer.updateMap();
