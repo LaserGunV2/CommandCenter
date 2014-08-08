@@ -23,21 +23,26 @@ namespace CommandCenter.View
 
         public void updateMap()
         {
-            foreach (Prajurit prajurit in prajurits)
+            map.Dispatcher.Invoke((Action)(() =>
             {
-                // Create a push pin if not yet done
-                if (prajurit.assignedPushPin == null && prajurit.currentState.location != null)
+                foreach (Prajurit prajurit in prajurits)
                 {
-                    prajurit.assignedPushPin = new Pushpin();
-                    prajurit.assignedPushPin.Location = prajurit.currentState.location;
-                    map.Children.Add(prajurit.assignedPushPin);
+                    // Create a push pin if not yet done
+                    if (prajurit.assignedPushPin == null && prajurit.currentState != null && prajurit.currentState.location != null)
+                    {
+                        prajurit.assignedPushPin = new Pushpin();
+                        prajurit.assignedPushPin.Location = prajurit.currentState.location;
+                        ToolTipService.SetToolTip(prajurit.assignedPushPin, prajurit.nama);
+                        map.Children.Add(prajurit.assignedPushPin);
+                    }
+                    // Update and draw the push pin if available
+                    if (prajurit.assignedPushPin != null)
+                    {
+                        prajurit.assignedPushPin.Location = prajurit.currentState.location;
+                        prajurit.assignedPushPin.Heading = prajurit.currentState.orientation;
+                    }
                 }
-                // Update and draw the push pin if available
-                if (prajurit.assignedPushPin != null)
-                {
-                    prajurit.assignedPushPin.Location = prajurit.currentState.location;
-                }
-            }
+            }));
         }
 
         public void showEveryone()

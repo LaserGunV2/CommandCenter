@@ -1,4 +1,5 @@
-﻿using CommandCenter.Model;
+﻿using CommandCenter.Dummy;
+using CommandCenter.Model;
 using CommandCenter.View;
 using Microsoft.Maps.MapControl.WPF;
 using System;
@@ -40,6 +41,9 @@ namespace CommandCenter
 
             mapDrawer = new MapDrawer(map, prajurits);
             mapDrawer.updateMap();
+
+            // TODO sample only
+            new DummyPrajuritMovement(prajurits, mapDrawer);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

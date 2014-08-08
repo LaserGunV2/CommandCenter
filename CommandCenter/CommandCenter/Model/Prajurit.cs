@@ -18,8 +18,21 @@ namespace CommandCenter.Model
         public Prajurit(string nama, PrajuritState initialState)
         {
             this.nama = nama;
-            this.currentState = initialState == null ? new PrajuritState() : initialState;
             this.stateHistory = new ArrayList();
+            if (initialState == null)
+            {
+                this.currentState = null;
+            }
+            else
+            {
+                updateState(initialState);
+            }
+        }
+
+        public void updateState(PrajuritState newState)
+        {
+            stateHistory.Add(newState);
+            currentState = newState;
         }
     }
 }
