@@ -10,3 +10,4 @@ Requirements:
 
 Informasi Lain:
 * Untuk Bing Map License Key, menggunakan account Windows Live dengan email: commandcenter@outlook.sg dan password: (nama solution command center pada project pertama)
+* Untuk pengujian UDP packet, bisa memanfaatkan PacketSender (http://packetsender.com/)

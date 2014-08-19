@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -34,6 +35,11 @@ namespace CommandCenter
             InitializeComponent();
             
             prajurits = new ArrayList();
+
+            // Start listener
+            UDPListener listener = new UDPListener();
+            Thread thread = new Thread(new ThreadStart(listener.listen));
+            thread.Start();
 
             // TODO Sample only
             prajurits.Add(new Prajurit("Pascal", new PrajuritState(new Location(-6.87491,107.60643), 0)));
