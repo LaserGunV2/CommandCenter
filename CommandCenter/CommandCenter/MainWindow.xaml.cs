@@ -53,5 +53,29 @@ namespace CommandCenter
                 mapDrawer.showEveryone();
             }
         }
+
+        private void pendaftaranButton_Click(object sender, RoutedEventArgs e)
+        {
+            String gameId = "";
+            Random random = new Random();
+            for (int i = 0; i < 3; i++)
+            {
+                gameId += random.Next(10);
+            }
+            idSimulationLabel.Content = gameId;
+
+            pendaftaranButton.IsEnabled = false;
+            mulaiButton.IsEnabled = true;
+            akhiriButton.IsEnabled = true;
+        }
+
+        private void akhiriButton_Click(object sender, RoutedEventArgs e)
+        {
+            idSimulationLabel.Content = "###";
+
+            pendaftaranButton.IsEnabled = true;
+            mulaiButton.IsEnabled = false;
+            akhiriButton.IsEnabled = false;
+        }
     }
 }
