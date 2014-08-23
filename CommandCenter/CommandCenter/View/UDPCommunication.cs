@@ -1,0 +1,62 @@
+﻿using CommandCenter.Model.Protocol;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace CommandCenter.View
+{
+    class UDPCommunication
+    {
+        const int IN_PORT = 25100;
+        const int OUT_PORT = 21500;
+
+        MainWindow parent;
+        GameController controller = null;
+
+        public UDPCommunication(MainWindow parent)
+        {
+            this.parent = parent;
+        }
+
+        private void listen()
+        {
+            UdpClient client = new UdpClient(IN_PORT);
+            IPEndPoint endPoint = new IPEndPoint(IPAddress.Any, 0);
+            while (true)
+            {
+                byte[] receivedBytes = client.Receive(ref endPoint);
+                string receivedString = Encoding.UTF8.GetString(receivedBytes);
+                parent.writeLog("Terima dari " + endPoint + ": " + receivedString);
+                controller.handlePacket(endPoint.Address, JSONPacket.createFromJSON(receivedString));
+            }
+        }
+
+        public void listenAsync(GameController controller)
+        {
+            this.controller = controller;
+            Thread thread = new Thread(listen);
+            thread.Start();
+        }
+
+        public void send(IPAddress address, JSONPacket outPacket)
+        {
+            UdpClient client = new UdpClient(address + "", OUT_PORT);
+            string sendString = outPacket.ToString();
+            Byte[] sendBytes = Encoding.UTF8.GetBytes(sendString);
+            try
+            {
+                client.Send(sendBytes, sendBytes.Length);
+                parent.writeLog("Kirim ke " + address + ": " + sendString);
+            }
+            catch (Exception e)
+            {
+                parent.writeLog("Error: " + e);
+            }
+        }
+    }
+}

@@ -19,5 +19,9 @@
             </DataGrid.Columns>
         </DataGrid>
         <Label Content="Daftar Peserta" HorizontalAlignment="Left" Margin="10,102,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.289,-0.462"/>
+        <CheckBox x:Name="peristiwaCheckBox" Content="Catat peristiwa" HorizontalAlignment="Left" Margin="10,253,0,0" VerticalAlignment="Top" IsChecked="True"/>
+        <ScrollViewer HorizontalAlignment="Left" Height="108" Margin="10,273,0,0" VerticalAlignment="Top" Width="253">
+            <TextBlock x:Name="peristiwaTextBlock" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Height="108" Width="253" Background="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
+        </ScrollViewer>
     </Grid>
 </Window>

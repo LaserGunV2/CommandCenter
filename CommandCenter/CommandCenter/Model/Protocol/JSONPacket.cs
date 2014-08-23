@@ -7,23 +7,23 @@ using System.Threading.Tasks;
 
 namespace CommandCenter.Model.Protocol
 {
-    class JSONUDPPacket
+    class JSONPacket
     {
         private Dictionary<string, string> parameters = new Dictionary<string,string>();
 
-        public JSONUDPPacket(string type)
+        public JSONPacket(string type)
         {
             parameters.Add("type", type);
         }
 
-        protected JSONUDPPacket()
+        protected JSONPacket()
         {
             // void
         }
 
-        public static JSONUDPPacket createFromJSON(string json)
+        public static JSONPacket createFromJSON(string json)
         {
-            JSONUDPPacket packet = new JSONUDPPacket();
+            JSONPacket packet = new JSONPacket();
             packet.parameters = JsonConvert.DeserializeObject<Dictionary<string,string>>(json);
             return packet;
         }
@@ -36,6 +36,11 @@ namespace CommandCenter.Model.Protocol
         public string getParameter(string name)
         {
             return parameters[name];
+        }
+
+        public string ToString()
+        {
+            return JsonConvert.SerializeObject(parameters);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using CommandCenter.Dummy;
 using CommandCenter.Model;
+using CommandCenter.Model.Protocol;
 using CommandCenter.View;
 using Microsoft.Maps.MapControl.WPF;
 using System;
@@ -30,16 +31,13 @@ namespace CommandCenter
         private MapDrawer mapDrawer;
         private ArrayList prajurits;
 
+        public String gameId = null;
+
         public MainWindow()
         {
             InitializeComponent();
             
             prajurits = new ArrayList();
-
-            // Start listener
-            UDPListener listener = new UDPListener();
-            Thread thread = new Thread(new ThreadStart(listener.listen));
-            thread.Start();
 
             // TODO Sample only
             prajurits.Add(new Prajurit("Pascal", new PrajuritState(new Location(-6.87491,107.60643), 0)));
@@ -62,8 +60,8 @@ namespace CommandCenter
 
         private void pendaftaranButton_Click(object sender, RoutedEventArgs e)
         {
-            String gameId = "";
             Random random = new Random();
+            gameId = "";
             for (int i = 0; i < 3; i++)
             {
                 gameId += random.Next(10);
@@ -73,15 +71,33 @@ namespace CommandCenter
             pendaftaranButton.IsEnabled = false;
             mulaiButton.IsEnabled = true;
             akhiriButton.IsEnabled = true;
+
+            // Start controller and start listening
+            UDPCommunication comm = new UDPCommunication(this);
+            GameController controller = new GameController(this, comm);
+            comm.listenAsync(controller);
+            writeLog("Pendaftaran dibuka, game id = " + gameId);
         }
 
         private void akhiriButton_Click(object sender, RoutedEventArgs e)
         {
             idSimulationLabel.Content = "###";
+            gameId = null;
 
             pendaftaranButton.IsEnabled = true;
             mulaiButton.IsEnabled = false;
             akhiriButton.IsEnabled = false;
         }
+
+        public void writeLog(String s)
+        {
+                Dispatcher.InvokeAsync((Action)(() =>
+                {
+                    if ((bool)peristiwaCheckBox.IsChecked)
+                    {
+                        peristiwaTextBlock.Text += s + "\n";
+                    }
+                }));
+            }
     }
 }

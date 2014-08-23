@@ -23,7 +23,7 @@ namespace CommandCenter.View
 
         public void updateMap()
         {
-            map.Dispatcher.Invoke((Action)(() =>
+            map.Dispatcher.InvokeAsync((Action)(() =>
             {
                 foreach (Prajurit prajurit in prajurits)
                 {
