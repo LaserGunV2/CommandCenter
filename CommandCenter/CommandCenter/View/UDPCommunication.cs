@@ -17,6 +17,7 @@ namespace CommandCenter.View
 
         MainWindow parent;
         GameController controller = null;
+        Thread thread = null;
 
         public UDPCommunication(MainWindow parent)
         {
@@ -25,21 +26,38 @@ namespace CommandCenter.View
 
         private void listen()
         {
-            UdpClient client = new UdpClient(IN_PORT);
-            IPEndPoint endPoint = new IPEndPoint(IPAddress.Any, 0);
-            while (true)
+            UdpClient client = null;
+            try
             {
-                byte[] receivedBytes = client.Receive(ref endPoint);
-                string receivedString = Encoding.UTF8.GetString(receivedBytes);
-                parent.writeLog("Terima dari " + endPoint + ": " + receivedString);
-                controller.handlePacket(endPoint.Address, JSONPacket.createFromJSON(receivedString));
+                client = new UdpClient(IN_PORT);
+                client.Client.ReceiveTimeout = 1000;
+                IPEndPoint endPoint = new IPEndPoint(IPAddress.Any, 0);
+                while (true)
+                {
+                    try
+                    {
+                        byte[] receivedBytes = client.Receive(ref endPoint);
+                        string receivedString = Encoding.UTF8.GetString(receivedBytes);
+                        parent.writeLog("Terima dari " + endPoint + ": " + receivedString);
+                        controller.handlePacket(endPoint.Address, JSONPacket.createFromJSON(receivedString));
+                    }
+                    catch (SocketException se)
+                    {
+                        // void
+                    }
+                }
+            }
+            catch (ThreadAbortException tae)
+            {
+                client.Close();
+                return;
             }
         }
 
         public void listenAsync(GameController controller)
         {
             this.controller = controller;
-            Thread thread = new Thread(listen);
+            thread = new Thread(listen);
             thread.Start();
         }
 
@@ -56,6 +74,14 @@ namespace CommandCenter.View
             catch (Exception e)
             {
                 parent.writeLog("Error: " + e);
+            }
+        }
+
+        public void stopListenAsync()
+        {
+            if (thread != null)
+            { 
+                thread.Abort();
             }
         }
     }

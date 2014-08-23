@@ -38,7 +38,7 @@ namespace CommandCenter.Model.Protocol
             return parameters[name];
         }
 
-        public string ToString()
+        public override string ToString()
         {
             return JsonConvert.SerializeObject(parameters);
         }

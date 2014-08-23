@@ -1,5 +1,4 @@
-﻿using CommandCenter.Dummy;
-using CommandCenter.Model;
+﻿using CommandCenter.Model;
 using CommandCenter.Model.Protocol;
 using CommandCenter.View;
 using Microsoft.Maps.MapControl.WPF;
@@ -31,6 +30,8 @@ namespace CommandCenter
         private MapDrawer mapDrawer;
         private ArrayList prajurits;
 
+        private UDPCommunication comm;
+        private GameController controller;
         public String gameId = null;
 
         public MainWindow()
@@ -45,9 +46,6 @@ namespace CommandCenter
 
             mapDrawer = new MapDrawer(map, prajurits);
             mapDrawer.updateMap();
-
-            // TODO sample only
-            new DummyPrajuritMovement(prajurits, mapDrawer);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -73,8 +71,8 @@ namespace CommandCenter
             akhiriButton.IsEnabled = true;
 
             // Start controller and start listening
-            UDPCommunication comm = new UDPCommunication(this);
-            GameController controller = new GameController(this, comm);
+            comm = new UDPCommunication(this);
+            controller = new GameController(this, comm);
             comm.listenAsync(controller);
             writeLog("Pendaftaran dibuka, game id = " + gameId);
         }
@@ -83,6 +81,7 @@ namespace CommandCenter
         {
             idSimulationLabel.Content = "###";
             gameId = null;
+            comm.stopListenAsync();
 
             pendaftaranButton.IsEnabled = true;
             mulaiButton.IsEnabled = false;
@@ -95,9 +94,17 @@ namespace CommandCenter
                 {
                     if ((bool)peristiwaCheckBox.IsChecked)
                     {
-                        peristiwaTextBlock.Text += s + "\n";
+                        peristiwaTextBlock.Text = s + "\n" + peristiwaTextBlock.Text;
                     }
                 }));
             }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (comm != null)
+            {
+                comm.stopListenAsync();
+            }
+        }
     }
 }
