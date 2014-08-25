@@ -12,8 +12,8 @@ namespace CommandCenter.View
 {
     class UDPCommunication
     {
-        const int IN_PORT = 25100;
-        const int OUT_PORT = 21500;
+        const int IN_PORT = 21500;
+        const int OUT_PORT = 21501;
 
         MainWindow parent;
         GameController controller = null;
