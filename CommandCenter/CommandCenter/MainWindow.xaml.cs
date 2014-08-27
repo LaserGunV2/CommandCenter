@@ -5,6 +5,7 @@ using Microsoft.Maps.MapControl.WPF;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -28,7 +29,7 @@ namespace CommandCenter
     {
         
         private MapDrawer mapDrawer;
-        private ArrayList prajurits;
+        public ArrayList prajurits;
 
         private UDPCommunication comm;
         private GameController controller;
@@ -39,13 +40,15 @@ namespace CommandCenter
             InitializeComponent();
             
             prajurits = new ArrayList();
+            pesertaDataGrid.DataContext = prajurits;
 
             // TODO Sample only
-            prajurits.Add(new Prajurit("Pascal", new PrajuritState(new Location(-6.87491,107.60643), 0)));
-            prajurits.Add(new Prajurit("Kristopher", new PrajuritState(new Location(-6.87503,107.60501), 0)));
+            prajurits.Add(new Prajurit(1, "2003730013", null, new PrajuritState(new Location(-6.87491,107.60643), 0)));
+            prajurits.Add(new Prajurit(2, "2003730010", null, new PrajuritState(new Location(-6.87503,107.60501), 0)));
 
             mapDrawer = new MapDrawer(map, prajurits);
             mapDrawer.updateMap();
+
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -105,6 +108,14 @@ namespace CommandCenter
             {
                 comm.stopListenAsync();
             }
+        }
+
+        public void refreshTable()
+        {
+            Dispatcher.InvokeAsync((Action)(() =>
+            {
+                pesertaDataGrid.Items.Refresh();
+            }));            
         }
     }
 }

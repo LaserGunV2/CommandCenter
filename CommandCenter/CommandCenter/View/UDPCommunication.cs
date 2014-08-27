@@ -1,4 +1,5 @@
 ﻿using CommandCenter.Model.Protocol;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,13 +42,17 @@ namespace CommandCenter.View
                         parent.writeLog("Terima dari " + endPoint + ": " + receivedString);
                         controller.handlePacket(endPoint.Address, JSONPacket.createFromJSON(receivedString));
                     }
-                    catch (SocketException se)
+                    catch (SocketException)
                     {
                         // void
                     }
+                    catch (JsonReaderException jre)
+                    {
+                        parent.writeLog(jre.Message);
+                    }
                 }
             }
-            catch (ThreadAbortException tae)
+            catch (ThreadAbortException)
             {
                 client.Close();
                 return;

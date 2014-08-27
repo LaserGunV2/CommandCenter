@@ -1,5 +1,6 @@
 ﻿using CommandCenter.View;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -13,6 +14,7 @@ namespace CommandCenter.Model.Protocol
 
         MainWindow parent;
         UDPCommunication comm;
+        ArrayList prajurits;
 
         public int counter = 0;
 
@@ -20,6 +22,7 @@ namespace CommandCenter.Model.Protocol
         {
             this.parent = parent;
             this.comm = comm;
+            this.prajurits = parent.prajurits;
         }
 
         public void handlePacket(IPAddress address, JSONPacket inPacket)
@@ -29,7 +32,13 @@ namespace CommandCenter.Model.Protocol
             {
                 if (inPacket.getParameter("gameid").Equals(parent.gameId))
                 {
-                    // TODO Register
+                    // Register
+                    int nomerUrut = prajurits.Count + 1;
+                    Prajurit newPrajurit = new Prajurit(nomerUrut, inPacket.getParameter("nomerInduk"), address, null);
+                    prajurits.Add(newPrajurit);
+                    parent.refreshTable();
+
+                    // Confirm
                     JSONPacket outPacket = new JSONPacket("confirm");
                     outPacket.addParameter("androidId", "" + (counter++));
                     comm.send(address, outPacket);
