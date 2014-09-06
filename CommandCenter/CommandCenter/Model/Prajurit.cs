@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CommandCenter.Model
 {
-    class Prajurit
+    public class Prajurit
     {
         public int nomerUrut { get; set; }
         public string nomerInduk { get; set; }
@@ -36,6 +36,18 @@ namespace CommandCenter.Model
         public void updateState(PrajuritState newState)
         {
             currentState = newState;
+        }
+
+        public static int findPrajuritByNomerInduk(List<Prajurit> prajurits, String nomerInduk)
+        {
+            for (int i = 0; i < prajurits.Count; i++)
+            {
+                if (prajurits[i].nomerInduk.Equals(nomerInduk))
+                {
+                    return i;
+                }
+            }
+            return -1;
         }
     }
 }

@@ -29,7 +29,7 @@ namespace CommandCenter
     {
         
         private MapDrawer mapDrawer;
-        public ArrayList prajurits;
+        public List<Prajurit> prajurits;
 
         private UDPCommunication comm;
         private GameController controller;
@@ -39,7 +39,7 @@ namespace CommandCenter
         {
             InitializeComponent();
             
-            prajurits = new ArrayList();
+            prajurits = new List<Prajurit>();
             pesertaDataGrid.DataContext = prajurits;
 
             // TODO Sample only

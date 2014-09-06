@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CommandCenter.Model
 {
-    class PrajuritState
+    public class PrajuritState
     {
         public Location location;
         public double orientation;

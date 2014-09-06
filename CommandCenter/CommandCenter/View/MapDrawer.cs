@@ -13,9 +13,9 @@ namespace CommandCenter.View
     class MapDrawer
     {
         private Map map;
-        private ArrayList prajurits;
+        private List<Prajurit> prajurits;
 
-        public MapDrawer(Map map, ArrayList prajurits)
+        public MapDrawer(Map map, List<Prajurit> prajurits)
         {
             this.map = map;
             this.prajurits = prajurits;

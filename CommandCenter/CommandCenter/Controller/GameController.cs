@@ -14,7 +14,7 @@ namespace CommandCenter.Model.Protocol
 
         MainWindow parent;
         UDPCommunication comm;
-        ArrayList prajurits;
+        List<Prajurit> prajurits;
 
         public int counter = 0;
 
@@ -32,16 +32,23 @@ namespace CommandCenter.Model.Protocol
             {
                 if (inPacket.getParameter("gameid").Equals(parent.gameId))
                 {
-                    // Register
-                    int nomerUrut = prajurits.Count + 1;
-                    Prajurit newPrajurit = new Prajurit(nomerUrut, inPacket.getParameter("nomerInduk"), address, null);
-                    prajurits.Add(newPrajurit);
-                    parent.refreshTable();
+                    if (Prajurit.findPrajuritByNomerInduk(prajurits, inPacket.getParameter("nomerInduk")) == -1)
+                    {
+                        // Register
+                        int nomerUrut = prajurits.Count + 1;
+                        Prajurit newPrajurit = new Prajurit(nomerUrut, inPacket.getParameter("nomerInduk"), address, null);
+                        prajurits.Add(newPrajurit);
+                        parent.refreshTable();
 
-                    // Confirm
-                    JSONPacket outPacket = new JSONPacket("confirm");
-                    outPacket.addParameter("androidId", "" + (counter++));
-                    comm.send(address, outPacket);
+                        // Confirm
+                        JSONPacket outPacket = new JSONPacket("confirm");
+                        outPacket.addParameter("androidId", "" + (counter++));
+                        comm.send(address, outPacket);
+                    }
+                    else
+                    {
+                        parent.writeLog(inPacket.getParameter("nomerInduk") + " has already registered, hence ignored.");
+                    }
                 }
                 else
                 {
