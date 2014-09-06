@@ -60,7 +60,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Model\PrajuritState.cs" />
     <Compile Include="Model\Protocol\JSONPacket.cs" />
     <Compile Include="Controller\GameController.cs" />
     <Compile Include="View\MapDrawer.cs" />

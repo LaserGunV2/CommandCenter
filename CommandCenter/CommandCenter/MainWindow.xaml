@@ -9,7 +9,7 @@
         <Button x:Name="pendaftaranButton" Content="Pendaftaran Peserta" HorizontalAlignment="Left" Margin="139,16,0,0" VerticalAlignment="Top" Width="134" Click="pendaftaranButton_Click"/>
         <Label Content="ID Simulasi" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
         <Label x:Name="idSimulationLabel" Content="###" HorizontalAlignment="Left" Margin="10,36,0,0" VerticalAlignment="Top" Height="61" Width="124" FontSize="36"/>
-        <Button x:Name="mulaiButton" Content="Mulai Permainan" HorizontalAlignment="Left" Margin="139,41,0,0" VerticalAlignment="Top" Width="134" IsEnabled="False"/>
+        <Button x:Name="mulaiButton" Content="Mulai Permainan" HorizontalAlignment="Left" Margin="139,41,0,0" VerticalAlignment="Top" Width="134" IsEnabled="False" Click="mulaiButton_Click"/>
         <Button x:Name="akhiriButton" Content="Akhiri Permainan" HorizontalAlignment="Left" Margin="139,66,0,0" VerticalAlignment="Top" Width="134" IsEnabled="False" Click="akhiriButton_Click"/>
         <DataGrid x:Name="pesertaDataGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="120" Margin="10,128,0,0" VerticalAlignment="Top" Width="391" >
             <DataGrid.Columns>

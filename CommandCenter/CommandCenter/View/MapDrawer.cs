@@ -10,10 +10,10 @@ using System.Windows.Controls;
 
 namespace CommandCenter.View
 {
-    class MapDrawer
+    public class MapDrawer
     {
-        private Map map;
-        private List<Prajurit> prajurits;
+        Map map;
+        List<Prajurit> prajurits;
 
         public MapDrawer(Map map, List<Prajurit> prajurits)
         {
@@ -23,25 +23,28 @@ namespace CommandCenter.View
 
         public void updateMap()
         {
+            // TODO Optimization tip: create another version that only update a single prajurit. 
             map.Dispatcher.InvokeAsync((Action)(() =>
             {
                 foreach (Prajurit prajurit in prajurits)
                 {
                     // Create a push pin if not yet done
-                    if (prajurit.assignedPushPin == null && prajurit.currentState != null && prajurit.currentState.location != null)
+                    if (prajurit.assignedPushPin == null && prajurit.location != null)
                     {
                         prajurit.assignedPushPin = new Pushpin();
-                        prajurit.assignedPushPin.Location = prajurit.currentState.location;
+                        prajurit.assignedPushPin.Location = prajurit.location;
                         ToolTipService.SetToolTip(prajurit.assignedPushPin, prajurit.nama);
                         map.Children.Add(prajurit.assignedPushPin);
                     }
                     // Update and draw the push pin if available
                     if (prajurit.assignedPushPin != null)
                     {
-                        prajurit.assignedPushPin.Location = prajurit.currentState.location;
-                        prajurit.assignedPushPin.Heading = prajurit.currentState.orientation;
+                        prajurit.assignedPushPin.Location = prajurit.location;
+                        prajurit.assignedPushPin.Heading = prajurit.heading;
                     }
                 }
+                map.Center = map.Center;
+                // FIXME how to update map so that pin location is updated, too (not just heading).
             }));
         }
 
@@ -50,7 +53,10 @@ namespace CommandCenter.View
             LocationCollection locations = new LocationCollection();
             foreach (Prajurit prajurit in prajurits)
             {
-                locations.Add(prajurit.currentState.location);
+                if (prajurit.location != null)
+                {
+                    locations.Add(prajurit.location);
+                }
             }
             LocationRect bounds = new LocationRect(locations);
             map.SetView(bounds);

@@ -11,31 +11,27 @@ namespace CommandCenter.Model
 {
     public class Prajurit
     {
+        public IPAddress ipAddress;
         public int nomerUrut { get; set; }
         public string nomerInduk { get; set; }
         public string nama {get; set; }
-        public IPAddress ipAddress;
-        public PrajuritState currentState;
+        public Location location { get; set; }
+        public double heading { get; set; }
         public Pushpin assignedPushPin = null;
 
-        public Prajurit(int nomerUrut, string nomerInduk, IPAddress ipAddress, PrajuritState initialState)
+        public Prajurit(int nomerUrut, string nomerInduk, IPAddress ipAddress, Location location)
         {
             this.nomerUrut = nomerUrut;
             this.nomerInduk = nomerInduk;
             this.ipAddress = ipAddress;
-            if (initialState == null)
+            if (location == null)
             {
-                this.currentState = null;
+                this.location = null;
             }
             else
             {
-                updateState(initialState);
+                this.location = location;
             }
-        }
-
-        public void updateState(PrajuritState newState)
-        {
-            currentState = newState;
         }
 
         public static int findPrajuritByNomerInduk(List<Prajurit> prajurits, String nomerInduk)
@@ -48,6 +44,17 @@ namespace CommandCenter.Model
                 }
             }
             return -1;
+        }
+
+        public void setLocation(String locationString)
+        {
+            string[] latlon = locationString.Split(',');
+            if (location == null)
+            {
+                location = new Location();
+            }
+            location.Latitude = Double.Parse(latlon[0]);
+            location.Longitude = Double.Parse(latlon[1]);
         }
     }
 }

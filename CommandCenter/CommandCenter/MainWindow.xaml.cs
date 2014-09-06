@@ -28,13 +28,11 @@ namespace CommandCenter
     public partial class MainWindow : Window
     {
         
-        private MapDrawer mapDrawer;
+        public MapDrawer mapDrawer;
         public List<Prajurit> prajurits;
 
-        private UDPCommunication comm;
         private GameController controller;
-        public String gameId = null;
-
+ 
         public MainWindow()
         {
             InitializeComponent();
@@ -42,9 +40,11 @@ namespace CommandCenter
             prajurits = new List<Prajurit>();
             pesertaDataGrid.DataContext = prajurits;
 
+            controller = new GameController(this);
+
             // TODO Sample only
-            prajurits.Add(new Prajurit(1, "2003730013", null, new PrajuritState(new Location(-6.87491,107.60643), 0)));
-            prajurits.Add(new Prajurit(2, "2003730010", null, new PrajuritState(new Location(-6.87503,107.60501), 0)));
+            prajurits.Add(new Prajurit(1, "2003730013", null, new Location(-6.87491,107.60643)));
+            prajurits.Add(new Prajurit(2, "2003730010", null, new Location(-6.87503,107.60501)));
 
             mapDrawer = new MapDrawer(map, prajurits);
             mapDrawer.updateMap();
@@ -61,30 +61,28 @@ namespace CommandCenter
 
         private void pendaftaranButton_Click(object sender, RoutedEventArgs e)
         {
-            Random random = new Random();
-            gameId = "";
-            for (int i = 0; i < 3; i++)
-            {
-                gameId += random.Next(10);
-            }
-            idSimulationLabel.Content = gameId;
-
             pendaftaranButton.IsEnabled = false;
             mulaiButton.IsEnabled = true;
             akhiriButton.IsEnabled = true;
 
             // Start controller and start listening
-            comm = new UDPCommunication(this);
-            controller = new GameController(this, comm);
-            comm.listenAsync(controller);
-            writeLog("Pendaftaran dibuka, game id = " + gameId);
+            idSimulationLabel.Content = controller.startRegistration();
+        }
+
+        private void mulaiButton_Click(object sender, RoutedEventArgs e)
+        {
+            pendaftaranButton.IsEnabled = false;
+            mulaiButton.IsEnabled = false;
+            akhiriButton.IsEnabled = true;
+
+            controller.startPlaying();
         }
 
         private void akhiriButton_Click(object sender, RoutedEventArgs e)
         {
             idSimulationLabel.Content = "###";
-            gameId = null;
-            comm.stopListenAsync();
+            controller.stopPlaying();
+
 
             pendaftaranButton.IsEnabled = true;
             mulaiButton.IsEnabled = false;
@@ -104,10 +102,7 @@ namespace CommandCenter
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (comm != null)
-            {
-                comm.stopListenAsync();
-            }
+            controller.stopPlaying();
         }
 
         public void refreshTable()
