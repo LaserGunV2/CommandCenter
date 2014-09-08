@@ -43,8 +43,11 @@ namespace CommandCenter.View
                         prajurit.assignedPushPin.Heading = prajurit.heading;
                     }
                 }
-                map.Center = map.Center;
-                // FIXME how to update map so that pin location is updated, too (not just heading).
+                // Refresh map, if map is ready.
+                if (map.ActualHeight > 0 && map.ActualWidth > 0)
+                {
+                    map.SetView(map.BoundingRectangle);
+                }
             }));
         }
 

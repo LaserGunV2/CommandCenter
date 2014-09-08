@@ -48,7 +48,6 @@ namespace CommandCenter
 
             mapDrawer = new MapDrawer(map, prajurits);
             mapDrawer.updateMap();
-
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
