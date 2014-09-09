@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Net.Sockets;
 
 namespace CommandCenter.Model.Protocol
 {
@@ -15,7 +16,7 @@ namespace CommandCenter.Model.Protocol
         enum State { IDLE, REGISTRATION, PLAYING };
 
         MainWindow parent;
-        UDPCommunication comm;
+        UDPCommunication communication;
         List<Prajurit> prajurits;
         State state;
         String gameId = null;
@@ -23,7 +24,7 @@ namespace CommandCenter.Model.Protocol
         public GameController(MainWindow parent)
         {
             this.parent = parent;
-            this.comm = new UDPCommunication(parent);
+            this.communication = new UDPCommunication(parent);
             this.prajurits = parent.prajurits;
             this.state = State.IDLE;
         }
@@ -37,7 +38,7 @@ namespace CommandCenter.Model.Protocol
                 gameId += random.Next(10);
             }
 
-            comm.listenAsync(this);
+            communication.listenAsync(this);
             this.state = State.REGISTRATION;
             parent.writeLog("Pendaftaran dibuka, game id = " + gameId);
             return gameId;
@@ -51,9 +52,23 @@ namespace CommandCenter.Model.Protocol
 
         public void stopPlaying()
         {
+            // Stop incoming communication
+            communication.stopListenAsync();
             this.state = State.IDLE;
-            comm.stopListenAsync();
+
+            // Send endgame signal
+            JSONPacket outPacket = new JSONPacket("endgame");
+            foreach (Prajurit prajurit in prajurits)
+            {
+                communication.send(prajurit.ipAddress, outPacket);   
+            }
+
+            // Remove any references and members.
+            prajurits.Clear();
             gameId = null;
+
+            parent.refreshTable();
+            parent.writeLog("Permainan diakhiri");
         }
 
         public void handlePacket(IPAddress address, JSONPacket inPacket)
@@ -78,7 +93,7 @@ namespace CommandCenter.Model.Protocol
                                 // Confirm
                                 JSONPacket outPacket = new JSONPacket("confirm");
                                 outPacket.addParameter("androidId", "" + (nomerUrut++));
-                                comm.send(address, outPacket);
+                                communication.send(address, outPacket);
                             }
                             else
                             {

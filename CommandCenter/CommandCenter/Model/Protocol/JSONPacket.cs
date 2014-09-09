@@ -21,10 +21,11 @@ namespace CommandCenter.Model.Protocol
             // void
         }
 
-        public static JSONPacket createFromJSON(string json)
+        public static JSONPacket createFromJSONBytes(byte[] jsonBytes)
         {
             JSONPacket packet = new JSONPacket();
-            packet.parameters = JsonConvert.DeserializeObject<Dictionary<string,string>>(json);
+            string jsonString = Encoding.UTF8.GetString(jsonBytes);
+            packet.parameters = JsonConvert.DeserializeObject<Dictionary<string,string>>(jsonString);
             return packet;
         }
 
@@ -41,6 +42,11 @@ namespace CommandCenter.Model.Protocol
         public override string ToString()
         {
             return JsonConvert.SerializeObject(parameters);
+        }
+
+        public byte[] toBytes()
+        {
+            return Encoding.UTF8.GetBytes(ToString());
         }
     }
 }
