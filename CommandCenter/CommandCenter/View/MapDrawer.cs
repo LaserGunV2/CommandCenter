@@ -63,6 +63,7 @@ namespace CommandCenter.View
             }
             LocationRect bounds = new LocationRect(locations);
             map.SetView(bounds);
+            map.ZoomLevel--;
         }
     }
 }

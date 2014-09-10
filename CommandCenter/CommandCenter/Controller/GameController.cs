@@ -47,6 +47,7 @@ namespace CommandCenter.Model.Protocol
         public void startPlaying()
         {
             this.state = State.PLAYING;
+            parent.mapDrawer.showEveryone();
             parent.writeLog("Permainan dimulai");
         }
 
@@ -86,7 +87,7 @@ namespace CommandCenter.Model.Protocol
                             {
                                 // Register
                                 int nomerUrut = prajurits.Count + 1;
-                                Prajurit newPrajurit = new Prajurit(nomerUrut, inPacket.getParameter("nomerInduk"), address, null);
+                                Prajurit newPrajurit = new Prajurit(nomerUrut, inPacket.getParameter("nomerInduk"), address, "A", null);
                                 prajurits.Add(newPrajurit);
                                 parent.refreshTable();
 
@@ -118,6 +119,7 @@ namespace CommandCenter.Model.Protocol
                     prajurit.heading = Double.Parse(inPacket.getParameter("heading"));
                     // FIXME implement accuracy
                     parent.mapDrawer.updateMap();
+                    parent.refreshTable();
                 }
                 else
                 {

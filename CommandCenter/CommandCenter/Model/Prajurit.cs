@@ -17,13 +17,19 @@ namespace CommandCenter.Model
         public string nama {get; set; }
         public Location location { get; set; }
         public double heading { get; set; }
+        public string group { get; set; }
+        public DateTime lastUpdate { get; set; }
+
         public Pushpin assignedPushPin = null;
 
-        public Prajurit(int nomerUrut, string nomerInduk, IPAddress ipAddress, Location location)
+        public static List<string> GROUPS_AVAILABLE = new List<string>() { "A", "B" };
+
+        public Prajurit(int nomerUrut, string nomerInduk, IPAddress ipAddress, string group, Location location)
         {
             this.nomerUrut = nomerUrut;
             this.nomerInduk = nomerInduk;
             this.ipAddress = ipAddress;
+            this.group = group;
             if (location == null)
             {
                 this.location = null;
@@ -32,6 +38,7 @@ namespace CommandCenter.Model
             {
                 this.location = location;
             }
+            lastUpdate = DateTime.Now;
         }
 
         public static int findPrajuritByNomerInduk(List<Prajurit> prajurits, String nomerInduk)
@@ -55,6 +62,7 @@ namespace CommandCenter.Model
             }
             location.Latitude = Double.Parse(latlon[0]);
             location.Longitude = Double.Parse(latlon[1]);
+            lastUpdate = DateTime.Now;
         }
     }
 }
