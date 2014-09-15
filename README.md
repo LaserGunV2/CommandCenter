@@ -10,7 +10,8 @@ Requirements:
 
 * Visual Studio Express 2013 for Windows Desktop (http://www.visualstudio.com/downloads/download-visual-studio-vs#d-express-windows-desktop)
 * Bing Maps Windows Presentation Foundation (WPF) Control (http://www.microsoft.com/en-us/download/details.aspx?id=27165), jangan lupa _add reference_ juga di projectnya, seperti di http://msdn.microsoft.com/en-us/library/hh830433.aspx.
-* Json.NET (https://www.nuget.org/packages/newtonsoft.json/)
+* Json.NET (Download di https://www.nuget.org/packages/newtonsoft.json/)
+* SQLite (Download di https://www.nuget.org/packages/system.data.sqlite)
 
 Informasi Lain:
 * Untuk Bing Map License Key, menggunakan account Windows Live dengan email: commandcenter@outlook.sg dan password: (nama solution command center pada project pertama)

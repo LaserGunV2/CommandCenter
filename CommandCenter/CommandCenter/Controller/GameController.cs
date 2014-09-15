@@ -18,6 +18,7 @@ namespace CommandCenter.Model.Protocol
         MainWindow parent;
         UDPCommunication communication;
         List<Prajurit> prajurits;
+        PrajuritDatabase prajuritDatabase;
         State state;
         String gameId = null;
 
@@ -26,6 +27,7 @@ namespace CommandCenter.Model.Protocol
             this.parent = parent;
             this.communication = new UDPCommunication(parent);
             this.prajurits = parent.prajurits;
+            this.prajuritDatabase = new PrajuritDatabase();
             this.state = State.IDLE;
         }
 
