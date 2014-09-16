@@ -63,11 +63,12 @@ namespace CommandCenter.Model.Protocol
             JSONPacket outPacket = new JSONPacket("endgame");
             foreach (Prajurit prajurit in prajurits)
             {
-                communication.send(prajurit.ipAddress, outPacket);   
+                communication.send(prajurit.ipAddress, outPacket);
             }
 
             // Remove any references and members.
             prajurits.Clear();
+            parent.clearMap();
             gameId = null;
 
             parent.refreshTable();
@@ -119,8 +120,7 @@ namespace CommandCenter.Model.Protocol
                     Prajurit prajurit = prajurits[index];
                     prajurit.setLocation(inPacket.getParameter("location"));
                     prajurit.heading = Double.Parse(inPacket.getParameter("heading"));
-                    // FIXME implement accuracy
-                    parent.mapDrawer.updateMap();
+                    parent.mapDrawer.updateMap(prajurit);
                     parent.refreshTable();
                 }
                 else

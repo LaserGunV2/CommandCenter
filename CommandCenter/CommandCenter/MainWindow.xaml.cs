@@ -104,5 +104,10 @@ namespace CommandCenter
                 pesertaDataGrid.Items.Refresh();
             }));            
         }
+
+        public void clearMap()
+        {
+            mapDrawer.clearMap();
+        }
     }
 }

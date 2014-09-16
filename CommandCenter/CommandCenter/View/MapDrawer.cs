@@ -23,7 +23,6 @@ namespace CommandCenter.View
 
         public void updateMap()
         {
-            // TODO Optimization tip: create another version that only update a single prajurit. 
             map.Dispatcher.InvokeAsync((Action)(() =>
             {
                 foreach (Prajurit prajurit in prajurits)
@@ -51,6 +50,33 @@ namespace CommandCenter.View
             }));
         }
 
+        public void updateMap(Prajurit prajurit)
+        {
+            map.Dispatcher.InvokeAsync((Action)(() =>
+            {
+                // Create a push pin if not yet done
+                if (prajurit.assignedPushPin == null && prajurit.location != null)
+                {
+                    prajurit.assignedPushPin = new Pushpin();
+                    prajurit.assignedPushPin.Location = prajurit.location;
+                    ToolTipService.SetToolTip(prajurit.assignedPushPin, prajurit.nama);
+                    map.Children.Add(prajurit.assignedPushPin);
+                }
+                // Update and draw the push pin if available
+                if (prajurit.assignedPushPin != null)
+                {
+                    // Note: Bing Maps fix to force update. Hopefully it would work
+                    prajurit.assignedPushPin.Location = new Location(prajurit.location);
+                    prajurit.assignedPushPin.Heading = prajurit.heading;
+                }
+                // Refresh map, if map is ready.
+                if (map.ActualHeight > 0 && map.ActualWidth > 0)
+                {
+                    map.SetView(map.BoundingRectangle);
+                }
+            }));
+        }
+
         public void showEveryone()
         {
             LocationCollection locations = new LocationCollection();
@@ -64,6 +90,11 @@ namespace CommandCenter.View
             LocationRect bounds = new LocationRect(locations);
             map.SetView(bounds);
             map.ZoomLevel--;
+        }
+
+        public void clearMap()
+        {
+            map.Children.Clear();
         }
     }
 }
