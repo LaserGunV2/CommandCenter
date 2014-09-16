@@ -6,10 +6,10 @@
     <Grid>
         <m:Map x:Name="map" CredentialsProvider="AvWJ7o3gamZ5qF8w-S7xZhIVvdJuK6O-Gl1ydDUvwgmCujidkjh5iFk6RAgRSsXn"  Center="-2.548926,118.0148634" ZoomLevel="4" Mode="AerialWithLabels" Margin="406,10,10,10"/>
         <Button x:Name="pendaftaranButton" Content="Pendaftaran Peserta" HorizontalAlignment="Left" Margin="139,16,0,0" VerticalAlignment="Top" Width="134" Click="pendaftaranButton_Click"/>
-        <Label Content="ID Simulasi" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <Label Content="ID Latihan" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
         <Label x:Name="idSimulationLabel" Content="###" HorizontalAlignment="Left" Margin="10,36,0,0" VerticalAlignment="Top" Height="61" Width="124" FontSize="36"/>
-        <Button x:Name="mulaiButton" Content="Mulai Permainan" HorizontalAlignment="Left" Margin="139,41,0,0" VerticalAlignment="Top" Width="134" IsEnabled="False" Click="mulaiButton_Click"/>
-        <Button x:Name="akhiriButton" Content="Akhiri Permainan" HorizontalAlignment="Left" Margin="139,66,0,0" VerticalAlignment="Top" Width="134" IsEnabled="False" Click="akhiriButton_Click"/>
+        <Button x:Name="mulaiButton" Content="Mulai Latihan" HorizontalAlignment="Left" Margin="139,41,0,0" VerticalAlignment="Top" Width="134" IsEnabled="False" Click="mulaiButton_Click"/>
+        <Button x:Name="akhiriButton" Content="Akhiri Latihan" HorizontalAlignment="Left" Margin="139,66,0,0" VerticalAlignment="Top" Width="134" IsEnabled="False" Click="akhiriButton_Click"/>
         <DataGrid x:Name="pesertaDataGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="120" Margin="10,128,0,0" VerticalAlignment="Top" Width="391" >
             <DataGrid.Columns>
                 <DataGridTextColumn Header="No" Binding="{Binding nomerUrut}" IsReadOnly="True"/>
