@@ -7,6 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 
 namespace CommandCenter.View
 {
@@ -31,6 +34,16 @@ namespace CommandCenter.View
                     if (prajurit.assignedPushPin == null && prajurit.location != null)
                     {
                         prajurit.assignedPushPin = new Pushpin();
+                        Uri imgUri = new Uri("../../img/soldier.png", UriKind.Relative);
+                        BitmapImage imgSourceR = new BitmapImage(imgUri);
+                        ImageBrush imgBrush = new ImageBrush() { ImageSource = imgSourceR };
+                        prajurit.assignedPushPin.Background = new SolidColorBrush(Colors.Red);
+                        prajurit.assignedPushPin.Content = new Ellipse()
+                        {
+                            Fill = imgBrush,
+                            Height = 20,
+                            Width = 20,
+                        };
                         prajurit.assignedPushPin.Location = prajurit.location;
                         ToolTipService.SetToolTip(prajurit.assignedPushPin, prajurit.nama);
                         map.Children.Add(prajurit.assignedPushPin);
