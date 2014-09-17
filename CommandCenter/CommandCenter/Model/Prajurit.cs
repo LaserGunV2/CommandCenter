@@ -19,6 +19,7 @@ namespace CommandCenter.Model
         public double heading { get; set; }
         public string group { get; set; }
         public DateTime lastUpdate { get; set; }
+        public Senjata senjata { get; set; }
 
         public Pushpin assignedPushPin = null;
 

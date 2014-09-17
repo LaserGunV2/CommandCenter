@@ -18,6 +18,7 @@ namespace CommandCenter.Model.Protocol
         MainWindow parent;
         UDPCommunication communication;
         List<Prajurit> prajurits;
+        Dictionary<int, Senjata> senjatas;
         PrajuritDatabase prajuritDatabase;
         State state;
         String gameId = null;
@@ -27,6 +28,7 @@ namespace CommandCenter.Model.Protocol
             this.parent = parent;
             this.communication = new UDPCommunication(parent);
             this.prajurits = parent.prajurits;
+            this.senjatas = parent.senjatas;
             this.prajuritDatabase = new PrajuritDatabase();
             this.state = State.IDLE;
         }
@@ -68,7 +70,7 @@ namespace CommandCenter.Model.Protocol
 
             // Remove any references and members.
             prajurits.Clear();
-            parent.clearMap();
+            parent.mapDrawer.clearMap();
             gameId = null;
 
             parent.refreshTable();
@@ -116,12 +118,31 @@ namespace CommandCenter.Model.Protocol
                 }
                 else if (type.Equals("event/update"))
                 {
-                    int index = Int32.Parse(inPacket.getParameter("androidId")) - 1;
-                    Prajurit prajurit = prajurits[index];
-                    prajurit.setLocation(inPacket.getParameter("location"));
-                    prajurit.heading = Double.Parse(inPacket.getParameter("heading"));
-                    parent.mapDrawer.updateMap(prajurit);
-                    parent.refreshTable();
+                    if (state != State.IDLE)
+                    {
+                        int index = Int32.Parse(inPacket.getParameter("androidId")) - 1;
+                        Prajurit prajurit = prajurits[index];
+                        prajurit.setLocation(inPacket.getParameter("location"));
+                        prajurit.heading = Double.Parse(inPacket.getParameter("heading"));
+                        if (inPacket.getParameter("action").Equals("hit"))
+                        {
+                            if (state == State.REGISTRATION) {
+                                // Registration phase, senjata assign to prajurit.
+                                Senjata newSenjata = new Senjata(Int32.Parse(inPacket.getParameter("idsenjata")), prajurit, Int32.Parse(inPacket.getParameter("counter")));
+                                prajurit.senjata = newSenjata;
+                                senjatas.Add(newSenjata.idSenjata, newSenjata);
+                                parent.refreshTable();
+                            }
+                            
+                        }
+                        parent.mapDrawer.updateMap(prajurit);
+                        parent.refreshTable();
+
+                    }
+                    else
+                    {
+                        parent.writeLog("Update event is ignored when state is idle.");
+                    }
                 }
                 else
                 {

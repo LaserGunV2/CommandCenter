@@ -17,6 +17,7 @@
                 <DataGridTextColumn Header="Nama" Binding="{Binding nama}"/>
                 <DataGridTextColumn Header="Tim" Binding="{Binding group}"/>
                 <DataGridTextColumn Header="Last update" Binding="{Binding lastUpdate}"/>
+                <DataGridTextColumn Header="ID Senjata" Binding="{Binding senjata}" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
         <Label Content="Daftar Peserta" HorizontalAlignment="Left" Margin="10,102,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.289,-0.462"/>

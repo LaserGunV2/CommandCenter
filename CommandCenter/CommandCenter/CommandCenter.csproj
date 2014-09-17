@@ -79,6 +79,7 @@
     <Compile Include="Model\PrajuritDatabase.cs" />
     <Compile Include="Model\Protocol\JSONPacket.cs" />
     <Compile Include="Controller\GameController.cs" />
+    <Compile Include="Model\Senjata.cs" />
     <Compile Include="View\MapDrawer.cs" />
     <Compile Include="View\UDPCommunication.cs" />
     <Page Include="MainWindow.xaml">

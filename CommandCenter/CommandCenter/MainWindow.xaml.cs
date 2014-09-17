@@ -31,6 +31,7 @@ namespace CommandCenter
         
         public MapDrawer mapDrawer;
         public List<Prajurit> prajurits;
+        public Dictionary<int, Senjata> senjatas;
 
         private GameController controller;
  
@@ -40,6 +41,7 @@ namespace CommandCenter
             
             prajurits = new List<Prajurit>();
             pesertaDataGrid.DataContext = prajurits;
+            senjatas = new Dictionary<int, Senjata>();
 
             controller = new GameController(this);
 
@@ -75,7 +77,6 @@ namespace CommandCenter
             idSimulationLabel.Content = "###";
             controller.stopPlaying();
 
-
             pendaftaranButton.IsEnabled = true;
             mulaiButton.IsEnabled = false;
             akhiriButton.IsEnabled = false;
@@ -101,13 +102,15 @@ namespace CommandCenter
         {
             Dispatcher.InvokeAsync((Action)(() =>
             {
-                pesertaDataGrid.Items.Refresh();
-            }));            
-        }
+                try
+                {
+                    pesertaDataGrid.Items.Refresh();
+                } catch (InvalidOperationException)
+                {
+                    // void
+                }
 
-        public void clearMap()
-        {
-            mapDrawer.clearMap();
+            }));            
         }
     }
 }
