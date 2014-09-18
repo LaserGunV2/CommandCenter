@@ -132,6 +132,9 @@ namespace CommandCenter.Model.Protocol
                                 prajurit.senjata = newSenjata;
                                 senjatas.Add(newSenjata.idSenjata, newSenjata);
                                 parent.refreshTable();
+                            } else if (state == State.PLAYING) {
+                                // TODO check ammo
+                                communication.send(prajurit.ipAddress, new JSONPacket("killed"));
                             }
                             
                         }
@@ -143,6 +146,10 @@ namespace CommandCenter.Model.Protocol
                     {
                         parent.writeLog("Update event is ignored when state is idle.");
                     }
+                }
+                else if (type.Equals("ping"))
+                {
+                    communication.send(address, new JSONPacket("pong"));
                 }
                 else
                 {
