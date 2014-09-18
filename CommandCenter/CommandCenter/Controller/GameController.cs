@@ -124,6 +124,16 @@ namespace CommandCenter.Model.Protocol
                         Prajurit prajurit = prajurits[index];
                         prajurit.setLocation(inPacket.getParameter("location"));
                         prajurit.heading = Double.Parse(inPacket.getParameter("heading"));
+                        try
+                        {
+                            string[] prajuritState = inPacket.getParameter("state").Split('/');
+                            prajurit.alive = prajuritState[0].Equals("alive");
+                            prajurit.posture = prajuritState[1];
+                        }
+                        catch (KeyNotFoundException)
+                        {
+                            parent.writeLog("WARNING: you didn't send state attribute. [TODO remove after everyone implemented]");
+                        }
                         if (inPacket.getParameter("action").Equals("hit"))
                         {
                             if (state == State.REGISTRATION) {
@@ -140,7 +150,6 @@ namespace CommandCenter.Model.Protocol
                         }
                         parent.mapDrawer.updateMap(prajurit);
                         parent.refreshTable();
-
                     }
                     else
                     {

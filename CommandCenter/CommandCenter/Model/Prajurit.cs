@@ -20,6 +20,8 @@ namespace CommandCenter.Model
         public string group { get; set; }
         public DateTime lastUpdate { get; set; }
         public Senjata senjata { get; set; }
+        public bool alive;
+        public string posture;
 
         public Pushpin assignedPushPin = null;
 
