@@ -46,8 +46,8 @@ namespace CommandCenter
             controller = new GameController(this);
 
             // TODO Sample only
-            prajurits.Add(new Prajurit(1, "2003730013", new IPAddress(16777343), "A", new Location(-6.87491, 107.60643)));
-            prajurits.Add(new Prajurit(2, "2003730010", new IPAddress(16777343), "B", new Location(-6.87503, 107.60501)));
+            // prajurits.Add(new Prajurit(1, "2003730013", new IPAddress(16777343), "A", new Location(-6.87491, 107.60643)));
+            // prajurits.Add(new Prajurit(2, "2003730010", new IPAddress(16777343), "B", new Location(-6.87503, 107.60501)));
 
             mapDrawer = new MapDrawer(map, prajurits);
             mapDrawer.updateMap();
