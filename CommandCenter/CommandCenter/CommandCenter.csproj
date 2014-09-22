@@ -180,7 +180,14 @@
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
+   -->
   <Target Name="AfterBuild">
+    <MakeDir Directories="$(TargetDir)img" Condition="!Exists('$(TargetDir)img')" />
+
+    <ItemGroup>
+      <Templates Include="$(ProjectDir)img\*.png" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(Templates)" DestinationFolder="$(TargetDir)img\" />
   </Target>
-  -->
 </Project>

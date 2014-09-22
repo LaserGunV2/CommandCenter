@@ -26,14 +26,14 @@ namespace CommandCenter.View
             this.prajurits = prajurits;
             standingPrajuritIcon = new Ellipse()
             {
-                Fill = new ImageBrush() { ImageSource = new BitmapImage(new Uri("../../img/stand.png", UriKind.Relative)) },
+                Fill = new ImageBrush() { ImageSource = new BitmapImage(new Uri("img/stand.png", UriKind.Relative)) },
                 Height = 20,
                 Width = 20,
             };
 
             crawlingPrajuritIcon = new Ellipse()
             {
-                Fill = new ImageBrush() { ImageSource = new BitmapImage(new Uri("../../img/crawl.png", UriKind.Relative)) },
+                Fill = new ImageBrush() { ImageSource = new BitmapImage(new Uri("img/crawl.png", UriKind.Relative)) },
                 Height = 20,
                 Width = 20,
             };
@@ -50,7 +50,9 @@ namespace CommandCenter.View
                     if (prajurit.assignedPushPin == null && prajurit.location != null)
                     {
                         prajurit.assignedPushPin = new Pushpin();
-                        Uri imgUri = new Uri("../../img/stand.png", UriKind.Relative);
+                        Uri imgUri = new Uri("img/soldier.png", UriKind.Relative);
+                        BitmapImage imgSourceR = new BitmapImage(imgUri);
+                        ImageBrush imgBrush = new ImageBrush() { ImageSource = imgSourceR };
                         prajurit.assignedPushPin.Background = new SolidColorBrush(Colors.Red);
                         prajurit.assignedPushPin.Content = standingPrajuritIcon;
                         prajurit.assignedPushPin.Location = prajurit.location;
