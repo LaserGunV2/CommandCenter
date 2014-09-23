@@ -20,6 +20,7 @@ namespace CommandCenter.Model.Protocol
         List<Prajurit> prajurits;
         Dictionary<int, Senjata> senjatas;
         PrajuritDatabase prajuritDatabase;
+        EventsRecorder recorder;
         State state;
         String gameId = null;
 
@@ -42,8 +43,17 @@ namespace CommandCenter.Model.Protocol
                 gameId += random.Next(10);
             }
 
-            communication.listenAsync(this);
-            this.state = State.REGISTRATION;
+            try
+            {
+                this.recorder = new EventsRecorder();
+                communication.listenAsync(this);
+                this.state = State.REGISTRATION;
+            }
+            catch (Exception e)
+            {
+                parent.writeLog(e.ToString());
+                return null;
+            }
             parent.writeLog("Pendaftaran dibuka, game id = " + gameId);
             return gameId;
         }
@@ -52,11 +62,17 @@ namespace CommandCenter.Model.Protocol
         {
             this.state = State.PLAYING;
             parent.mapDrawer.showEveryone();
+            recorder.startPlaying();
             parent.writeLog("Permainan dimulai");
         }
 
         public void stopPlaying()
         {
+            if (state == State.IDLE)
+            {
+                return;
+            }
+
             // Stop incoming communication
             communication.stopListenAsync();
             this.state = State.IDLE;
@@ -71,6 +87,7 @@ namespace CommandCenter.Model.Protocol
             // Remove any references and members.
             prajurits.Clear();
             parent.mapDrawer.clearMap();
+            this.recorder.stopPlaying();
             gameId = null;
 
             parent.refreshTable();
@@ -81,6 +98,7 @@ namespace CommandCenter.Model.Protocol
         {
             try
             {
+                this.recorder.record(inPacket.ToString());
                 String type = inPacket.getParameter("type");
                 if (type.Equals("register"))
                 {

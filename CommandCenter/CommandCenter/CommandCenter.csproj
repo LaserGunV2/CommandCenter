@@ -96,6 +96,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\EventsRecorder.cs" />
     <Compile Include="Model\PrajuritDatabase.cs" />
     <Compile Include="Model\Protocol\JSONPacket.cs" />
     <Compile Include="Controller\GameController.cs" />
@@ -183,11 +184,9 @@
    -->
   <Target Name="AfterBuild">
     <MakeDir Directories="$(TargetDir)img" Condition="!Exists('$(TargetDir)img')" />
-
     <ItemGroup>
       <Templates Include="$(ProjectDir)img\*.png" />
     </ItemGroup>
-
     <Copy SourceFiles="@(Templates)" DestinationFolder="$(TargetDir)img\" />
   </Target>
 </Project>

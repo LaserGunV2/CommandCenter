@@ -55,12 +55,16 @@ namespace CommandCenter
 
         private void pendaftaranButton_Click(object sender, RoutedEventArgs e)
         {
-            pendaftaranButton.IsEnabled = false;
-            mulaiButton.IsEnabled = true;
-            akhiriButton.IsEnabled = true;
+            String result = controller.startRegistration();
+            if (result != null)
+            {
+                pendaftaranButton.IsEnabled = false;
+                mulaiButton.IsEnabled = true;
+                akhiriButton.IsEnabled = true;
 
-            // Start controller and start listening
-            idSimulationLabel.Content = controller.startRegistration();
+                // Start controller and start listening
+                idSimulationLabel.Content = result;
+            }
         }
 
         private void mulaiButton_Click(object sender, RoutedEventArgs e)
