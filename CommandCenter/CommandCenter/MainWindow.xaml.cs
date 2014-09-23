@@ -2,10 +2,12 @@
 using CommandCenter.Model.Protocol;
 using CommandCenter.View;
 using Microsoft.Maps.MapControl.WPF;
+using Microsoft.Win32;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -45,10 +47,6 @@ namespace CommandCenter
 
             controller = new GameController(this);
 
-            // TODO Sample only
-            // prajurits.Add(new Prajurit(1, "2003730013", new IPAddress(16777343), "A", new Location(-6.87491, 107.60643)));
-            // prajurits.Add(new Prajurit(2, "2003730010", new IPAddress(16777343), "B", new Location(-6.87503, 107.60501)));
-
             mapDrawer = new MapDrawer(map, prajurits);
             mapDrawer.updateMap();
         }
@@ -61,6 +59,8 @@ namespace CommandCenter
                 pendaftaranButton.IsEnabled = false;
                 mulaiButton.IsEnabled = true;
                 akhiriButton.IsEnabled = true;
+                loadButton.IsEnabled = false;
+                saveButton.IsEnabled = false;
 
                 // Start controller and start listening
                 idSimulationLabel.Content = result;
@@ -84,6 +84,8 @@ namespace CommandCenter
             pendaftaranButton.IsEnabled = true;
             mulaiButton.IsEnabled = false;
             akhiriButton.IsEnabled = false;
+            loadButton.IsEnabled = true;
+            saveButton.IsEnabled = true;
         }
 
         public void writeLog(String s)
@@ -115,6 +117,45 @@ namespace CommandCenter
                 }
 
             }));            
+        }
+
+        private void saveButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                SaveFileDialog saveDialog = new SaveFileDialog();
+                saveDialog.Filter = "SQLite files (*.sqlite)|*.sqlite|All files (*.*)|*.*";
+                saveDialog.RestoreDirectory = true;
+                if (saveDialog.ShowDialog() == true)
+                {
+                    File.Copy(EventsRecorder.FILENAME, saveDialog.FileName, true);
+                    writeLog("Replay disimpan ke " + saveDialog.FileName);
+                }
+            }
+            catch (Exception ex)
+            {
+                writeLog(ex.ToString());
+            }
+        }
+
+        private void loadButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                OpenFileDialog openDialog = new OpenFileDialog();
+                openDialog.Filter = "SQLite files (*.sqlite)|*.sqlite|All files (*.*)|*.*";
+                openDialog.RestoreDirectory = true;
+                if (openDialog.ShowDialog() == true)
+                {
+                    File.Copy(openDialog.FileName, EventsRecorder.FILENAME, true);
+                    writeLog("Replay dibaca dari " + openDialog.FileName);
+                }
+            }
+            catch (Exception ex)
+            {
+                writeLog(ex.ToString());
+            }
+
         }
     }
 }

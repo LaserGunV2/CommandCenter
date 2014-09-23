@@ -25,8 +25,8 @@
         <ScrollViewer CanContentScroll="True" HorizontalAlignment="Left" Height="151" Margin="10,273,0,0" VerticalAlignment="Top" Width="391" HorizontalScrollBarVisibility="Auto"  VerticalScrollBarVisibility="Auto" FontFamily="Consolas" FontSize="10">
             <TextBlock x:Name="peristiwaTextBlock" HorizontalAlignment="Left" VerticalAlignment="Top" Height="Auto" Width="Auto" IsEnabled="False"/>
         </ScrollViewer>
-        <Button Content="Replay" HorizontalAlignment="Left" Margin="278,16,0,0" VerticalAlignment="Top" Width="123" IsEnabled="False"/>
-        <Button Content="Load..." HorizontalAlignment="Left" Margin="278,41,0,0" VerticalAlignment="Top" Width="123" IsEnabled="False"/>
-        <Button Content="Save..." HorizontalAlignment="Left" Margin="278,66,0,0" VerticalAlignment="Top" Width="123" IsEnabled="False"/>
+        <Button x:Name="replayButton" Content="Replay" HorizontalAlignment="Left" Margin="278,16,0,0" VerticalAlignment="Top" Width="123" IsEnabled="False"/>
+        <Button x:Name="loadButton" Content="Load..." HorizontalAlignment="Left" Margin="278,41,0,0" VerticalAlignment="Top" Width="123" Click="loadButton_Click"/>
+        <Button x:Name="saveButton" Content="Save..." HorizontalAlignment="Left" Margin="278,66,0,0" VerticalAlignment="Top" Width="123" IsEnabled="False" Click="saveButton_Click"/>
     </Grid>
 </Window>

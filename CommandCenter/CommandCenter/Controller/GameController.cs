@@ -45,6 +45,8 @@ namespace CommandCenter.Model.Protocol
 
             try
             {
+                prajurits.Clear();
+                parent.mapDrawer.clearMap();
                 this.recorder = new EventsRecorder();
                 communication.listenAsync(this);
                 this.state = State.REGISTRATION;
@@ -85,8 +87,6 @@ namespace CommandCenter.Model.Protocol
             }
 
             // Remove any references and members.
-            prajurits.Clear();
-            parent.mapDrawer.clearMap();
             this.recorder.stopPlaying();
             gameId = null;
 

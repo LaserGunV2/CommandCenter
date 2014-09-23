@@ -15,7 +15,7 @@ namespace CommandCenter.Model
         public const string START = "START";
         public const string STOP = "STOP";
 
-        const string FILENAME = "events.sqlite";
+        public const string FILENAME = "events.sqlite";
 
         SQLiteConnection connection;
         Stopwatch stopwatch;
@@ -60,6 +60,7 @@ namespace CommandCenter.Model
             record(STOP);
             if (connection != null) {
                 connection.Close();
+                connection = null;
             }
         }
     }
