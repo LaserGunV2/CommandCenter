@@ -96,7 +96,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Model\EventsRecorder.cs" />
+    <Compile Include="Model\Events\EventsPlayer.cs" />
+    <Compile Include="Model\Events\EventsRecorder.cs" />
     <Compile Include="Model\PrajuritDatabase.cs" />
     <Compile Include="Model\Protocol\JSONPacket.cs" />
     <Compile Include="Controller\GameController.cs" />

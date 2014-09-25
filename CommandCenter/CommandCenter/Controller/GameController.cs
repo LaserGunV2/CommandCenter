@@ -8,6 +8,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
+using CommandCenter.Model.Events;
 
 namespace CommandCenter.Model.Protocol
 {
@@ -188,5 +189,7 @@ namespace CommandCenter.Model.Protocol
                 parent.writeLog("Unhandled exception: " + e);
             }
         }
+
     }
+
 }

@@ -8,13 +8,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CommandCenter.Model
+namespace CommandCenter.Model.Events
 {
     class EventsRecorder
     {
         public const string START = "START";
         public const string STOP = "STOP";
-
         public const string FILENAME = "events.sqlite";
 
         SQLiteConnection connection;
@@ -40,7 +39,7 @@ namespace CommandCenter.Model
         public void record(string eventText)
         {
             long timeOffset = stopwatch.ElapsedMilliseconds;
-            SQLiteCommand command = new SQLiteCommand("INSERT INTO EVENTS (timeOffset, packet) VALUES (@TIMEOFFSET, @PACKET)", connection);
+            SQLiteCommand command = new SQLiteCommand("INSERT INTO events (timeOffset, packet) VALUES (@TIMEOFFSET, @PACKET)", connection);
             command.Parameters.AddWithValue("@TIMEOFFSET", timeOffset);
             command.Parameters.AddWithValue("@PACKET", eventText);
             int returnValue = command.ExecuteNonQuery();
@@ -58,7 +57,8 @@ namespace CommandCenter.Model
         public void stopPlaying()
         {
             record(STOP);
-            if (connection != null) {
+            if (connection != null)
+            {
                 connection.Close();
                 connection = null;
             }

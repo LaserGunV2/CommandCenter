@@ -1,4 +1,5 @@
 ﻿using CommandCenter.Model;
+using CommandCenter.Model.Events;
 using CommandCenter.Model.Protocol;
 using CommandCenter.View;
 using Microsoft.Maps.MapControl.WPF;
@@ -36,6 +37,8 @@ namespace CommandCenter
         public Dictionary<int, Senjata> senjatas;
 
         private GameController controller;
+
+        EventsPlayer player;
  
         public MainWindow()
         {
@@ -46,6 +49,7 @@ namespace CommandCenter
             senjatas = new Dictionary<int, Senjata>();
 
             controller = new GameController(this);
+            player = new EventsPlayer();
 
             mapDrawer = new MapDrawer(map, prajurits);
             mapDrawer.updateMap();
@@ -61,6 +65,7 @@ namespace CommandCenter
                 akhiriButton.IsEnabled = true;
                 loadButton.IsEnabled = false;
                 saveButton.IsEnabled = false;
+                replayLengthLabel.Content = "0:00.000";
 
                 // Start controller and start listening
                 idSimulationLabel.Content = result;
@@ -86,6 +91,7 @@ namespace CommandCenter
             akhiriButton.IsEnabled = false;
             loadButton.IsEnabled = true;
             saveButton.IsEnabled = true;
+            updateReplayLength();
         }
 
         public void writeLog(String s)
@@ -147,7 +153,7 @@ namespace CommandCenter
                 openDialog.RestoreDirectory = true;
                 if (openDialog.ShowDialog() == true)
                 {
-                    File.Copy(openDialog.FileName, EventsRecorder.FILENAME, true);
+                    File.Copy(openDialog.FileName, EventsPlayer.FILENAME, true);
                     writeLog("Replay dibaca dari " + openDialog.FileName);
                 }
             }
@@ -156,6 +162,23 @@ namespace CommandCenter
                 writeLog(ex.ToString());
             }
 
+        }
+
+        private void updateReplayLength()
+        {
+            try
+            {
+                long milliseconds = player.getLength();
+                long seconds = milliseconds / 1000;
+                long minutes = seconds / 60;
+                milliseconds %= 1000;
+                seconds %= 60;
+                replayLengthLabel.Content = String.Format("{0}:{1,2:D2}.{2,3:D3}", minutes, seconds, milliseconds);
+            }
+            catch (Exception e)
+            {
+                writeLog(e.ToString());
+            }
         }
     }
 }
