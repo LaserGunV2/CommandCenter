@@ -1,8 +1,36 @@
 ﻿<Application x:Class="CommandCenter.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:m="clr-namespace:Microsoft.Maps.MapControl.WPF;assembly=Microsoft.Maps.MapControl.WPF"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <!--Start custom resource stand soldier-->
+        <ControlTemplate x:Key="imagePushpinS" TargetType="m:Pushpin">
+            <Grid x:Name="ContentGrid" Width="32" Height="32" Margin="0">
+                <Image Source="img/standPin.png" Stretch="Fill"/>
+            </Grid>
+        </ControlTemplate>
+        <ControlTemplate x:Key="pushpinStand">
+            <m:Pushpin Background="Red" Template="{StaticResource imagePushpinS}" >
+                <m:Pushpin.RenderTransform>
+                    <ScaleTransform ScaleX="2" ScaleY="2" CenterX="17" CenterY="35"></ScaleTransform>
+                </m:Pushpin.RenderTransform>
+            </m:Pushpin>
+        </ControlTemplate>
+        <!--End custom resource stand soldier-->
+        <!--Start custom resource stand soldier-->
+        <ControlTemplate x:Key="imagePushpinC" TargetType="m:Pushpin">
+            <Grid x:Name="ContentGrid" Width="32" Height="32" Margin="0">
+                <Image Source="img/crawlPin.png" Stretch="Fill"/>
+            </Grid>
+        </ControlTemplate>
+        <ControlTemplate x:Key="pushpinCrawl">
+            <m:Pushpin Background="Red" Template="{StaticResource imagePushpinC}" >
+                <m:Pushpin.RenderTransform>
+                    <ScaleTransform ScaleX="2" ScaleY="2" CenterX="17" CenterY="35"></ScaleTransform>
+                </m:Pushpin.RenderTransform>
+            </m:Pushpin>
+        </ControlTemplate>
+        <!--End custom resource stand soldier-->
     </Application.Resources>
 </Application>

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -24,6 +25,7 @@ namespace CommandCenter.View
         {
             this.map = map;
             this.prajurits = prajurits;
+            /*
             standingPrajuritIcon = new Ellipse()
             {
                 Fill = new ImageBrush() { ImageSource = new BitmapImage(new Uri("img/stand.png", UriKind.Relative)) },
@@ -37,6 +39,7 @@ namespace CommandCenter.View
                 Height = 20,
                 Width = 20,
             };
+             */ 
         }
 
         // TODO Deprecated, i guess
@@ -50,13 +53,19 @@ namespace CommandCenter.View
                     if (prajurit.assignedPushPin == null && prajurit.location != null)
                     {
                         prajurit.assignedPushPin = new Pushpin();
-                        Uri imgUri = new Uri("img/soldier.png", UriKind.Relative);
-                        BitmapImage imgSourceR = new BitmapImage(imgUri);
-                        ImageBrush imgBrush = new ImageBrush() { ImageSource = imgSourceR };
-                        prajurit.assignedPushPin.Background = new SolidColorBrush(Colors.Red);
-                        prajurit.assignedPushPin.Content = standingPrajuritIcon;
+                        prajurit.assignedPushPin.Template = (ControlTemplate)Application.Current.Resources["pushpinStand"];
                         prajurit.assignedPushPin.Location = prajurit.location;
                         ToolTipService.SetToolTip(prajurit.assignedPushPin, prajurit.nama);
+                        /*Start add text to soldier*/
+                        TextBlock textBlock = new TextBlock();
+                        textBlock.Text = prajurit.nomerUrut+"";
+                        textBlock.Background = new SolidColorBrush(Colors.Orange);
+                        textBlock.Width = 30;
+                        textBlock.FontSize = 20;
+                        textBlock.TextAlignment = TextAlignment.Right;
+                        MapLayer.SetPosition(textBlock, prajurit.location);
+                        /*End add text to soldier*/
+                        map.Children.Add(textBlock); //add textblock to layer
                         map.Children.Add(prajurit.assignedPushPin);
                     }
                     // Update and draw the push pin if available
@@ -82,8 +91,9 @@ namespace CommandCenter.View
                 if (prajurit.assignedPushPin == null && prajurit.location != null)
                 {
                     prajurit.assignedPushPin = new Pushpin();
-                    prajurit.assignedPushPin.Background = new SolidColorBrush(Colors.Red);
-                    prajurit.assignedPushPin.Content = standingPrajuritIcon;
+ 
+                    //prajurit.assignedPushPin.Content = standingPrajuritIcon;
+                    prajurit.assignedPushPin.Template = (ControlTemplate)Application.Current.Resources["pushpinStand"];
                     prajurit.assignedPushPin.Location = prajurit.location;
                     ToolTipService.SetToolTip(prajurit.assignedPushPin, prajurit.nama);
                     map.Children.Add(prajurit.assignedPushPin);
@@ -94,6 +104,7 @@ namespace CommandCenter.View
                     // Note: Bing Maps fix to force update. Hopefully it would work
                     prajurit.assignedPushPin.Location = new Location(prajurit.location);
                     prajurit.assignedPushPin.Heading = (180 + prajurit.heading) % 360;
+                    // !!! Diupdate ke Template
                     prajurit.assignedPushPin.Content = prajurit.posture != null && prajurit.posture.Equals("crawl") ? crawlingPrajuritIcon : standingPrajuritIcon;
                 }
                 // Refresh map, if map is ready.
