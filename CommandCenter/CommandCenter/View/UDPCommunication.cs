@@ -17,7 +17,7 @@ namespace CommandCenter.View
         const int OUT_PORT = 21501;
 
         MainWindow parent;
-        GameController controller = null;
+        AbstractGameController controller = null;
         Thread thread = null;
 
         public UDPCommunication(MainWindow parent)
@@ -59,14 +59,14 @@ namespace CommandCenter.View
             }
         }
 
-        public void listenAsync(GameController controller)
+        public void listenAsync(AbstractGameController controller)
         {
             this.controller = controller;
             thread = new Thread(listen);
             thread.Start();
         }
 
-        public void send(IPAddress address, JSONPacket outPacket)
+        public virtual void send(IPAddress address, JSONPacket outPacket)
         {
             UdpClient client = new UdpClient(address + "", OUT_PORT);
             string sendString = outPacket.ToString();

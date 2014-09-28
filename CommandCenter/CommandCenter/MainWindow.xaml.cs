@@ -35,10 +35,10 @@ namespace CommandCenter
         public MapDrawer mapDrawer;
         public List<Prajurit> prajurits;
         public Dictionary<int, Senjata> senjatas;
+        public EventsRecorder recorder;
 
-        private GameController controller;
+        private LiveGameController controller;
 
-        EventsPlayer player;
  
         public MainWindow()
         {
@@ -48,8 +48,8 @@ namespace CommandCenter
             pesertaDataGrid.DataContext = prajurits;
             senjatas = new Dictionary<int, Senjata>();
 
-            controller = new GameController(this);
-            player = new EventsPlayer();
+            recorder = new EventsRecorder();
+            controller = new LiveGameController(this);
 
             mapDrawer = new MapDrawer(map, prajurits);
             mapDrawer.updateMap();
@@ -65,6 +65,7 @@ namespace CommandCenter
                 akhiriButton.IsEnabled = true;
                 loadButton.IsEnabled = false;
                 saveButton.IsEnabled = false;
+                playButton.IsEnabled = false;
                 replayLengthLabel.Content = "0:00.000";
 
                 // Start controller and start listening
@@ -92,6 +93,7 @@ namespace CommandCenter
             loadButton.IsEnabled = true;
             saveButton.IsEnabled = true;
             updateReplayLength();
+            playButton.IsEnabled = true;
         }
 
         public void writeLog(String s)
@@ -153,7 +155,7 @@ namespace CommandCenter
                 openDialog.RestoreDirectory = true;
                 if (openDialog.ShowDialog() == true)
                 {
-                    File.Copy(openDialog.FileName, EventsPlayer.FILENAME, true);
+                    File.Copy(openDialog.FileName, EventsRecorder.FILENAME, true);
                     writeLog("Replay dibaca dari " + openDialog.FileName);
                 }
             }
@@ -168,7 +170,7 @@ namespace CommandCenter
         {
             try
             {
-                long milliseconds = player.getLength();
+                long milliseconds = recorder.getRecordingLength();
                 long seconds = milliseconds / 1000;
                 long minutes = seconds / 60;
                 milliseconds %= 1000;

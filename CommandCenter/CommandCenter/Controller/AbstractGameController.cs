@@ -12,27 +12,25 @@ using CommandCenter.Model.Events;
 
 namespace CommandCenter.Model.Protocol
 {
-    class GameController
+    abstract class AbstractGameController
     {
-        enum State { IDLE, REGISTRATION, PLAYING };
+        public enum State { IDLE, REGISTRATION, PLAYING };
 
-        MainWindow parent;
-        UDPCommunication communication;
-        List<Prajurit> prajurits;
-        Dictionary<int, Senjata> senjatas;
-        PrajuritDatabase prajuritDatabase;
-        EventsRecorder recorder;
-        State state;
-        String gameId = null;
+        protected MainWindow parent;
+        protected UDPCommunication communication;
+        protected State state;
+        protected String gameId = null;
+        protected List<Prajurit> prajurits;
+        protected Dictionary<int, Senjata> senjatas;
+        protected EventsRecorder recorder;
 
-        public GameController(MainWindow parent)
+        public AbstractGameController(MainWindow parent, UDPCommunication communication, EventsRecorder recorder)
         {
+            this.communication = communication;
             this.parent = parent;
-            this.communication = new UDPCommunication(parent);
             this.prajurits = parent.prajurits;
             this.senjatas = parent.senjatas;
-            this.prajuritDatabase = new PrajuritDatabase();
-            this.state = State.IDLE;
+            this.recorder = recorder;
         }
 
         public String startRegistration()
@@ -48,7 +46,7 @@ namespace CommandCenter.Model.Protocol
             {
                 prajurits.Clear();
                 parent.mapDrawer.clearMap();
-                this.recorder = new EventsRecorder();
+                this.recorder.startRecording();
                 communication.listenAsync(this);
                 this.state = State.REGISTRATION;
             }
@@ -65,7 +63,7 @@ namespace CommandCenter.Model.Protocol
         {
             this.state = State.PLAYING;
             parent.mapDrawer.showEveryone();
-            recorder.startPlaying();
+            recorder.record(null, EventsRecorder.START);
             parent.writeLog("Permainan dimulai");
         }
 
@@ -88,7 +86,7 @@ namespace CommandCenter.Model.Protocol
             }
 
             // Remove any references and members.
-            this.recorder.stopPlaying();
+            this.recorder.stopRecording();
             gameId = null;
 
             parent.refreshTable();
@@ -99,7 +97,7 @@ namespace CommandCenter.Model.Protocol
         {
             try
             {
-                this.recorder.record(inPacket.ToString());
+                this.recorder.record(address, inPacket.ToString());
                 String type = inPacket.getParameter("type");
                 if (type.Equals("register"))
                 {
@@ -191,5 +189,4 @@ namespace CommandCenter.Model.Protocol
         }
 
     }
-
 }
