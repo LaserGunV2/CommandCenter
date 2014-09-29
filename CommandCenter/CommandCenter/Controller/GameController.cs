@@ -127,8 +127,8 @@ namespace CommandCenter.Model.Protocol
                         try
                         {
                             string[] prajuritState = inPacket.getParameter("state").Split('/');
-                            prajurit.alive = prajuritState[0].Equals("alive");
-                            prajurit.posture = prajuritState[1];
+                            prajurit.state = (prajuritState[0].Equals("alive") ? Prajurit.State.NORMAL : Prajurit.State.DEAD);
+                            prajurit.posture = (prajuritState[1].Equals("stand") ? Prajurit.Posture.STAND : Prajurit.Posture.CRAWL);
                         }
                         catch (KeyNotFoundException)
                         {
@@ -136,6 +136,7 @@ namespace CommandCenter.Model.Protocol
                         }
                         if (inPacket.getParameter("action").Equals("hit"))
                         {
+                            prajurit.state = Prajurit.State.HIT;
                             if (state == State.REGISTRATION) {
                                 // Registration phase, senjata assign to prajurit.
                                 Senjata newSenjata = new Senjata(Int32.Parse(inPacket.getParameter("idsenjata")), prajurit, Int32.Parse(inPacket.getParameter("counter")));
@@ -147,6 +148,9 @@ namespace CommandCenter.Model.Protocol
                                 communication.send(prajurit.ipAddress, new JSONPacket("killed"));
                             }
                             
+                        } else if (inPacket.getParameter("action").Equals("shoot"))
+                        {
+                            prajurit.state = Prajurit.State.SHOOT;
                         }
                         parent.mapDrawer.updateMap(prajurit);
                         parent.refreshTable();

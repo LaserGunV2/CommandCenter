@@ -11,6 +11,10 @@ namespace CommandCenter.Model
 {
     public class Prajurit
     {
+
+        public enum State { NORMAL, SHOOT, HIT, DEAD }
+        public enum Posture { STAND, CRAWL }
+
         public IPAddress ipAddress;
         public int nomerUrut { get; set; }
         public string nomerInduk { get; set; }
@@ -20,8 +24,8 @@ namespace CommandCenter.Model
         public string group { get; set; }
         public DateTime lastUpdate { get; set; }
         public Senjata senjata { get; set; }
-        public bool alive;
-        public string posture;
+        public State state { get; set; }
+        public Posture posture { get; set; }
 
         public Pushpin assignedPushPin = null;
 

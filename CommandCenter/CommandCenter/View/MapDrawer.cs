@@ -105,7 +105,7 @@ namespace CommandCenter.View
                     prajurit.assignedPushPin.Location = new Location(prajurit.location);
                     prajurit.assignedPushPin.Heading = (180 + prajurit.heading) % 360;
                     // !!! Diupdate ke Template
-                    prajurit.assignedPushPin.Content = prajurit.posture != null && prajurit.posture.Equals("crawl") ? crawlingPrajuritIcon : standingPrajuritIcon;
+                    prajurit.assignedPushPin.Content = (prajurit.posture == Prajurit.Posture.CRAWL ? crawlingPrajuritIcon : standingPrajuritIcon);
                 }
                 // Refresh map, if map is ready.
                 if (map.ActualHeight > 0 && map.ActualWidth > 0)
