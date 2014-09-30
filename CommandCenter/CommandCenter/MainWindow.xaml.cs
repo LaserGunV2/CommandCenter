@@ -81,13 +81,13 @@ namespace CommandCenter
             mulaiButton.IsEnabled = false;
             akhiriButton.IsEnabled = true;
 
-            liveGameController.startPlaying();
+            liveGameController.startExercise();
         }
 
         private void akhiriButton_Click(object sender, RoutedEventArgs e)
         {
             idSimulationLabel.Content = "###";
-            liveGameController.stopPlaying();
+            liveGameController.stopExercise();
 
             pendaftaranButton.IsEnabled = true;
             mulaiButton.IsEnabled = false;
@@ -111,7 +111,7 @@ namespace CommandCenter
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            liveGameController.stopPlaying();
+            liveGameController.stopExercise();
         }
 
         public void refreshTable()
@@ -219,7 +219,7 @@ namespace CommandCenter
 
         private void stopButton_Click(object sender, RoutedEventArgs e)
         {
-            replayController.stopPlaying();
+            replayController.stopExercise();
             playButton.IsEnabled = true;
             stopButton.IsEnabled = false;
         }

@@ -54,11 +54,11 @@ namespace CommandCenter.Controller
                 parent.updateReplayProgress(1e-3 * currentTime);
                 if (scheduledEvent.packet.Equals(EventsRecorder.START))
                 {
-                    startPlaying();
+                    startExercise();
                 }
                 else if (scheduledEvent.packet.Equals(EventsRecorder.STOP))
                 {
-                    stopPlaying();
+                    stopExercise();
                 }
                 else
                 {

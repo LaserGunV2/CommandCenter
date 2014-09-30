@@ -14,7 +14,7 @@ namespace CommandCenter.Model.Protocol
 {
     abstract class AbstractGameController
     {
-        public enum State { IDLE, REGISTRATION, PLAYING };
+        public enum State { IDLE, REGISTRATION, EXERCISE };
 
         protected MainWindow parent;
         protected UDPCommunication communication;
@@ -59,15 +59,15 @@ namespace CommandCenter.Model.Protocol
             return gameId;
         }
 
-        public void startPlaying()
+        public void startExercise()
         {
-            this.state = State.PLAYING;
+            this.state = State.EXERCISE;
             parent.mapDrawer.showEveryone();
             recorder.record(null, EventsRecorder.START);
             parent.writeLog("Permainan dimulai");
         }
 
-        public void stopPlaying()
+        public void stopExercise()
         {
             if (state == State.IDLE)
             {
@@ -159,7 +159,7 @@ namespace CommandCenter.Model.Protocol
                                 prajurit.senjata = newSenjata;
                                 senjatas.Add(newSenjata.idSenjata, newSenjata);
                                 parent.refreshTable();
-                            } else if (state == State.PLAYING) {
+                            } else if (state == State.EXERCISE) {
                                 // TODO check ammo
                                 communication.send(prajurit.ipAddress, new JSONPacket("killed"));
                             }
