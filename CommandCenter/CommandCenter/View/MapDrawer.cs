@@ -124,7 +124,10 @@ namespace CommandCenter.View
 
         public void clearMap()
         {
-            map.Children.Clear();
+            map.Dispatcher.InvokeAsync((Action)(() =>
+            {
+                map.Children.Clear();
+            }));
         }
     }
 }

@@ -59,7 +59,7 @@ namespace CommandCenter.View
             }
         }
 
-        public void listenAsync(AbstractGameController controller)
+        public virtual void listenAsync(AbstractGameController controller)
         {
             this.controller = controller;
             thread = new Thread(listen);

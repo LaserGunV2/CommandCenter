@@ -35,7 +35,6 @@ namespace CommandCenter.Controller
             parent.updateReplayProgress(0);
             scheduledEvent = null;
             executePacketAndScheduleNext();
-            startRegistration();
             timer.Enabled = true;
         }
 
@@ -52,7 +51,11 @@ namespace CommandCenter.Controller
             {
                 currentTime = scheduledEvent.timeOffset;
                 parent.updateReplayProgress(1e-3 * currentTime);
-                if (scheduledEvent.packet.Equals(EventsRecorder.START))
+                if (scheduledEvent.packet.StartsWith(EventsRecorder.REGISTER))
+                {
+                    startRegistration(scheduledEvent.packet.Substring(scheduledEvent.packet.Length - 3));
+                }
+                else if (scheduledEvent.packet.Equals(EventsRecorder.START))
                 {
                     startExercise();
                 }
@@ -69,7 +72,8 @@ namespace CommandCenter.Controller
             if (nextEvent != null)
             {
                 scheduledEvent = nextEvent;
-                timer.Interval = nextEvent.timeOffset - currentTime;
+                long interval = nextEvent.timeOffset - currentTime;
+                timer.Interval = interval == 0 ? 1 : interval;
             }
             else
             {
@@ -94,6 +98,11 @@ namespace CommandCenter.Controller
             this.parent = parent;
         }
 
+        public override void listenAsync(AbstractGameController controller)
+        {
+            // void
+        }
+
         public override void send(IPAddress address, JSONPacket outPacket)
         {
             string sendString = outPacket.ToString();
@@ -103,7 +112,7 @@ namespace CommandCenter.Controller
 
     class MyEventsRecorder : EventsRecorder
     {
-        public override void startRecording()
+        public override void startRecording(string gameId)
         {
             // void
         }

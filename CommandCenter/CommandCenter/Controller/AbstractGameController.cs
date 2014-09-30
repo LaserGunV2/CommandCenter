@@ -36,17 +36,24 @@ namespace CommandCenter.Model.Protocol
         public String startRegistration()
         {
             Random random = new Random();
-            gameId = "";
+            String gameId = "";
             for (int i = 0; i < 3; i++)
             {
                 gameId += random.Next(10);
             }
 
+            return startRegistration(gameId);
+        }
+
+        public String startRegistration(string gameId)
+        {
+            this.gameId = gameId;
+
             try
             {
                 prajurits.Clear();
                 parent.mapDrawer.clearMap();
-                this.recorder.startRecording();
+                this.recorder.startRecording(gameId);
                 communication.listenAsync(this);
                 this.state = State.REGISTRATION;
             }
@@ -58,6 +65,7 @@ namespace CommandCenter.Model.Protocol
             parent.writeLog("Pendaftaran dibuka, game id = " + gameId);
             return gameId;
         }
+
 
         public void startExercise()
         {

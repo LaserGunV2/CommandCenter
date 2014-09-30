@@ -13,6 +13,7 @@ namespace CommandCenter.Model.Events
 {
     public class EventsRecorder
     {
+        public const string REGISTER = "REGISTER";
         public const string START = "START";
         public const string STOP = "STOP";
         public const string FILENAME = "events.sqlite";
@@ -25,7 +26,7 @@ namespace CommandCenter.Model.Events
         {
         }
 
-        public virtual void startRecording()
+        public virtual void startRecording(string gameId)
         {
             if (File.Exists(FILENAME))
             {
@@ -40,6 +41,7 @@ namespace CommandCenter.Model.Events
 
             stopwatch = new Stopwatch();
             stopwatch.Start();
+            record(null, REGISTER + "/" + gameId);
         }
 
         public virtual void record(IPAddress sender, string eventText)
