@@ -32,8 +32,10 @@ namespace CommandCenter.Controller
         {
             player.startReplaying();
             currentTime = 0;
+            parent.updateReplayProgress(0);
             scheduledEvent = null;
             executePacketAndScheduleNext();
+            startRegistration();
             timer.Enabled = true;
         }
 
@@ -49,7 +51,19 @@ namespace CommandCenter.Controller
             if (scheduledEvent != null)
             {
                 currentTime = scheduledEvent.timeOffset;
-                this.handlePacket(scheduledEvent.sender, JSONPacket.createFromJSONBytes(Encoding.UTF8.GetBytes(scheduledEvent.packet)));
+                parent.updateReplayProgress(1e-3 * currentTime);
+                if (scheduledEvent.packet.Equals(EventsRecorder.START))
+                {
+                    startPlaying();
+                }
+                else if (scheduledEvent.packet.Equals(EventsRecorder.STOP))
+                {
+                    stopPlaying();
+                }
+                else
+                {
+                    this.handlePacket(scheduledEvent.sender, JSONPacket.createFromJSONBytes(Encoding.UTF8.GetBytes(scheduledEvent.packet)));
+                }
             }
             Event nextEvent = player.getNextPlayEvent();
             if (nextEvent != null)
@@ -65,7 +79,9 @@ namespace CommandCenter.Controller
 
         private void OnTimedEvent(Object source, ElapsedEventArgs e)
         {
+            timer.Enabled = false;
             executePacketAndScheduleNext();
+            timer.Enabled = true;
         }
     }
 

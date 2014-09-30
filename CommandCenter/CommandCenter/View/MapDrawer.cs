@@ -106,17 +106,20 @@ namespace CommandCenter.View
 
         public void showEveryone()
         {
-            LocationCollection locations = new LocationCollection();
-            foreach (Prajurit prajurit in prajurits)
+            map.Dispatcher.InvokeAsync((Action)(() =>
             {
-                if (prajurit.location != null)
+                LocationCollection locations = new LocationCollection();
+                foreach (Prajurit prajurit in prajurits)
                 {
-                    locations.Add(prajurit.location);
+                    if (prajurit.location != null)
+                    {
+                        locations.Add(prajurit.location);
+                    }
                 }
-            }
-            LocationRect bounds = new LocationRect(locations);
-            map.SetView(bounds);
-            map.ZoomLevel--;
+                LocationRect bounds = new LocationRect(locations);
+                map.SetView(bounds);
+                map.ZoomLevel--;
+            }));
         }
 
         public void clearMap()

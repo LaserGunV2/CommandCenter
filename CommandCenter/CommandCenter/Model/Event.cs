@@ -12,12 +12,5 @@ namespace CommandCenter.Model
         public Int64 timeOffset;
         public IPAddress sender;
         public string packet;
-
-        public Event(Int64 timeOffset, IPAddress sender, string packet)
-        {
-            this.timeOffset = timeOffset;
-            this.sender = sender;
-            this.packet = packet;
-        }
     }
 }

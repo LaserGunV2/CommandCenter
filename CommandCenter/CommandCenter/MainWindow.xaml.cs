@@ -1,4 +1,5 @@
-﻿using CommandCenter.Model;
+﻿using CommandCenter.Controller;
+using CommandCenter.Model;
 using CommandCenter.Model.Events;
 using CommandCenter.Model.Protocol;
 using CommandCenter.View;
@@ -37,8 +38,8 @@ namespace CommandCenter
         public Dictionary<int, Senjata> senjatas;
         public EventsRecorder recorder;
 
-        private LiveGameController controller;
-
+        private LiveGameController liveGameController;
+        private ReplayGameController replayController;
  
         public MainWindow()
         {
@@ -49,7 +50,8 @@ namespace CommandCenter
             senjatas = new Dictionary<int, Senjata>();
 
             recorder = new EventsRecorder();
-            controller = new LiveGameController(this);
+            liveGameController = new LiveGameController(this);
+            replayController = new ReplayGameController(this);
 
             mapDrawer = new MapDrawer(map, prajurits);
             mapDrawer.updateMap();
@@ -57,7 +59,7 @@ namespace CommandCenter
 
         private void pendaftaranButton_Click(object sender, RoutedEventArgs e)
         {
-            String result = controller.startRegistration();
+            String result = liveGameController.startRegistration();
             if (result != null)
             {
                 pendaftaranButton.IsEnabled = false;
@@ -79,13 +81,13 @@ namespace CommandCenter
             mulaiButton.IsEnabled = false;
             akhiriButton.IsEnabled = true;
 
-            controller.startPlaying();
+            liveGameController.startPlaying();
         }
 
         private void akhiriButton_Click(object sender, RoutedEventArgs e)
         {
             idSimulationLabel.Content = "###";
-            controller.stopPlaying();
+            liveGameController.stopPlaying();
 
             pendaftaranButton.IsEnabled = true;
             mulaiButton.IsEnabled = false;
@@ -98,18 +100,18 @@ namespace CommandCenter
 
         public void writeLog(String s)
         {
-                Dispatcher.InvokeAsync((Action)(() =>
+            Dispatcher.InvokeAsync((Action)(() =>
+            {
+                if ((bool)peristiwaCheckBox.IsChecked)
                 {
-                    if ((bool)peristiwaCheckBox.IsChecked)
-                    {
-                        peristiwaTextBlock.Text = s + "\n" + peristiwaTextBlock.Text;
-                    }
-                }));
-            }
+                    peristiwaTextBlock.Text = s + "\n" + peristiwaTextBlock.Text;
+                }
+            }));
+        }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            controller.stopPlaying();
+            liveGameController.stopPlaying();
         }
 
         public void refreshTable()
@@ -156,6 +158,8 @@ namespace CommandCenter
                 if (openDialog.ShowDialog() == true)
                 {
                     File.Copy(openDialog.FileName, EventsRecorder.FILENAME, true);
+                    updateReplayLength();
+                    playButton.IsEnabled = true;
                     writeLog("Replay dibaca dari " + openDialog.FileName);
                 }
             }
@@ -171,6 +175,7 @@ namespace CommandCenter
             try
             {
                 long milliseconds = recorder.getRecordingLength();
+                replayProgressBar.Maximum = 1e-3 * milliseconds;
                 long seconds = milliseconds / 1000;
                 long minutes = seconds / 60;
                 milliseconds %= 1000;
@@ -181,6 +186,42 @@ namespace CommandCenter
             {
                 writeLog(e.ToString());
             }
+        }
+
+        public void updateReplayProgress(double progress)
+        {
+            Dispatcher.InvokeAsync((Action)(() =>
+            {
+                try
+                {
+                    replayProgressBar.Value = progress;
+                    long milliseconds = (int)(progress * 1000);
+                    replayProgressBar.Maximum = 1e-3 * milliseconds;
+                    long seconds = milliseconds / 1000;
+                    long minutes = seconds / 60;
+                    milliseconds %= 1000;
+                    seconds %= 60;
+                    replayProgressLabel.Content = String.Format("{0}:{1,2:D2}.{2,3:D3}", minutes, seconds, milliseconds);
+                }
+                catch (InvalidOperationException ioe)
+                {
+                    writeLog(ioe.ToString());
+                }
+            }));            
+        }
+
+        private void playButton_Click(object sender, RoutedEventArgs e)
+        {
+            replayController.startPlayback();
+            playButton.IsEnabled = false;
+            stopButton.IsEnabled = true;
+        }
+
+        private void stopButton_Click(object sender, RoutedEventArgs e)
+        {
+            replayController.stopPlaying();
+            playButton.IsEnabled = true;
+            stopButton.IsEnabled = false;
         }
     }
 }

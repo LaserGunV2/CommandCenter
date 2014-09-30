@@ -32,19 +32,19 @@
                     </ScrollViewer>
                 </Grid>
             </TabItem>            
-            <TabItem Header="Replay">
+            <TabItem Header="Replay" Height="22" VerticalAlignment="Top">
                 <Grid Background="#FFE5E5E5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="25*"/>
                         <ColumnDefinition Width="64*"/>
                         <ColumnDefinition Width="5*"/>
                     </Grid.ColumnDefinitions>
-                    <ProgressBar HorizontalAlignment="Left" Height="17" Margin="10,41,0,0" VerticalAlignment="Top" Width="365" Grid.ColumnSpan="3" Value="100"/>
-                    <Label Content="0:00.000" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="150"/>
+                    <ProgressBar x:Name="replayProgressBar" HorizontalAlignment="Left" Height="17" Margin="10,41,0,0" VerticalAlignment="Top" Width="365" Grid.ColumnSpan="3" Value="100"/>
+                    <Label x:Name="replayProgressLabel" Content="0:00.000" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="150"/>
                     <Label x:Name="replayLengthLabel" Content="0:00.000" Grid.Column="1" HorizontalAlignment="Right" HorizontalContentAlignment="Right"  Margin="0,10,10,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="150"/>
-                    <Button x:Name="playButton" IsEnabled="False" Content="&gt; Play" HorizontalAlignment="Left" Margin="90,63,0,0" VerticalAlignment="Top" Width="75" Grid.ColumnSpan="2"/>
+                    <Button x:Name="playButton" IsEnabled="False" Content="&gt; Play" HorizontalAlignment="Left" Margin="90,63,0,0" VerticalAlignment="Top" Width="75" Grid.ColumnSpan="2" Click="playButton_Click"/>
                     <Button IsEnabled="False" Content="|&lt; Restart" HorizontalAlignment="Left" Margin="10,63,0,0" VerticalAlignment="Top" Width="75"/>
-                    <Button IsEnabled="False" Content="|| Pause" HorizontalAlignment="Left" Margin="68,63,0,0" VerticalAlignment="Top" Width="75" Grid.Column="1"/>
+                    <Button x:Name="stopButton" IsEnabled="False" Content="|| Stop" HorizontalAlignment="Left" Margin="68,63,0,0" VerticalAlignment="Top" Width="75" Grid.Column="1" Click="stopButton_Click"/>
                 </Grid>
             </TabItem>
         </TabControl>

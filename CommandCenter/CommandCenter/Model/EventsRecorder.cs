@@ -79,16 +79,20 @@ namespace CommandCenter.Model.Events
         public void startReplaying()
         {
             SQLiteConnection connection = new SQLiteConnection("Data Source=" + FILENAME + "; Version=3;");
+            connection.Open();
             SQLiteCommand command = new SQLiteCommand("SELECT timeOffset, sender, packet FROM events", connection);
             reader = command.ExecuteReader();
-            connection.Open();
         }
 
         public Event getNextPlayEvent()
         {
             if (reader.Read())
             {
-                return new Event(Int64.Parse((string)reader["timeOffset"]), IPAddress.Parse((string)reader["sender"]), (string)reader["packet"]);
+                Event newEvent = new Event();
+                newEvent.timeOffset = (Int64)reader["timeOffset"];
+                newEvent.sender = reader["sender"] is DBNull ? null : IPAddress.Parse((string)reader["sender"]);
+                newEvent.packet = reader["packet"] is DBNull ? null : (string)reader["packet"];
+                return newEvent;
             }
             else
             {
