@@ -4,6 +4,7 @@ using CommandCenter.Model.Protocol;
 using CommandCenter.View;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -17,12 +18,13 @@ namespace CommandCenter.Controller
 
         Timer eventTimer, heartbeatTimer;
         EventsRecorder player;
-        Int64 currentTime, heartbeatTime;
+        Stopwatch stopwatch;
         Event scheduledEvent;
 
         public ReplayGameController(MainWindow parent)
             : base(parent, new MyUDPCommunication(parent), new MyEventsRecorder())
         {
+            stopwatch = new Stopwatch();
             eventTimer = new Timer();
             eventTimer.Elapsed += OnEventTimedEvent;
             heartbeatTimer = new Timer(1000);
@@ -33,7 +35,7 @@ namespace CommandCenter.Controller
         public void startPlayback()
         {
             player.startReplaying();
-            currentTime = heartbeatTime = 0;
+            stopwatch.Restart();
             parent.updateReplayProgress(0);
             scheduledEvent = null;
             executePacketAndScheduleNext();
@@ -46,6 +48,7 @@ namespace CommandCenter.Controller
         {
             eventTimer.Enabled = false;
             heartbeatTimer.Enabled = false;
+            stopwatch.Stop();
             player.stopReplaying();
             scheduledEvent = null;
             this.state = State.IDLE;
@@ -56,8 +59,7 @@ namespace CommandCenter.Controller
         {
             if (scheduledEvent != null)
             {
-                currentTime = scheduledEvent.timeOffset;
-                parent.updateReplayProgress(1e-3 * currentTime);
+                parent.updateReplayProgress(1e-3 * stopwatch.ElapsedMilliseconds);
                 if (scheduledEvent.packet.StartsWith(EventsRecorder.REGISTER))
                 {
                     startRegistration(scheduledEvent.packet.Substring(scheduledEvent.packet.Length - 3));
@@ -79,8 +81,9 @@ namespace CommandCenter.Controller
             if (nextEvent != null)
             {
                 scheduledEvent = nextEvent;
+                long currentTime = stopwatch.ElapsedMilliseconds;
                 long interval = nextEvent.timeOffset - currentTime;
-                eventTimer.Interval = interval == 0 ? 1 : interval;
+                eventTimer.Interval = interval <= 0 ? 1 : interval;
             }
             else
             {
@@ -97,8 +100,7 @@ namespace CommandCenter.Controller
 
         private void OnHeartbeatTimedEvent(Object source, ElapsedEventArgs e)
         {
-            heartbeatTime++;
-            parent.updateReplayProgress(heartbeatTime);
+            parent.updateReplayProgress(1e-3 * stopwatch.ElapsedMilliseconds);
         }
     }
 
