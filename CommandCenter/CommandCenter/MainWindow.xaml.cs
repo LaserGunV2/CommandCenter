@@ -116,7 +116,7 @@ namespace CommandCenter
 
         public void refreshTable()
         {
-            Dispatcher.InvokeAsync((Action)(() =>
+            pesertaDataGrid.Dispatcher.InvokeAsync((Action)(() =>
             {
                 try
                 {
@@ -160,6 +160,7 @@ namespace CommandCenter
                     File.Copy(openDialog.FileName, EventsRecorder.FILENAME, true);
                     updateReplayLength();
                     playButton.IsEnabled = true;
+                    tabControl.SelectedIndex = 1;
                     writeLog("Replay dibaca dari " + openDialog.FileName);
                 }
             }
@@ -190,38 +191,43 @@ namespace CommandCenter
 
         public void updateReplayProgress(double progress)
         {
-            Dispatcher.InvokeAsync((Action)(() =>
+            replayProgressBar.Dispatcher.InvokeAsync((Action)(() =>
             {
-                try
-                {
-                    replayProgressBar.Value = progress;
-                    long milliseconds = (int)(progress * 1000);
-                    replayProgressBar.Maximum = 1e-3 * milliseconds;
-                    long seconds = milliseconds / 1000;
-                    long minutes = seconds / 60;
-                    milliseconds %= 1000;
-                    seconds %= 60;
-                    replayProgressLabel.Content = String.Format("{0}:{1,2:D2}.{2,3:D3}", minutes, seconds, milliseconds);
-                }
-                catch (InvalidOperationException ioe)
-                {
-                    writeLog(ioe.ToString());
-                }
-            }));            
+                replayProgressBar.Value = progress;
+            }));
+            replayProgressLabel.Dispatcher.InvokeAsync((Action)(() =>
+            {
+                long milliseconds = (int)(progress * 1000);
+                long seconds = milliseconds / 1000;
+                long minutes = seconds / 60;
+                milliseconds %= 1000;
+                seconds %= 60;
+                replayProgressLabel.Content = String.Format("{0}:{1,2:D2}.{2,3:D3}", minutes, seconds, milliseconds);
+            }));
         }
 
         private void playButton_Click(object sender, RoutedEventArgs e)
         {
             replayController.startPlayback();
-            playButton.IsEnabled = false;
-            stopButton.IsEnabled = true;
         }
 
         private void stopButton_Click(object sender, RoutedEventArgs e)
         {
-            replayController.stopExercise();
-            playButton.IsEnabled = true;
-            stopButton.IsEnabled = false;
+            replayController.stopPlayback();
+        }
+
+        public void setReplayingEnabled(bool isReplaying)
+        {
+            Dispatcher.InvokeAsync((Action)(() =>
+            {
+                pendaftaranButton.IsEnabled = !isReplaying;
+                mulaiButton.IsEnabled = !isReplaying;
+                akhiriButton.IsEnabled = !isReplaying;
+                loadButton.IsEnabled = !isReplaying;
+                saveButton.IsEnabled = !isReplaying;
+                playButton.IsEnabled = !isReplaying;
+                stopButton.IsEnabled = isReplaying;
+            }));     
         }
     }
 }

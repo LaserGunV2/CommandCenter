@@ -15,34 +15,41 @@ namespace CommandCenter.Controller
     class ReplayGameController : AbstractGameController
     {
 
-        Timer timer;
+        Timer eventTimer, heartbeatTimer;
         EventsRecorder player;
-        Int64 currentTime;
+        Int64 currentTime, heartbeatTime;
         Event scheduledEvent;
 
         public ReplayGameController(MainWindow parent)
             : base(parent, new MyUDPCommunication(parent), new MyEventsRecorder())
         {
-            timer = new Timer();
-            timer.Elapsed += OnTimedEvent;
+            eventTimer = new Timer();
+            eventTimer.Elapsed += OnEventTimedEvent;
+            heartbeatTimer = new Timer(1000);
+            heartbeatTimer.Elapsed += OnHeartbeatTimedEvent;
             player = new EventsRecorder();
         }
 
         public void startPlayback()
         {
             player.startReplaying();
-            currentTime = 0;
+            currentTime = heartbeatTime = 0;
             parent.updateReplayProgress(0);
             scheduledEvent = null;
             executePacketAndScheduleNext();
-            timer.Enabled = true;
+            eventTimer.Enabled = true;
+            heartbeatTimer.Enabled = true;
+            parent.setReplayingEnabled(true);
         }
 
         public void stopPlayback()
         {
+            eventTimer.Enabled = false;
+            heartbeatTimer.Enabled = false;
             player.stopReplaying();
             scheduledEvent = null;
             this.state = State.IDLE;
+            parent.setReplayingEnabled(false);
         }
 
         private void executePacketAndScheduleNext()
@@ -73,7 +80,7 @@ namespace CommandCenter.Controller
             {
                 scheduledEvent = nextEvent;
                 long interval = nextEvent.timeOffset - currentTime;
-                timer.Interval = interval == 0 ? 1 : interval;
+                eventTimer.Interval = interval == 0 ? 1 : interval;
             }
             else
             {
@@ -81,11 +88,17 @@ namespace CommandCenter.Controller
             }
         }
 
-        private void OnTimedEvent(Object source, ElapsedEventArgs e)
+        private void OnEventTimedEvent(Object source, ElapsedEventArgs e)
         {
-            timer.Enabled = false;
+            eventTimer.Enabled = false;
             executePacketAndScheduleNext();
-            timer.Enabled = true;
+            eventTimer.Enabled = true;
+        }
+
+        private void OnHeartbeatTimedEvent(Object source, ElapsedEventArgs e)
+        {
+            heartbeatTime++;
+            parent.updateReplayProgress(heartbeatTime);
         }
     }
 

@@ -18,7 +18,7 @@ namespace CommandCenter.Model.Events
         public const string STOP = "STOP";
         public const string FILENAME = "events.sqlite";
 
-        SQLiteConnection connection;
+        public SQLiteConnection connection;
         SQLiteDataReader reader;
         Stopwatch stopwatch;
 
@@ -80,7 +80,7 @@ namespace CommandCenter.Model.Events
 
         public void startReplaying()
         {
-            SQLiteConnection connection = new SQLiteConnection("Data Source=" + FILENAME + "; Version=3;");
+            connection = new SQLiteConnection("Data Source=" + FILENAME + "; Version=3;");
             connection.Open();
             SQLiteCommand command = new SQLiteCommand("SELECT timeOffset, sender, packet FROM events", connection);
             reader = command.ExecuteReader();

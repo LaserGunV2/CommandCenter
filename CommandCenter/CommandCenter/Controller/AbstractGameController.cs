@@ -52,6 +52,7 @@ namespace CommandCenter.Model.Protocol
             try
             {
                 prajurits.Clear();
+                parent.refreshTable();
                 parent.mapDrawer.clearMap();
                 this.recorder.startRecording(gameId);
                 communication.listenAsync(this);
