@@ -26,6 +26,7 @@ namespace CommandCenter.Model
         public Senjata senjata { get; set; }
         public State state { get; set; }
         public Posture posture { get; set; }
+        public int accuracy { get; set; } //sementara
 
         public Pushpin assignedPushPin = null;
 
@@ -37,6 +38,9 @@ namespace CommandCenter.Model
             this.nomerInduk = nomerInduk;
             this.ipAddress = ipAddress;
             this.group = group;
+            this.posture = (Posture)0;
+            this.state = (State)0;
+            this.accuracy = 200; //sementara - test doang
             if (location == null)
             {
                 this.location = null;
