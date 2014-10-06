@@ -96,9 +96,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controller\AbstractGameController.cs" />
+    <Compile Include="Controller\ReplayGameController.cs" />
+    <Compile Include="Model\Event.cs" />
+    <Compile Include="Model\EventsRecorder.cs" />
     <Compile Include="Model\PrajuritDatabase.cs" />
     <Compile Include="Model\Protocol\JSONPacket.cs" />
-    <Compile Include="Controller\GameController.cs" />
+    <Compile Include="Controller\LiveGameController.cs" />
     <Compile Include="Model\Senjata.cs" />
     <Compile Include="View\MapDrawer.cs" />
     <Compile Include="View\UDPCommunication.cs" />
@@ -183,11 +187,9 @@
    -->
   <Target Name="AfterBuild">
     <MakeDir Directories="$(TargetDir)img" Condition="!Exists('$(TargetDir)img')" />
-
     <ItemGroup>
       <Templates Include="$(ProjectDir)img\*.png" />
     </ItemGroup>
-
     <Copy SourceFiles="@(Templates)" DestinationFolder="$(TargetDir)img\" />
   </Target>
 </Project>

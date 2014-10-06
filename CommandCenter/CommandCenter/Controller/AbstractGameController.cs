@@ -8,55 +8,81 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
+using CommandCenter.Model.Events;
 
 namespace CommandCenter.Model.Protocol
 {
-    class GameController
+    abstract class AbstractGameController
     {
-        enum State { IDLE, REGISTRATION, PLAYING };
+        public enum State { IDLE, REGISTRATION, EXERCISE };
 
-        MainWindow parent;
-        UDPCommunication communication;
-        List<Prajurit> prajurits;
-        Dictionary<int, Senjata> senjatas;
-        PrajuritDatabase prajuritDatabase;
-        State state;
-        String gameId = null;
+        protected MainWindow parent;
+        protected UDPCommunication communication;
+        protected State state;
+        protected String gameId = null;
+        protected List<Prajurit> prajurits;
+        protected Dictionary<int, Senjata> senjatas;
+        protected EventsRecorder recorder;
 
-        public GameController(MainWindow parent)
+        public AbstractGameController(MainWindow parent, UDPCommunication communication, EventsRecorder recorder)
         {
+            this.communication = communication;
             this.parent = parent;
-            this.communication = new UDPCommunication(parent);
             this.prajurits = parent.prajurits;
             this.senjatas = parent.senjatas;
-            this.prajuritDatabase = new PrajuritDatabase();
-            this.state = State.IDLE;
+            this.recorder = recorder;
         }
 
         public String startRegistration()
         {
             Random random = new Random();
-            gameId = "";
+            String gameId = "";
             for (int i = 0; i < 3; i++)
             {
                 gameId += random.Next(10);
             }
 
-            communication.listenAsync(this);
-            this.state = State.REGISTRATION;
+            return startRegistration(gameId);
+        }
+
+        public String startRegistration(string gameId)
+        {
+            this.gameId = gameId;
+
+            try
+            {
+                prajurits.Clear();
+                parent.refreshTable();
+                parent.mapDrawer.clearMap();
+                this.recorder.startRecording(gameId);
+                communication.listenAsync(this);
+                this.state = State.REGISTRATION;
+            }
+            catch (Exception e)
+            {
+                parent.writeLog(e.ToString());
+                return null;
+            }
             parent.writeLog("Pendaftaran dibuka, game id = " + gameId);
             return gameId;
         }
 
-        public void startPlaying()
+
+        public void startExercise()
         {
-            this.state = State.PLAYING;
+            this.state = State.EXERCISE;
             parent.mapDrawer.showEveryone();
+            recorder.record(null, EventsRecorder.START);
             parent.writeLog("Permainan dimulai");
         }
 
-        public void stopPlaying()
+        public void stopExercise()
         {
+            if (state == State.IDLE)
+            {
+                return;
+            }
+
             // Stop incoming communication
             communication.stopListenAsync();
             this.state = State.IDLE;
@@ -69,8 +95,7 @@ namespace CommandCenter.Model.Protocol
             }
 
             // Remove any references and members.
-            prajurits.Clear();
-            parent.mapDrawer.clearMap();
+            this.recorder.stopRecording();
             gameId = null;
 
             parent.refreshTable();
@@ -81,6 +106,7 @@ namespace CommandCenter.Model.Protocol
         {
             try
             {
+                this.recorder.record(address, inPacket.ToString());
                 String type = inPacket.getParameter("type");
                 if (type.Equals("register"))
                 {
@@ -143,7 +169,7 @@ namespace CommandCenter.Model.Protocol
                                 prajurit.senjata = newSenjata;
                                 senjatas.Add(newSenjata.idSenjata, newSenjata);
                                 parent.refreshTable();
-                            } else if (state == State.PLAYING) {
+                            } else if (state == State.EXERCISE) {
                                 // TODO check ammo
                                 communication.send(prajurit.ipAddress, new JSONPacket("killed"));
                             }
@@ -174,5 +200,6 @@ namespace CommandCenter.Model.Protocol
                 parent.writeLog("Unhandled exception: " + e);
             }
         }
+
     }
 }
