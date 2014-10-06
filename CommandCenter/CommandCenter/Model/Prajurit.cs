@@ -26,7 +26,7 @@ namespace CommandCenter.Model
         public Senjata senjata { get; set; }
         public State state { get; set; }
         public Posture posture { get; set; }
-        public int accuracy { get; set; } //sementara
+        public int accuracy { get; set; }
 
         public Pushpin assignedPushPin = null;
 

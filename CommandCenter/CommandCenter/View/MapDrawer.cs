@@ -132,15 +132,7 @@ namespace CommandCenter.View
             TextBlock textBlock = new TextBlock();
             textBlock.Text = prajurit.nomerUrut + "";
             textBlock.Tag = prajurit.nomerUrut;
-            /*Check Team A OR B*/
-            if (prajurit.group.Equals("A"))
-            {
-                textBlock.Background = new SolidColorBrush(Colors.Orange);
-            }
-            else
-            {
-                textBlock.Background = new SolidColorBrush(Colors.Aqua);
-            }
+            textBlock.Background = new SolidColorBrush(convertCharToColor(prajurit.group[0]));
             textBlock.Width = 30;
             textBlock.FontSize = 20;
             /*Position TextBlock*/
@@ -167,35 +159,35 @@ namespace CommandCenter.View
 
         public ControlTemplate setTemplateStatePosture(Prajurit prajurit) {
             ControlTemplate ct = new ControlTemplate();
-            if (prajurit.state+""=="NORMAL" && prajurit.posture+""=="STAND")
+            if (prajurit.state == Prajurit.State.NORMAL && prajurit.posture == Prajurit.Posture.STAND)
             {
                 ct = (ControlTemplate)Application.Current.Resources["pushpinStand"];
             }
-            else if (prajurit.state+""=="NORMAL" && prajurit.posture+""=="CRAWL")
+            else if (prajurit.state == Prajurit.State.NORMAL && prajurit.posture == Prajurit.Posture.CRAWL)
             {
                 ct = (ControlTemplate)Application.Current.Resources["pushpinCrawl"];
             }
-            else if (prajurit.state+""==("SHOOT") && prajurit.posture+""==("STAND"))
+            else if (prajurit.state == Prajurit.State.SHOOT && prajurit.posture == Prajurit.Posture.STAND)
             {
                 ct = (ControlTemplate)Application.Current.Resources["pushpinStandShoot"];
             }
-            else if (prajurit.state+""==("SHOOT") && prajurit.posture+""==("CRAWL"))
+            else if (prajurit.state == Prajurit.State.SHOOT && prajurit.posture == Prajurit.Posture.CRAWL)
             {
                 ct = (ControlTemplate)Application.Current.Resources["pushpinCrawlShoot"];
             }
-            else if (prajurit.state+""==("HIT") && prajurit.posture+""==("STAND"))
+            else if (prajurit.state == Prajurit.State.HIT && prajurit.posture == Prajurit.Posture.STAND)
             {
                 ct = (ControlTemplate)Application.Current.Resources["pushpinStandHit"];
             }
-            else if (prajurit.state+""==("HIT") && prajurit.posture+""==("CRAWL"))
+            else if (prajurit.state == Prajurit.State.HIT && prajurit.posture == Prajurit.Posture.CRAWL)
             {
                 ct = (ControlTemplate)Application.Current.Resources["pushpinCrawlHit"];
             }
-            else if (prajurit.state+""==("DEAD") && prajurit.posture+""==("STAND"))
+            else if (prajurit.state == Prajurit.State.DEAD && prajurit.posture == Prajurit.Posture.STAND)
             {
                 ct = (ControlTemplate)Application.Current.Resources["pushpinStandDead"];
             }
-            else if (prajurit.state+""==("DEAD") && prajurit.posture+""==("CRAWL"))
+            else if (prajurit.state == Prajurit.State.DEAD && prajurit.posture == Prajurit.Posture.CRAWL)
             {
                 ct = (ControlTemplate)Application.Current.Resources["pushpinCrawlDead"];
             }
@@ -221,6 +213,12 @@ namespace CommandCenter.View
         public void clearMap()
         {
             map.Children.Clear();
+        }
+
+        private Color convertCharToColor(char c)
+        {
+            int c2 = (int)c % 8;
+            return Color.FromRgb((byte)(127 + (c2 / 4) * 128), (byte)(127 + ((c2 / 2) % 2) * 128), (byte)(127 + (c2 % 2) * 128));
         }
     }
 }
