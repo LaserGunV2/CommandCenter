@@ -23,6 +23,7 @@ namespace CommandCenter.Model.Protocol
         protected List<Prajurit> prajurits;
         protected Dictionary<int, Senjata> senjatas;
         protected EventsRecorder recorder;
+        protected PrajuritDatabase prajuritDatabase;
 
         public AbstractGameController(MainWindow parent, UDPCommunication communication, EventsRecorder recorder)
         {
@@ -31,6 +32,7 @@ namespace CommandCenter.Model.Protocol
             this.prajurits = parent.prajurits;
             this.senjatas = parent.senjatas;
             this.recorder = recorder;
+            this.prajuritDatabase = parent.prajuritDatabase;
         }
 
         public String startRegistration()
@@ -119,6 +121,7 @@ namespace CommandCenter.Model.Protocol
                                 // Register
                                 int nomerUrut = prajurits.Count + 1;
                                 Prajurit newPrajurit = new Prajurit(nomerUrut, inPacket.getParameter("nomerInduk"), address, "A", null);
+                                prajuritDatabase.retrieveNameFromDatabase(newPrajurit);
                                 prajurits.Add(newPrajurit);
                                 parent.refreshTable();
 

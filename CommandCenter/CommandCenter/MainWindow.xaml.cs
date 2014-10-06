@@ -37,14 +37,15 @@ namespace CommandCenter
         public List<Prajurit> prajurits;
         public Dictionary<int, Senjata> senjatas;
         public EventsRecorder recorder;
-
         private LiveGameController liveGameController;
         private ReplayGameController replayController;
+        public PrajuritDatabase prajuritDatabase;
  
         public MainWindow()
         {
             InitializeComponent();
-            
+
+            prajuritDatabase = new PrajuritDatabase();
             prajurits = new List<Prajurit>();
             pesertaDataGrid.DataContext = prajurits;
             senjatas = new Dictionary<int, Senjata>();
@@ -77,6 +78,7 @@ namespace CommandCenter
 
         private void mulaiButton_Click(object sender, RoutedEventArgs e)
         {
+            prajuritDatabase.saveNamesToDatabase(prajurits);
             pendaftaranButton.IsEnabled = false;
             mulaiButton.IsEnabled = false;
             akhiriButton.IsEnabled = true;
@@ -86,6 +88,7 @@ namespace CommandCenter
 
         private void akhiriButton_Click(object sender, RoutedEventArgs e)
         {
+            prajuritDatabase.saveNamesToDatabase(prajurits);
             idSimulationLabel.Content = "###";
             liveGameController.stopExercise();
 
@@ -112,6 +115,8 @@ namespace CommandCenter
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             liveGameController.stopExercise();
+            replayController.stopPlayback();
+            prajuritDatabase.closeConnection();
         }
 
         public void refreshTable()

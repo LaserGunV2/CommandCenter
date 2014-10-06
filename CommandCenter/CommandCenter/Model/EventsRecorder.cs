@@ -104,7 +104,10 @@ namespace CommandCenter.Model.Events
 
         public void stopReplaying()
         {
-            connection.Close();
+            if (connection != null)
+            {
+                connection.Close();
+            }
         }
     }
 }

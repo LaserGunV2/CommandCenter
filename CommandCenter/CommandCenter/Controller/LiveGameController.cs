@@ -14,12 +14,11 @@ namespace CommandCenter.Model.Protocol
 {
     class LiveGameController : AbstractGameController
     {
-        PrajuritDatabase prajuritDatabase;
 
         public LiveGameController(MainWindow parent)
             : base(parent, new UDPCommunication(parent), parent.recorder)
         {
-            this.prajuritDatabase = new PrajuritDatabase();
+            // void
         }
     }
 }
