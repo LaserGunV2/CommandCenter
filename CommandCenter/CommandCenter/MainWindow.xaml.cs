@@ -9,6 +9,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -40,7 +41,9 @@ namespace CommandCenter
         private LiveGameController liveGameController;
         private ReplayGameController replayController;
         public PrajuritDatabase prajuritDatabase;
- 
+
+        public double playSpeed = 1;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -232,7 +235,18 @@ namespace CommandCenter
                 saveButton.IsEnabled = !isReplaying;
                 playButton.IsEnabled = !isReplaying;
                 stopButton.IsEnabled = isReplaying;
+                playSpeedComboBox.IsEnabled = !isReplaying;
             }));     
+        }
+
+        private void playSpeedComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            string selectedValue = (e.AddedItems[0] as ComboBoxItem).Content as string;
+            if (selectedValue.Length != 0)
+            {
+                CultureInfo culture = new CultureInfo("en-US");
+                playSpeed = Double.Parse(selectedValue.Substring(0, selectedValue.Length - 1), culture.NumberFormat);
+            }
         }
     }
 }

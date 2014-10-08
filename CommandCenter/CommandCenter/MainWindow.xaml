@@ -44,6 +44,13 @@
                     <Label x:Name="replayLengthLabel" Content="0:00.000" Grid.Column="1" HorizontalAlignment="Right" HorizontalContentAlignment="Right"  Margin="0,10,10,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="150"/>
                     <Button x:Name="playButton" IsEnabled="False" Content="Play" HorizontalAlignment="Left" Margin="10,63,0,0" VerticalAlignment="Top" Width="75" Click="playButton_Click"/>
                     <Button x:Name="stopButton" IsEnabled="False" Content="Stop" HorizontalAlignment="Left" Margin="90,63,0,0" VerticalAlignment="Top" Width="75" Click="stopButton_Click" Grid.ColumnSpan="2"/>
+                    <ComboBox x:Name="playSpeedComboBox" Grid.Column="1" HorizontalAlignment="Left" Margin="68,62,0,0" VerticalAlignment="Top" Width="70" SelectedIndex="2" SelectionChanged="playSpeedComboBox_SelectionChanged">
+                        <ComboBoxItem Content="0.25x"/>
+                        <ComboBoxItem Content="0.5x"/>
+                        <ComboBoxItem Content="1x"/>
+                        <ComboBoxItem Content="2x"/>
+                        <ComboBoxItem Content="4x"/>
+                    </ComboBox>
                 </Grid>
             </TabItem>
         </TabControl>

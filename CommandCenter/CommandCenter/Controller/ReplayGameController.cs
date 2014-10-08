@@ -27,7 +27,7 @@ namespace CommandCenter.Controller
             stopwatch = new Stopwatch();
             eventTimer = new Timer();
             eventTimer.Elapsed += OnEventTimedEvent;
-            heartbeatTimer = new Timer(1000);
+            heartbeatTimer = new Timer();
             heartbeatTimer.Elapsed += OnHeartbeatTimedEvent;
             player = new EventsRecorder();
         }
@@ -40,6 +40,7 @@ namespace CommandCenter.Controller
             scheduledEvent = null;
             executePacketAndScheduleNext();
             eventTimer.Enabled = true;
+            heartbeatTimer.Interval = 1000 / parent.playSpeed;
             heartbeatTimer.Enabled = true;
             parent.setReplayingEnabled(true);
         }
@@ -57,9 +58,10 @@ namespace CommandCenter.Controller
 
         private void executePacketAndScheduleNext()
         {
+            eventTimer.Enabled = false;
             if (scheduledEvent != null)
             {
-                parent.updateReplayProgress(1e-3 * stopwatch.ElapsedMilliseconds);
+                parent.updateReplayProgress(1e-3 * (stopwatch.ElapsedMilliseconds * parent.playSpeed));
                 if (scheduledEvent.packet.StartsWith(EventsRecorder.REGISTER))
                 {
                     startRegistration(scheduledEvent.packet.Substring(scheduledEvent.packet.Length - 3));
@@ -81,9 +83,10 @@ namespace CommandCenter.Controller
             if (nextEvent != null)
             {
                 scheduledEvent = nextEvent;
-                long currentTime = stopwatch.ElapsedMilliseconds;
-                long interval = nextEvent.timeOffset - currentTime;
+                long currentTime = (long)(stopwatch.ElapsedMilliseconds * parent.playSpeed);
+                long interval = (long)((nextEvent.timeOffset - currentTime) / parent.playSpeed);
                 eventTimer.Interval = interval <= 0 ? 1 : interval;
+                eventTimer.Enabled = true;
             }
             else
             {
@@ -93,14 +96,12 @@ namespace CommandCenter.Controller
 
         private void OnEventTimedEvent(Object source, ElapsedEventArgs e)
         {
-            eventTimer.Enabled = false;
             executePacketAndScheduleNext();
-            eventTimer.Enabled = true;
         }
 
         private void OnHeartbeatTimedEvent(Object source, ElapsedEventArgs e)
         {
-            parent.updateReplayProgress(1e-3 * stopwatch.ElapsedMilliseconds);
+            parent.updateReplayProgress(1e-3 * (stopwatch.ElapsedMilliseconds * parent.playSpeed));
         }
     }
 
