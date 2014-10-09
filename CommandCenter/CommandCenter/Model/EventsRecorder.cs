@@ -16,6 +16,8 @@ namespace CommandCenter.Model.Events
         public const string REGISTER = "REGISTER";
         public const string START = "START";
         public const string STOP = "STOP";
+        public const string PROP_GAMEID = "gameId";
+        public const string PROP_AMMO = "ammo";
         public const string FILENAME = "events.sqlite";
 
         public SQLiteConnection connection;
@@ -26,7 +28,7 @@ namespace CommandCenter.Model.Events
         {
         }
 
-        public virtual void startRecording(string gameId)
+        public virtual void startRecording()
         {
             if (File.Exists(FILENAME))
             {
@@ -36,12 +38,14 @@ namespace CommandCenter.Model.Events
             connection = new SQLiteConnection("Data Source=" + FILENAME + "; Version=3;");
             SQLiteConnection.CreateFile(FILENAME);
             connection.Open();
-            SQLiteCommand command = new SQLiteCommand("CREATE TABLE EVENTS (timeOffset INTEGER, sender TEXT, packet TEXT)", connection);
+            SQLiteCommand command = new SQLiteCommand("CREATE TABLE events (timeOffset INTEGER, sender TEXT, packet TEXT)", connection);
+            command.ExecuteNonQuery();
+            command = new SQLiteCommand("CREATE TABLE properties (name TEXT PRIMARY KEY UNIQUE, value TEXT)", connection);
             command.ExecuteNonQuery();
 
             stopwatch = new Stopwatch();
             stopwatch.Start();
-            record(null, REGISTER + "/" + gameId);
+            record(null, REGISTER);
         }
 
         public virtual void record(IPAddress sender, string eventText)
@@ -66,6 +70,21 @@ namespace CommandCenter.Model.Events
                 connection.Close();
                 connection = null;
             }
+        }
+
+        public virtual void setProperty(string name, string value)
+        {
+            SQLiteCommand command = new SQLiteCommand("INSERT OR REPLACE INTO properties(name, value) VALUES(@NAME, @VALUE)", connection);
+            command.Parameters.AddWithValue("@NAME", name);
+            command.Parameters.AddWithValue("@VALUE", value);
+            command.ExecuteNonQuery();
+        }
+
+        public string getProperty(string name)
+        {
+            SQLiteCommand command = new SQLiteCommand("SELECT value FROM properties WHERE name=@NAME", connection);
+            command.Parameters.AddWithValue("@NAME", name);
+            return (string)command.ExecuteScalar();
         }
 
         public Int64 getRecordingLength()

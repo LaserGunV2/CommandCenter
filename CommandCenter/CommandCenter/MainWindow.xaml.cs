@@ -63,7 +63,19 @@ namespace CommandCenter
 
         private void pendaftaranButton_Click(object sender, RoutedEventArgs e)
         {
-            String result = liveGameController.startRegistration();
+            int initialAmmo;
+            // Validate potentially erroneus user inputs
+            try
+            {
+                initialAmmo = Int32.Parse(ammoTextBox.Text);
+            }
+            catch (FormatException)
+            {
+                MessageBox.Show("Isi jumlah peluru dengan angka!", "Kesalahan masukan");
+                return;
+            }
+
+            String result = liveGameController.startRegistration(initialAmmo);
             if (result != null)
             {
                 pendaftaranButton.IsEnabled = false;
@@ -72,6 +84,7 @@ namespace CommandCenter
                 loadButton.IsEnabled = false;
                 saveButton.IsEnabled = false;
                 playButton.IsEnabled = false;
+                ammoTextBox.IsEnabled = false;
                 replayLengthLabel.Content = "0:00.000";
 
                 // Start controller and start listening
@@ -100,6 +113,7 @@ namespace CommandCenter
             akhiriButton.IsEnabled = false;
             loadButton.IsEnabled = true;
             saveButton.IsEnabled = true;
+            ammoTextBox.IsEnabled = true;
             updateReplayLength();
             playButton.IsEnabled = true;
         }
@@ -231,6 +245,7 @@ namespace CommandCenter
                 pendaftaranButton.IsEnabled = !isReplaying;
                 mulaiButton.IsEnabled = !isReplaying;
                 akhiriButton.IsEnabled = !isReplaying;
+                ammoTextBox.IsEnabled = !isReplaying;
                 loadButton.IsEnabled = !isReplaying;
                 saveButton.IsEnabled = !isReplaying;
                 playButton.IsEnabled = !isReplaying;

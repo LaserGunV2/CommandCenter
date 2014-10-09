@@ -24,6 +24,7 @@ namespace CommandCenter.Model.Protocol
         protected Dictionary<int, Senjata> senjatas;
         protected EventsRecorder recorder;
         protected PrajuritDatabase prajuritDatabase;
+        protected int initialAmmo;
 
         public AbstractGameController(MainWindow parent, UDPCommunication communication, EventsRecorder recorder)
         {
@@ -35,7 +36,7 @@ namespace CommandCenter.Model.Protocol
             this.prajuritDatabase = parent.prajuritDatabase;
         }
 
-        public String startRegistration()
+        public String startRegistration(int initialAmmo)
         {
             Random random = new Random();
             String gameId = "";
@@ -44,19 +45,23 @@ namespace CommandCenter.Model.Protocol
                 gameId += random.Next(10);
             }
 
-            return startRegistration(gameId);
+            return startRegistration(gameId, initialAmmo);
         }
 
-        public String startRegistration(string gameId)
+        public String startRegistration(string gameId, int initialAmmo)
         {
             this.gameId = gameId;
+            this.initialAmmo = initialAmmo;
 
             try
             {
                 prajurits.Clear();
+                senjatas.Clear();
                 parent.refreshTable();
                 parent.mapDrawer.clearMap();
-                this.recorder.startRecording(gameId);
+                this.recorder.startRecording();
+                this.recorder.setProperty(EventsRecorder.PROP_GAMEID, gameId);
+                this.recorder.setProperty(EventsRecorder.PROP_AMMO, "" + initialAmmo);
                 communication.listenAsync(this);
                 this.state = State.REGISTRATION;
             }
@@ -165,18 +170,22 @@ namespace CommandCenter.Model.Protocol
                         }
                         if (inPacket.getParameter("action").Equals("hit"))
                         {
-                            prajurit.state = Prajurit.State.HIT;
+                            int idSenjata = Int32.Parse(inPacket.getParameter("idsenjata"));
+                            int counter = Int32.Parse(inPacket.getParameter("counter"));
                             if (state == State.REGISTRATION) {
                                 // Registration phase, senjata assign to prajurit.
-                                Senjata newSenjata = new Senjata(Int32.Parse(inPacket.getParameter("idsenjata")), prajurit, Int32.Parse(inPacket.getParameter("counter")));
+                                Senjata newSenjata = new Senjata(idSenjata, prajurit, counter, this.initialAmmo);
                                 prajurit.senjata = newSenjata;
                                 senjatas.Add(newSenjata.idSenjata, newSenjata);
-                                parent.refreshTable();
                             } else if (state == State.EXERCISE) {
-                                // TODO check ammo
-                                communication.send(prajurit.ipAddress, new JSONPacket("killed"));
+                                Senjata senjataPenembak = senjatas[idSenjata];
+                                senjataPenembak.currentCounter = counter;
+                                if (senjataPenembak.getRemainingAmmo() > 0) {
+                                    prajurit.state = Prajurit.State.HIT;
+                                    communication.send(prajurit.ipAddress, new JSONPacket("killed"));
+                                }
                             }
-                            
+                            parent.refreshTable();                            
                         } else if (inPacket.getParameter("action").Equals("shoot"))
                         {
                             prajurit.state = Prajurit.State.SHOOT;

@@ -22,7 +22,7 @@ namespace CommandCenter.Controller
         Event scheduledEvent;
 
         public ReplayGameController(MainWindow parent)
-            : base(parent, new MyUDPCommunication(parent), new MyEventsRecorder())
+            : base(parent, new SilentUDPCommunication(parent), new SilentEventsRecorder())
         {
             stopwatch = new Stopwatch();
             eventTimer = new Timer();
@@ -62,9 +62,9 @@ namespace CommandCenter.Controller
             if (scheduledEvent != null)
             {
                 parent.updateReplayProgress(1e-3 * (stopwatch.ElapsedMilliseconds * parent.playSpeed));
-                if (scheduledEvent.packet.StartsWith(EventsRecorder.REGISTER))
+                if (scheduledEvent.packet.Equals(EventsRecorder.REGISTER))
                 {
-                    startRegistration(scheduledEvent.packet.Substring(scheduledEvent.packet.Length - 3));
+                    startRegistration(player.getProperty(EventsRecorder.PROP_GAMEID), Int32.Parse(player.getProperty(EventsRecorder.PROP_AMMO)));
                 }
                 else if (scheduledEvent.packet.Equals(EventsRecorder.START))
                 {
@@ -105,11 +105,11 @@ namespace CommandCenter.Controller
         }
     }
 
-    class MyUDPCommunication : UDPCommunication
+    class SilentUDPCommunication : UDPCommunication
     {
         public MainWindow parent;
 
-        public MyUDPCommunication(MainWindow parent) : base(parent)
+        public SilentUDPCommunication(MainWindow parent) : base(parent)
         {
             this.parent = parent;
         }
@@ -126,21 +126,26 @@ namespace CommandCenter.Controller
         }
     }
 
-    class MyEventsRecorder : EventsRecorder
+    class SilentEventsRecorder : EventsRecorder
     {
-        public override void startRecording(string gameId)
+        public override void startRecording()
         {
-            // void
+            // silenced
         }
 
         public override void record(IPAddress sender, string eventText)
         {
-            // void
+            // silenced
         }
 
         public override void stopRecording()
         {
-            // void 
+            // silenced
+        }
+
+        public override void setProperty(string name, string value)
+        {
+            // silenced
         }
     }
 }

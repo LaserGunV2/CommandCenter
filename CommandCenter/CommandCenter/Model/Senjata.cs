@@ -10,18 +10,25 @@ namespace CommandCenter.Model
     {
         public int idSenjata;
         public Prajurit owner;
-        public int counter;
+        public int initialCounter, currentCounter, initialAmmo;
 
-        public Senjata(int idSenjata, Prajurit owner, int counter)
+        public Senjata(int idSenjata, Prajurit owner, int counter, int initialAmmo)
         {
             this.idSenjata = idSenjata;
             this.owner = owner;
-            this.counter = counter;
+            this.initialCounter = counter;
+            this.currentCounter = counter;
+            this.initialAmmo = initialAmmo;
+        }
+
+        public int getRemainingAmmo()
+        {
+            return (initialCounter + initialAmmo - currentCounter);
         }
 
         override public String ToString()
         {
-            return "" + idSenjata;
+            return "#" + idSenjata + " / " + getRemainingAmmo();
         }
     }
 }
