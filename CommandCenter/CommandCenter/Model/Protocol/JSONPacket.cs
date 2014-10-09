@@ -29,9 +29,9 @@ namespace CommandCenter.Model.Protocol
             return packet;
         }
 
-        public void addParameter(string name, string value)
+        public void setParameter(string name, string value)
         {
-            parameters.Add(name, value);
+            parameters[name] = value;
         }
 
         public string getParameter(string name)

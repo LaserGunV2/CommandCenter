@@ -127,7 +127,7 @@ namespace CommandCenter.Model.Protocol
 
                                 // Confirm
                                 JSONPacket outPacket = new JSONPacket("confirm");
-                                outPacket.addParameter("androidId", "" + (nomerUrut++));
+                                outPacket.setParameter("androidId", "" + (nomerUrut++));
                                 communication.send(address, outPacket);
                             }
                             else
@@ -191,7 +191,9 @@ namespace CommandCenter.Model.Protocol
                 }
                 else if (type.Equals("ping"))
                 {
-                    communication.send(address, new JSONPacket("pong"));
+                    // Reply with pong, and let the rest of parameters be the same.
+                    inPacket.setParameter("type", "pong");
+                    communication.send(address, inPacket);
                 }
                 else
                 {
