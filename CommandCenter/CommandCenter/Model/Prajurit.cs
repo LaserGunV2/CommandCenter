@@ -52,7 +52,7 @@ namespace CommandCenter.Model
             lastUpdate = DateTime.Now;
         }
 
-        public static int findPrajuritByNomerInduk(List<Prajurit> prajurits, String nomerInduk)
+        public static int findPrajuritIndexByNomerInduk(List<Prajurit> prajurits, String nomerInduk)
         {
             for (int i = 0; i < prajurits.Count; i++)
             {

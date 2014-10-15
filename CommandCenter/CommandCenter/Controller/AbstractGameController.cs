@@ -121,24 +121,23 @@ namespace CommandCenter.Model.Protocol
                     {
                         if (state == State.REGISTRATION)
                         {
-                            if (Prajurit.findPrajuritByNomerInduk(prajurits, inPacket.getParameter("nomerInduk")) == -1)
+                            int nomerUrut = Prajurit.findPrajuritIndexByNomerInduk(prajurits, inPacket.getParameter("nomerInduk"));
+                            if (nomerUrut == -1)
                             {
                                 // Register
-                                int nomerUrut = prajurits.Count + 1;
+                                nomerUrut = prajurits.Count + 1;
                                 Prajurit newPrajurit = new Prajurit(nomerUrut, inPacket.getParameter("nomerInduk"), address, "A", null);
                                 prajuritDatabase.retrieveNameFromDatabase(newPrajurit);
                                 prajurits.Add(newPrajurit);
                                 parent.refreshTable();
+                            } else {
+                                nomerUrut = nomerUrut + 1;
+                            }
 
-                                // Confirm
-                                JSONPacket outPacket = new JSONPacket("confirm");
-                                outPacket.setParameter("androidId", "" + (nomerUrut++));
-                                communication.send(address, outPacket);
-                            }
-                            else
-                            {
-                                parent.writeLog(inPacket.getParameter("nomerInduk") + " has already registered, hence ignored.");
-                            }
+                            // Confirm
+                            JSONPacket outPacket = new JSONPacket("confirm");
+                            outPacket.setParameter("androidId", "" + nomerUrut);
+                            communication.send(address, outPacket);
                         }
                         else
                         {
