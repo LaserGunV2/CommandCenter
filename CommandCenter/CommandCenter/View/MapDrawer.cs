@@ -37,19 +37,19 @@ namespace CommandCenter.View
                     if (prajurit.assignedPushPin == null && prajurit.location != null)
                     {
                         prajurit.assignedPushPin = new Pushpin();
-                        prajurit.assignedText = setTextBlockToMap(prajurit);
-                        prajurit.assignedAccuracy = getAccuracy(prajurit);
                         prajurit.assignedPushPin.Template = setTemplateStatePosture(prajurit);
                         prajurit.assignedPushPin.Location = prajurit.location;
                         ToolTipService.SetToolTip(prajurit.assignedPushPin, prajurit.nama);
                         /* start add textblock to layer */
-                        MapLayer.SetPosition(prajurit.assignedText, prajurit.location);
-                        map.Children.Add(prajurit.assignedText);
+                        TextBlock tx = setTextBlockToMap(prajurit);
+                        MapLayer.SetPosition(tx, prajurit.location);
+                        map.Children.Add(tx);
                         /* end add textblock to layer */
-                        /* start add accuracy to layer */
-                        MapLayer.SetPosition(prajurit.assignedAccuracy, prajurit.location);
-                        map.Children.Add(prajurit.assignedAccuracy);
-                        /* end add accuracy to layer */
+                        /* start add ellipse accurcy to layer */
+                        Ellipse acc = getAccuracy(prajurit);
+                        MapLayer.SetPosition(acc, prajurit.location);
+                        map.Children.Add(acc);
+                        /* end add ellipse accurcy to layer */
                         map.Children.Add(prajurit.assignedPushPin);
                     }
                     // Update and draw the push pin if available
@@ -75,19 +75,16 @@ namespace CommandCenter.View
                 if (prajurit.assignedPushPin == null && prajurit.location != null)
                 {
                     prajurit.assignedPushPin = new Pushpin();
-                    prajurit.assignedText = setTextBlockToMap(prajurit);
-                    prajurit.assignedAccuracy = getAccuracy(prajurit);
+ 
+                    //prajurit.assignedPushPin.Content = standingPrajuritIcon;
                     prajurit.assignedPushPin.Template = setTemplateStatePosture(prajurit);
                     prajurit.assignedPushPin.Location = prajurit.location;
                     ToolTipService.SetToolTip(prajurit.assignedPushPin, prajurit.nama);
                     /* start add textblock to layer */
-                    MapLayer.SetPosition(prajurit.assignedText, prajurit.location);
-                    map.Children.Add(prajurit.assignedText);
+                    TextBlock tx = setTextBlockToMap(prajurit);
+                    MapLayer.SetPosition(tx, prajurit.location);
+                    map.Children.Add(tx);
                     /* end add textblock to layer */
-                    /* start add accuracy to layer */
-                    MapLayer.SetPosition(prajurit.assignedAccuracy, prajurit.location);
-                    map.Children.Add(prajurit.assignedAccuracy);
-                    /* end add accuracy to layer */
                     map.Children.Add(prajurit.assignedPushPin);
                 }
                 // Update and draw the push pin if available
@@ -97,12 +94,16 @@ namespace CommandCenter.View
                     prajurit.assignedPushPin.Location = new Location(prajurit.location);
                     prajurit.assignedPushPin.Heading = (180 + prajurit.heading) % 360;
                     prajurit.assignedPushPin.Template = setTemplateStatePosture(prajurit);
-                    /* start update textblock and accuracy */
-                    setPositionText(prajurit);
-                    MapLayer.SetPosition(prajurit.assignedText, prajurit.location);
-                    setAccuracy(prajurit);
-                    MapLayer.SetPosition(prajurit.assignedAccuracy, prajurit.location);
-                    /* end update textblock and accuracy */
+                    /* start add textblock to layer */
+                    var tBlockRemove = map.Children.OfType<TextBlock>().Where(p => ((TextBlock)p).Tag.Equals(prajurit.nomerUrut)).ToList();
+                    foreach (var tb in tBlockRemove)
+                    {
+                        map.Children.Remove(tb);
+                    }
+                    TextBlock tx = setTextBlockToMap(prajurit);
+                    MapLayer.SetPosition(tx, prajurit.location);
+                    map.Children.Add(tx);
+                    /* end add textblock to layer */
                 }
                 // Refresh map, if map is ready.
                 if (map.ActualHeight > 0 && map.ActualWidth > 0)
@@ -119,24 +120,12 @@ namespace CommandCenter.View
             ellipse.Stroke = Brushes.Red; ;
             ellipse.Height = prajurit.accuracy;
             ellipse.Width = prajurit.accuracy;
-            double left = - (prajurit.accuracy / 2);
-            double top = - (prajurit.accuracy / 2);
+            double left = prajurit.location.Latitude - (prajurit.accuracy / 2);
+            double top = prajurit.location.Longitude - (prajurit.accuracy*3/4);
             ellipse.Margin = new Thickness(left, top, 0, 0);
             return ellipse;
         }
 
-        // update accuracy in map
-        public void setAccuracy(Prajurit prajurit)
-        {
-            double goundResolution = (Math.Cos(prajurit.location.Latitude * Math.PI / 180) * 2 * Math.PI * 6378137)/(256*2*0.0254); // 96 ==DPI
-            prajurit.assignedAccuracy.Height = goundResolution/prajurit.accuracy/96; //Masih nga pas 
-            prajurit.assignedAccuracy.Width =  goundResolution/prajurit.accuracy/96; // /96 karena inch to pixel
-            double left = -(((int)prajurit.assignedAccuracy.Width) / 2); //Masih ada bug nga ngegeser
-            double top = -(((int)prajurit.assignedAccuracy.Height) / 2);
-            prajurit.assignedAccuracy.Margin = new Thickness(left, top, 0, 0);
-        }
-
-        //Start initial textBlock
         public TextBlock setTextBlockToMap(Prajurit prajurit)
         {
             /*Start add text to soldier*/
@@ -147,20 +136,19 @@ namespace CommandCenter.View
             textBlock.Width = 30;
             textBlock.FontSize = 20;
             /*Position TextBlock*/
-            int quadrant = (int)prajurit.heading / 90;
-            if (prajurit.heading == 0)
+            if (prajurit.heading >= 0 && prajurit.heading <= 90)
             {
-                textBlock.Margin = new Thickness(-120, 0, 0, 0); //Menghadap kanan atas
+                textBlock.Margin = new Thickness(-120, 10, 0, 0); //Menghadap kanan atas
             }
-            else if (prajurit.heading == 1)
+            else if (prajurit.heading > 90 && prajurit.heading <= 180)
             {
                 textBlock.Margin = new Thickness(-120, -40, 0, 0); //Menghadap kanan bawah
             }
-            else if (prajurit.heading == 2)
+            else if (prajurit.heading > 180 && prajurit.heading <= 270)
             {
                 textBlock.Margin = new Thickness(50, -20, 0, 0); //Menghadap kiri bawah
             }
-            else if (prajurit.heading == 3)
+            else if (prajurit.heading > 270 && prajurit.heading <= 360)
             {
                 textBlock.Margin = new Thickness(5, 50, 0, 0); //Menghadap kiri atas
             }
@@ -169,68 +157,39 @@ namespace CommandCenter.View
             return textBlock;
         }
 
-        //update position textBlock
-        public void setPositionText(Prajurit p)
-        {
-            int quadrant = (int)p.heading / 90;
-            if (p.heading == 0)
-            {
-                p.assignedText.Margin = new Thickness(-120, 0, 0, 0); //Menghadap kanan atas
-            }
-            else if (p.heading == 1)
-            {
-                p.assignedText.Margin = new Thickness(-120, -40, 0, 0); //Menghadap kanan bawah
-            }
-            else if (p.heading == 2)
-            {
-                p.assignedText.Margin = new Thickness(50, -20, 0, 0); //Menghadap kiri bawah
-            }
-            else if (p.heading == 3)
-            {
-                p.assignedText.Margin = new Thickness(5, 50, 0, 0); //Menghadap kiri atas
-            }
-        }
-
         public ControlTemplate setTemplateStatePosture(Prajurit prajurit) {
             ControlTemplate ct = new ControlTemplate();
-            switch (prajurit.posture)
-            { 
-                case Prajurit.Posture.STAND:
-                    if (prajurit.state == Prajurit.State.NORMAL)
-                    {
-                        ct = (ControlTemplate)Application.Current.Resources["pushpinStand"];
-                    }
-                    else if (prajurit.state == Prajurit.State.SHOOT)
-                    {
-                        ct = (ControlTemplate)Application.Current.Resources["pushpinStandShoot"];
-                    }
-                    else if (prajurit.state == Prajurit.State.HIT) 
-                    {
-                        ct = (ControlTemplate)Application.Current.Resources["pushpinStandHit"];
-                    }
-                    else if (prajurit.state == Prajurit.State.DEAD)
-                    {
-                        ct = (ControlTemplate)Application.Current.Resources["pushpinStandDead"];
-                    }
-                    break;
-                case Prajurit.Posture.CRAWL:
-                    if (prajurit.state == Prajurit.State.NORMAL)
-                    {
-                        ct = (ControlTemplate)Application.Current.Resources["pushpinCrawl"];
-                    }
-                    else if (prajurit.state == Prajurit.State.SHOOT)
-                    {
-                        ct = (ControlTemplate)Application.Current.Resources["pushpinCrawlShoot"];
-                    }
-                    else if (prajurit.state == Prajurit.State.HIT) 
-                    {
-                        ct = (ControlTemplate)Application.Current.Resources["pushpinCrawlHit"];
-                    }
-                    else if (prajurit.state == Prajurit.State.DEAD)
-                    {
-                        ct = (ControlTemplate)Application.Current.Resources["pushpinCrawlDead"];
-                    }
-                    break;
+            if (prajurit.state == Prajurit.State.NORMAL && prajurit.posture == Prajurit.Posture.STAND)
+            {
+                ct = (ControlTemplate)Application.Current.Resources["pushpinStand"];
+            }
+            else if (prajurit.state == Prajurit.State.NORMAL && prajurit.posture == Prajurit.Posture.CRAWL)
+            {
+                ct = (ControlTemplate)Application.Current.Resources["pushpinCrawl"];
+            }
+            else if (prajurit.state == Prajurit.State.SHOOT && prajurit.posture == Prajurit.Posture.STAND)
+            {
+                ct = (ControlTemplate)Application.Current.Resources["pushpinStandShoot"];
+            }
+            else if (prajurit.state == Prajurit.State.SHOOT && prajurit.posture == Prajurit.Posture.CRAWL)
+            {
+                ct = (ControlTemplate)Application.Current.Resources["pushpinCrawlShoot"];
+            }
+            else if (prajurit.state == Prajurit.State.HIT && prajurit.posture == Prajurit.Posture.STAND)
+            {
+                ct = (ControlTemplate)Application.Current.Resources["pushpinStandHit"];
+            }
+            else if (prajurit.state == Prajurit.State.HIT && prajurit.posture == Prajurit.Posture.CRAWL)
+            {
+                ct = (ControlTemplate)Application.Current.Resources["pushpinCrawlHit"];
+            }
+            else if (prajurit.state == Prajurit.State.DEAD && prajurit.posture == Prajurit.Posture.STAND)
+            {
+                ct = (ControlTemplate)Application.Current.Resources["pushpinStandDead"];
+            }
+            else if (prajurit.state == Prajurit.State.DEAD && prajurit.posture == Prajurit.Posture.CRAWL)
+            {
+                ct = (ControlTemplate)Application.Current.Resources["pushpinCrawlDead"];
             }
 
             return ct;
