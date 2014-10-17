@@ -6,6 +6,10 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace CommandCenter.Model
 {
@@ -29,6 +33,8 @@ namespace CommandCenter.Model
         public int accuracy { get; set; }
 
         public Pushpin assignedPushPin = null;
+        public TextBlock assignedText = null;
+        public Ellipse assignedAccuracy = null;
 
         public static List<string> GROUPS_AVAILABLE = new List<string>() { "A", "B" };
 
