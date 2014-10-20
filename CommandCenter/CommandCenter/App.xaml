@@ -6,14 +6,14 @@
     <Application.Resources>
         <!--Start custom resource stand soldier-->
         <ControlTemplate x:Key="imagePushpinS" TargetType="m:Pushpin">
-            <Grid x:Name="ContentGrid" Width="32" Height="32" Margin="0">
-                <Image Source="img/stand.png" Stretch="Fill"/>
+            <Grid x:Name="ContentGrid" Width="32" Height="32" >
+                <Image Source="img/stand.png" Stretch="Fill" />
             </Grid>
         </ControlTemplate>
         <ControlTemplate x:Key="pushpinStand">
-            <m:Pushpin Background="Red" Template="{StaticResource imagePushpinS}" >
+            <m:Pushpin Background="Red" PositionOrigin="Center" Template="{StaticResource imagePushpinS}" >
                 <m:Pushpin.RenderTransform>
-                    <ScaleTransform ScaleX="2" ScaleY="2" CenterX="17" CenterY="35"></ScaleTransform>
+                    <ScaleTransform ScaleX="2" ScaleY="2" CenterX="16" CenterY="16"></ScaleTransform>
                 </m:Pushpin.RenderTransform>
             </m:Pushpin>
         </ControlTemplate>
@@ -25,9 +25,9 @@
             </Grid>
         </ControlTemplate>
         <ControlTemplate x:Key="pushpinStandHit">
-            <m:Pushpin Background="Red" Template="{StaticResource imagePushpinSH}" >
+            <m:Pushpin Background="Red" PositionOrigin="Center" Template="{StaticResource imagePushpinSH}" >
                 <m:Pushpin.RenderTransform>
-                    <ScaleTransform ScaleX="2" ScaleY="2" CenterX="17" CenterY="35"></ScaleTransform>
+                    <ScaleTransform ScaleX="2" ScaleY="2" CenterX="16" CenterY="16"></ScaleTransform>
                 </m:Pushpin.RenderTransform>
             </m:Pushpin>
         </ControlTemplate>
@@ -39,9 +39,9 @@
             </Grid>
         </ControlTemplate>
         <ControlTemplate x:Key="pushpinStandShoot">
-            <m:Pushpin Background="Red" Template="{StaticResource imagePushpinSS}" >
+            <m:Pushpin Background="Red" PositionOrigin="Center" Template="{StaticResource imagePushpinSS}" >
                 <m:Pushpin.RenderTransform>
-                    <ScaleTransform ScaleX="2" ScaleY="2" CenterX="17" CenterY="35"></ScaleTransform>
+                    <ScaleTransform ScaleX="2" ScaleY="2" CenterX="16" CenterY="16"></ScaleTransform>
                 </m:Pushpin.RenderTransform>
             </m:Pushpin>
         </ControlTemplate>
@@ -53,9 +53,9 @@
             </Grid>
         </ControlTemplate>
         <ControlTemplate x:Key="pushpinStandDead">
-            <m:Pushpin Background="Red" Template="{StaticResource imagePushpinSD}" >
+            <m:Pushpin Background="Red" PositionOrigin="Center" Template="{StaticResource imagePushpinSD}" >
                 <m:Pushpin.RenderTransform>
-                    <ScaleTransform ScaleX="2" ScaleY="2" CenterX="17" CenterY="35"></ScaleTransform>
+                    <ScaleTransform ScaleX="2" ScaleY="2" CenterX="16" CenterY="16"></ScaleTransform>
                 </m:Pushpin.RenderTransform>
             </m:Pushpin>
         </ControlTemplate>
@@ -68,9 +68,9 @@
             </Grid>
         </ControlTemplate>
         <ControlTemplate x:Key="pushpinCrawl">
-            <m:Pushpin Background="Red" Template="{StaticResource imagePushpinC}" >
+            <m:Pushpin Background="Red" PositionOrigin="Center" Template="{StaticResource imagePushpinC}" >
                 <m:Pushpin.RenderTransform>
-                    <ScaleTransform ScaleX="2" ScaleY="2" CenterX="17" CenterY="35"></ScaleTransform>
+                    <ScaleTransform ScaleX="2" ScaleY="2" CenterX="16" CenterY="16"></ScaleTransform>
                 </m:Pushpin.RenderTransform>
             </m:Pushpin>
         </ControlTemplate>
@@ -82,9 +82,9 @@
             </Grid>
         </ControlTemplate>
         <ControlTemplate x:Key="pushpinCrawlHit">
-            <m:Pushpin Background="Red" Template="{StaticResource imagePushpinCH}" >
+            <m:Pushpin Background="Red" PositionOrigin="Center" Template="{StaticResource imagePushpinCH}" >
                 <m:Pushpin.RenderTransform>
-                    <ScaleTransform ScaleX="2" ScaleY="2" CenterX="17" CenterY="35"></ScaleTransform>
+                    <ScaleTransform ScaleX="2" ScaleY="2" CenterX="16" CenterY="16"></ScaleTransform>
                 </m:Pushpin.RenderTransform>
             </m:Pushpin>
         </ControlTemplate>
@@ -96,9 +96,9 @@
             </Grid>
         </ControlTemplate>
         <ControlTemplate x:Key="pushpinCrawlShoot">
-            <m:Pushpin Background="Red" Template="{StaticResource imagePushpinCS}" >
+            <m:Pushpin Background="Red" PositionOrigin="Center" Template="{StaticResource imagePushpinCS}" >
                 <m:Pushpin.RenderTransform>
-                    <ScaleTransform ScaleX="2" ScaleY="2" CenterX="17" CenterY="35"></ScaleTransform>
+                    <ScaleTransform ScaleX="2" ScaleY="2" CenterX="16" CenterY="16"></ScaleTransform>
                 </m:Pushpin.RenderTransform>
             </m:Pushpin>
         </ControlTemplate>
@@ -110,9 +110,9 @@
             </Grid>
         </ControlTemplate>
         <ControlTemplate x:Key="pushpinCrawlDead">
-            <m:Pushpin Background="Red" Template="{StaticResource imagePushpinCD}" >
+            <m:Pushpin Background="Red" PositionOrigin="Center" Template="{StaticResource imagePushpinCD}" >
                 <m:Pushpin.RenderTransform>
-                    <ScaleTransform ScaleX="2" ScaleY="2" CenterX="17" CenterY="35"></ScaleTransform>
+                    <ScaleTransform ScaleX="2" ScaleY="2" CenterX="16" CenterY="16"></ScaleTransform>
                 </m:Pushpin.RenderTransform>
             </m:Pushpin>
         </ControlTemplate>
