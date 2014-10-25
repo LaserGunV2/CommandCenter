@@ -43,6 +43,7 @@ namespace CommandCenter
         public PrajuritDatabase prajuritDatabase;
 
         public double playSpeed = 1;
+        public bool skipRegistration = true;
 
         public MainWindow()
         {
@@ -199,6 +200,7 @@ namespace CommandCenter
             {
                 long milliseconds = recorder.getRecordingLength();
                 replayProgressBar.Maximum = 1e-3 * milliseconds;
+                replayProgressBar.Value = 0;
                 long seconds = milliseconds / 1000;
                 long minutes = seconds / 60;
                 milliseconds %= 1000;
@@ -251,6 +253,7 @@ namespace CommandCenter
                 playButton.IsEnabled = !isReplaying;
                 stopButton.IsEnabled = isReplaying;
                 playSpeedComboBox.IsEnabled = !isReplaying;
+                skipRegistrationCheckBox.IsEnabled = !isReplaying;
             }));     
         }
 
@@ -262,6 +265,16 @@ namespace CommandCenter
                 CultureInfo culture = new CultureInfo("en-US");
                 playSpeed = Double.Parse(selectedValue.Substring(0, selectedValue.Length - 1), culture.NumberFormat);
             }
+        }
+
+        private void skipRegistrationCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            skipRegistration = true;
+        }
+
+        private void skipRegistrationCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            skipRegistration = false;
         }
     }
 }

@@ -20,6 +20,7 @@ namespace CommandCenter.Controller
         EventsRecorder player;
         Stopwatch stopwatch;
         Event scheduledEvent;
+        long skippedMilliseconds;
 
         public ReplayGameController(MainWindow parent)
             : base(parent, new SilentUDPCommunication(parent), new SilentEventsRecorder())
@@ -40,6 +41,7 @@ namespace CommandCenter.Controller
             scheduledEvent = null;
             executePacketAndScheduleNext();
             eventTimer.Enabled = true;
+            skippedMilliseconds = 0;
             heartbeatTimer.Interval = 1000 / parent.playSpeed;
             heartbeatTimer.Enabled = true;
             parent.setReplayingEnabled(true);
@@ -61,7 +63,7 @@ namespace CommandCenter.Controller
             eventTimer.Enabled = false;
             if (scheduledEvent != null)
             {
-                parent.updateReplayProgress(1e-3 * (stopwatch.ElapsedMilliseconds * parent.playSpeed));
+                parent.updateReplayProgress(1e-3 * ((stopwatch.ElapsedMilliseconds + skippedMilliseconds) * parent.playSpeed));
                 if (scheduledEvent.packet.Equals(EventsRecorder.REGISTER))
                 {
                     startRegistration(player.getProperty(EventsRecorder.PROP_GAMEID), Int32.Parse(player.getProperty(EventsRecorder.PROP_AMMO)));
@@ -83,8 +85,14 @@ namespace CommandCenter.Controller
             if (nextEvent != null)
             {
                 scheduledEvent = nextEvent;
-                long currentTime = (long)(stopwatch.ElapsedMilliseconds * parent.playSpeed);
+                long currentTime = (long)((stopwatch.ElapsedMilliseconds + skippedMilliseconds) * parent.playSpeed);
                 long interval = (long)((nextEvent.timeOffset - currentTime) / parent.playSpeed);
+                if (parent.skipRegistration && state == State.REGISTRATION)
+                {
+                    skippedMilliseconds += interval;
+                    interval = 0;
+                    parent.writeLog(stopwatch.ElapsedMilliseconds + " " + skippedMilliseconds);
+                }
                 eventTimer.Interval = interval <= 0 ? 1 : interval;
                 eventTimer.Enabled = true;
             }
@@ -101,7 +109,7 @@ namespace CommandCenter.Controller
 
         private void OnHeartbeatTimedEvent(Object source, ElapsedEventArgs e)
         {
-            parent.updateReplayProgress(1e-3 * (stopwatch.ElapsedMilliseconds * parent.playSpeed));
+            parent.updateReplayProgress(1e-3 * ((stopwatch.ElapsedMilliseconds + skippedMilliseconds) * parent.playSpeed));
         }
     }
 
