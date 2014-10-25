@@ -20,10 +20,14 @@ namespace CommandCenter.View
         Map map;
         List<Prajurit> prajurits;
 
+        private double? lastZoomLevel = null;
+
         public MapDrawer(Map map, List<Prajurit> prajurits)
         {
             this.map = map;
             this.prajurits = prajurits;
+            map.ViewChangeStart += mapViewChangeStart;
+            map.ViewChangeEnd += mapViewChangeEnd;
         }
 
         public void updateMap(Prajurit prajurit)
@@ -225,6 +229,22 @@ namespace CommandCenter.View
         {
             int c2 = (int)c % 8;
             return Color.FromRgb((byte)(127 + (c2 / 4) * 128), (byte)(127 + ((c2 / 2) % 2) * 128), (byte)(127 + (c2 % 2) * 128));
+        }
+
+        private void mapViewChangeStart(object sender, MapEventArgs e)
+        {
+            lastZoomLevel = map.ZoomLevel;
+        }
+
+        private void mapViewChangeEnd(object sender, MapEventArgs e)
+        {
+            if (lastZoomLevel != null && !lastZoomLevel.Equals(map.ZoomLevel))
+            {
+                foreach (Prajurit prajurit in prajurits) {
+                    updateMap(prajurit);
+                }
+            }
+            lastZoomLevel = null;
         }
     }
 }
