@@ -43,7 +43,6 @@ namespace CommandCenter.View
                     updateAccuracyCircle(prajurit);
                     prajurit.assignedPushPin.Template = setTemplateStatePosture(prajurit);
                     prajurit.assignedPushPin.Location = prajurit.location;
-                    prajurit.assignedPushPin.PositionOrigin = PositionOrigin.CenterLeft;
 
                     ToolTipService.SetToolTip(prajurit.assignedPushPin, prajurit.nama);
                     /* start add textblock to layer */
