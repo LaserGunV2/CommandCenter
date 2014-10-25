@@ -26,47 +26,6 @@ namespace CommandCenter.View
             this.prajurits = prajurits;
         }
 
-        // TODO Deprecated, i guess
-        public void updateMap()
-        {
-            map.Dispatcher.InvokeAsync((Action)(() =>
-            {
-                foreach (Prajurit prajurit in prajurits)
-                {
-                    // Create a push pin if not yet done
-                    if (prajurit.assignedPushPin == null && prajurit.location != null)
-                    {
-                        prajurit.assignedPushPin = new Pushpin();
-                        prajurit.assignedText = setTextBlockToMap(prajurit);
-                        prajurit.assignedAccuracy = getAccuracy(prajurit);
-                        prajurit.assignedPushPin.Template = setTemplateStatePosture(prajurit);
-                        prajurit.assignedPushPin.Location = prajurit.location;
-                        ToolTipService.SetToolTip(prajurit.assignedPushPin, prajurit.nama);
-                        /* start add textblock to layer */
-                        MapLayer.SetPosition(prajurit.assignedText, prajurit.location);
-                        map.Children.Add(prajurit.assignedText);
-                        /* end add textblock to layer */
-                        /* start add accuracy to layer */
-                        MapLayer.SetPosition(prajurit.assignedAccuracy, prajurit.location);
-                        map.Children.Add(prajurit.assignedAccuracy);
-                        /* end add accuracy to layer */
-                        map.Children.Add(prajurit.assignedPushPin);
-                    }
-                    // Update and draw the push pin if available
-                    if (prajurit.assignedPushPin != null)
-                    {
-                        prajurit.assignedPushPin.Location = prajurit.location;
-                        prajurit.assignedPushPin.Heading = (180 + prajurit.heading) % 360;
-                    }
-                }
-                // Refresh map, if map is ready.
-                if (map.ActualHeight > 0 && map.ActualWidth > 0)
-                {
-                    map.SetView(map.BoundingRectangle);
-                }
-            }));
-        }
-
         public void updateMap(Prajurit prajurit)
         {
             map.Dispatcher.InvokeAsync((Action)(() =>

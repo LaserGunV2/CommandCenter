@@ -59,7 +59,6 @@ namespace CommandCenter
             replayController = new ReplayGameController(this);
 
             mapDrawer = new MapDrawer(map, prajurits);
-            mapDrawer.updateMap();
         }
 
         private void pendaftaranButton_Click(object sender, RoutedEventArgs e)
