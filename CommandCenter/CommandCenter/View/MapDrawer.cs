@@ -35,7 +35,8 @@ namespace CommandCenter.View
                 {
                     prajurit.assignedPushPin = new Pushpin();
                     prajurit.assignedText = setTextBlockToMap(prajurit);
-                    prajurit.assignedAccuracy = getAccuracy(prajurit);
+                    prajurit.assignedAccuracy = createAccuracyCircle(prajurit);
+                    updateAccuracyCircle(prajurit);
                     prajurit.assignedPushPin.Template = setTemplateStatePosture(prajurit);
                     prajurit.assignedPushPin.Location = prajurit.location;
                     prajurit.assignedPushPin.PositionOrigin = PositionOrigin.CenterLeft;
@@ -50,6 +51,7 @@ namespace CommandCenter.View
                     map.Children.Add(prajurit.assignedAccuracy);
                     /* end add accuracy to layer */
                     map.Children.Add(prajurit.assignedPushPin);
+
                 }
                 // Update and draw the push pin if available
                 if (prajurit.assignedPushPin != null)
@@ -61,7 +63,7 @@ namespace CommandCenter.View
                     /* start update textblock and accuracy */
                     setPositionText(prajurit);
                     MapLayer.SetPosition(prajurit.assignedText, prajurit.location);
-                    setAccuracy(prajurit);
+                    updateAccuracyCircle(prajurit);
                     MapLayer.SetPosition(prajurit.assignedAccuracy, prajurit.location);
                     /* end update textblock and accuracy */
                 }
@@ -74,26 +76,22 @@ namespace CommandCenter.View
         }
 
         // Show accuracy in map
-        public Ellipse getAccuracy(Prajurit prajurit) {
+        private Ellipse createAccuracyCircle(Prajurit prajurit) {
             Ellipse ellipse = new Ellipse();
             ellipse.Fill = new SolidColorBrush(Color.FromArgb(20, 255, 0, 0));
-            ellipse.Stroke = Brushes.Red; ;
-            ellipse.Height = prajurit.accuracy;
-            ellipse.Width = prajurit.accuracy;
-            double left = - (prajurit.accuracy / 2);
-            double top = - (prajurit.accuracy / 2);
-            ellipse.Margin = new Thickness(left, top, 0, 0);
+            ellipse.Stroke = Brushes.Red;
             return ellipse;
         }
 
         // update accuracy in map
-        public void setAccuracy(Prajurit prajurit)
+        private void updateAccuracyCircle(Prajurit prajurit)
         {
-            double goundResolution = (Math.Cos(prajurit.location.Latitude * Math.PI / 180) * 2 * Math.PI * 6378137)/(256*2*0.0254); // 96 ==DPI
-            prajurit.assignedAccuracy.Height = goundResolution/prajurit.accuracy/96; //Masih nga pas 
-            prajurit.assignedAccuracy.Width =  goundResolution/prajurit.accuracy/96; // /96 karena inch to pixel
-            double left = -(((int)prajurit.assignedAccuracy.Width) / 2); //Masih ada bug nga ngegeser
-            double top = -(((int)prajurit.assignedAccuracy.Height) / 2);
+            double meterPerPixel = (Math.Cos(prajurit.location.Latitude * Math.PI / 180) * 2 * Math.PI * 6378137) / (256 * Math.Pow(2, map.ZoomLevel));
+            double pixelRadius = prajurit.accuracy / meterPerPixel;
+            prajurit.assignedAccuracy.Height = 2 * pixelRadius;
+            prajurit.assignedAccuracy.Width = 2 * pixelRadius;
+            double left = -(int)pixelRadius;
+            double top = -(int)pixelRadius;
             prajurit.assignedAccuracy.Margin = new Thickness(left, top, 0, 0);
         }
 

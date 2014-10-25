@@ -78,6 +78,7 @@ namespace CommandCenter.Controller
                 }
                 else
                 {
+                    parent.writeLog("Pura-pura terima dari " + scheduledEvent.sender + ": " + scheduledEvent.packet);
                     this.handlePacket(scheduledEvent.sender, JSONPacket.createFromJSONBytes(Encoding.UTF8.GetBytes(scheduledEvent.packet)));
                 }
             }
@@ -91,7 +92,6 @@ namespace CommandCenter.Controller
                 {
                     skippedMilliseconds += interval;
                     interval = 0;
-                    parent.writeLog(stopwatch.ElapsedMilliseconds + " " + skippedMilliseconds);
                 }
                 eventTimer.Interval = interval <= 0 ? 1 : interval;
                 eventTimer.Enabled = true;
