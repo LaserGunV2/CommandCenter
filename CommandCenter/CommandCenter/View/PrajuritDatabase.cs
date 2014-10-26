@@ -36,14 +36,14 @@ namespace CommandCenter.Model
         {
             SQLiteCommand command = new SQLiteCommand("SELECT name FROM prajurits WHERE nomerInduk=@NOMERINDUK", connection);
             command.Parameters.AddWithValue("@NOMERINDUK", prajurit.nomerInduk);
-            String name = (String)command.ExecuteScalar();
-            if (name == null)
+            Object result = command.ExecuteScalar();
+            if (result == System.DBNull.Value)
             {
                 return false;
             }
             else
             {
-                prajurit.nama = name;
+                prajurit.nama = (String)result;
                 return true;
             }
         }
