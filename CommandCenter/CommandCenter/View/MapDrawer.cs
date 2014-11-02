@@ -35,16 +35,25 @@ namespace CommandCenter.View
             map.Dispatcher.InvokeAsync((Action)(() =>
             {
                 // Create a push pin if not yet done
-                if (prajurit.assignedPushPin == null && prajurit.location != null)
+                if (prajurit.pushpin == null && prajurit.location != null)
                 {
+                    prajurit.pushpin = new Image();
+                    /*Default prajurits and initialization*/
+                    prajurit.pushpin.Source = new BitmapImage(new Uri("img/stand-hit.png", UriKind.Relative));
+                    prajurit.pushpin.Height = 60;
+                    prajurit.pushpin.Width = 60;
+                    prajurit.pushpin.RenderTransformOrigin = new Point(0.5, 0.5);
+                    prajurit.pushpin.Margin = new Thickness(-prajurit.pushpin.Height / 2, -prajurit.pushpin.Width / 2, 0, 0);
+                    //prajurit.pushpin.RenderTransform = new RotateTransform(80);
+                    
                     prajurit.assignedPushPin = new Pushpin();
                     prajurit.assignedText = setTextBlockToMap(prajurit);
                     prajurit.assignedAccuracy = createAccuracyCircle(prajurit);
                     updateAccuracyCircle(prajurit);
-                    prajurit.assignedPushPin.Template = setTemplateStatePosture(prajurit);
-                    prajurit.assignedPushPin.Location = prajurit.location;
+                    //prajurit.assignedPushPin.Template = setTemplateStatePosture(prajurit);
+                    //prajurit.assignedPushPin.Location = prajurit.location;
 
-                    ToolTipService.SetToolTip(prajurit.assignedPushPin, prajurit.nama);
+                    ToolTipService.SetToolTip(prajurit.pushpin, prajurit.nama);
                     /* start add textblock to layer */
                     MapLayer.SetPosition(prajurit.assignedText, prajurit.location);
                     map.Children.Add(prajurit.assignedText);
@@ -53,16 +62,25 @@ namespace CommandCenter.View
                     MapLayer.SetPosition(prajurit.assignedAccuracy, prajurit.location);
                     map.Children.Add(prajurit.assignedAccuracy);
                     /* end add accuracy to layer */
-                    map.Children.Add(prajurit.assignedPushPin);
+                    /* start add prajurit to layer */
+                    MapLayer.SetPosition(prajurit.pushpin, prajurit.location);
+                    map.Children.Add(prajurit.pushpin);
+                    /* end add prajurit to layer */
 
                 }
                 // Update and draw the push pin if available
-                if (prajurit.assignedPushPin != null)
+                if (prajurit.pushpin != null)
                 {
                     // Note: Bing Maps fix to force update. Hopefully it would work
-                    prajurit.assignedPushPin.Location = new Location(prajurit.location);
-                    prajurit.assignedPushPin.Heading = (180 + prajurit.heading) % 360;
-                    prajurit.assignedPushPin.Template = setTemplateStatePosture(prajurit);
+                    //prajurit.assignedPushPin.Location = new Location(prajurit.location);
+                    //prajurit.assignedPushPin.Heading = (180 + prajurit.heading) % 360;
+                    //prajurit.assignedPushPin.Template = setTemplateStatePosture(prajurit);
+
+                    String newImg = setPositionPrajurit(prajurit); 
+                    prajurit.pushpin.Source = new BitmapImage(new Uri(newImg, UriKind.Relative)); 
+                    
+                    prajurit.pushpin.RenderTransform = new RotateTransform((180 + prajurit.heading) % 360);
+                    MapLayer.SetPosition(prajurit.pushpin, prajurit.location);
                     /* start update textblock and accuracy */
                     setPositionText(prajurit);
                     MapLayer.SetPosition(prajurit.assignedText, prajurit.location);
@@ -151,6 +169,51 @@ namespace CommandCenter.View
             {
                 p.assignedText.Margin = new Thickness(5, 50, 0, 0); //Menghadap kiri atas
             }
+        }
+
+        //set image prajurit
+        public String setPositionPrajurit(Prajurit prajurit){
+            String img = "";
+            switch (prajurit.posture)
+            {
+                case Prajurit.Posture.STAND:
+                    if (prajurit.state == Prajurit.State.NORMAL)
+                    {
+                        img = "img/stand-shoot.png";
+                    }
+                    else if (prajurit.state == Prajurit.State.SHOOT)
+                    {
+                        img = "img/stand-shoot.png";
+                    }
+                    else if (prajurit.state == Prajurit.State.HIT)
+                    {
+                        img = "img/stand-hit.png";
+                    }
+                    else if (prajurit.state == Prajurit.State.DEAD)
+                    {
+                        img = "img/stand-dead.png";
+                    }
+                    break;
+                case Prajurit.Posture.CRAWL:
+                    if (prajurit.state == Prajurit.State.NORMAL)
+                    {
+                        img = "img/crawl.png";
+                    }
+                    else if (prajurit.state == Prajurit.State.SHOOT)
+                    {
+                        img = "img/crawl-shoot.png";
+                    }
+                    else if (prajurit.state == Prajurit.State.HIT)
+                    {
+                        img = "img/crawl-hit.png";
+                    }
+                    else if (prajurit.state == Prajurit.State.DEAD)
+                    {
+                        img = "img/crawl-dead.png";
+                    }
+                    break;
+            }
+            return img;
         }
 
         public ControlTemplate setTemplateStatePosture(Prajurit prajurit) {

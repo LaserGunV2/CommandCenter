@@ -33,6 +33,7 @@ namespace CommandCenter.Model
         public int accuracy { get; set; }
 
         public Pushpin assignedPushPin = null;
+        public Image pushpin = null;
         public TextBlock assignedText = null;
         public Ellipse assignedAccuracy = null;
 
