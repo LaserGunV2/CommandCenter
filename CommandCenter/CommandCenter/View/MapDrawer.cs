@@ -179,7 +179,7 @@ namespace CommandCenter.View
                 case Prajurit.Posture.STAND:
                     if (prajurit.state == Prajurit.State.NORMAL)
                     {
-                        img = "img/stand-shoot.png";
+                        img = "img/stand.png";
                     }
                     else if (prajurit.state == Prajurit.State.SHOOT)
                     {
