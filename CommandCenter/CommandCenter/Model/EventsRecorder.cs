@@ -18,7 +18,7 @@ namespace CommandCenter.Model.Events
         public const string STOP = "STOP";
         public const string PROP_GAMEID = "gameId";
         public const string PROP_AMMO = "ammo";
-        public const string FILENAME = "events.sqlite";
+        public const string FILENAME = "events.internal-sqlite";
 
         public SQLiteConnection connection;
         SQLiteDataReader reader;
