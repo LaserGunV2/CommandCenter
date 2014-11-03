@@ -11,21 +11,22 @@ namespace CommandCenter.Model
     public class PrajuritDatabase
     {
         SQLiteConnection connection;
+        public const string FILENAME = "prajurits.internal-sqlite";
 
         public PrajuritDatabase()
         {
-            if (!File.Exists("prajurits.sqlite"))
+            if (!File.Exists(FILENAME))
             {
                 createDatabase();
             }
-            connection = new SQLiteConnection("Data Source=prajurits.sqlite; Version=3;");
+            connection = new SQLiteConnection("Data Source=" + FILENAME + "; Version=3;");
             connection.Open();
         }
 
         void createDatabase()
         {
             SQLiteConnection.CreateFile("prajurits.sqlite");
-            connection = new SQLiteConnection("Data Source=prajurits.sqlite; Version=3;");
+            connection = new SQLiteConnection("Data Source=" + FILENAME +"; Version=3;");
             connection.Open();
             SQLiteCommand command = new SQLiteCommand("CREATE TABLE prajurits (nomerInduk TEXT PRIMARY KEY UNIQUE, name TEXT)", connection);
             command.ExecuteNonQuery();
