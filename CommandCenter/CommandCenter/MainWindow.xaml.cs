@@ -134,6 +134,7 @@ namespace CommandCenter
             liveGameController.stopExercise();
             replayController.stopPlayback();
             prajuritDatabase.closeConnection();
+            EventsRecorder.closeConnection();
         }
 
         public void refreshTable()
@@ -179,7 +180,7 @@ namespace CommandCenter
                 openDialog.RestoreDirectory = true;
                 if (openDialog.ShowDialog() == true)
                 {
-                    File.Copy(openDialog.FileName, EventsRecorder.FILENAME, true);
+                    EventsRecorder.loadFrom(openDialog.FileName);
                     updateReplayLength();
                     playButton.IsEnabled = true;
                     tabControl.SelectedIndex = 1;

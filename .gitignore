@@ -170,4 +170,6 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
+
 /CommandCenter/CommandCenter/bin/Release/*.internal-sqlite
+**/Thumbs.db
