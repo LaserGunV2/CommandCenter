@@ -81,9 +81,8 @@ namespace CommandCenter
                 pendaftaranButton.IsEnabled = false;
                 mulaiButton.IsEnabled = true;
                 akhiriButton.IsEnabled = true;
-                loadButton.IsEnabled = false;
                 saveButton.IsEnabled = false;
-                playButton.IsEnabled = false;
+                setActiveTab(latihanTabItem);
                 ammoTextBox.IsEnabled = false;
                 replayLengthLabel.Content = "0:00.000";
 
@@ -111,11 +110,10 @@ namespace CommandCenter
             pendaftaranButton.IsEnabled = true;
             mulaiButton.IsEnabled = false;
             akhiriButton.IsEnabled = false;
-            loadButton.IsEnabled = true;
             saveButton.IsEnabled = true;
+            setActiveTab(null);
             ammoTextBox.IsEnabled = true;
             updateReplayLength();
-            playButton.IsEnabled = true;
         }
 
         public void writeLog(String s)
@@ -244,16 +242,13 @@ namespace CommandCenter
         {
             Dispatcher.InvokeAsync((Action)(() =>
             {
-                pendaftaranButton.IsEnabled = !isReplaying;
-                mulaiButton.IsEnabled = !isReplaying;
-                akhiriButton.IsEnabled = !isReplaying;
                 ammoTextBox.IsEnabled = !isReplaying;
                 loadButton.IsEnabled = !isReplaying;
-                saveButton.IsEnabled = !isReplaying;
                 playButton.IsEnabled = !isReplaying;
                 stopButton.IsEnabled = isReplaying;
                 playSpeedComboBox.IsEnabled = !isReplaying;
                 skipRegistrationCheckBox.IsEnabled = !isReplaying;
+                setActiveTab(isReplaying ? replayTabItem : null);
             }));     
         }
 
@@ -275,6 +270,22 @@ namespace CommandCenter
         private void skipRegistrationCheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
             skipRegistration = false;
+        }
+
+        private void setActiveTab(TabItem activeTab)
+        {
+            if (activeTab == null)
+            {
+                latihanTabItem.IsEnabled = true;
+                replayTabItem.IsEnabled = true;
+                pantauTabItem.IsEnabled = true;
+            }
+            else
+            {
+                latihanTabItem.IsEnabled = (activeTab == latihanTabItem);
+                replayTabItem.IsEnabled = (activeTab == replayTabItem);
+                pantauTabItem.IsEnabled = (activeTab == pantauTabItem);
+            }
         }
     }
 }

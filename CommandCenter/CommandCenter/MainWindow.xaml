@@ -2,15 +2,10 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:m="clr-namespace:Microsoft.Maps.MapControl.WPF;assembly=Microsoft.Maps.MapControl.WPF"
-        Title="Command Center" Height="465" Width="923" Closing="Window_Closing">
+        Title="Command Center" Height="547" Width="923" Closing="Window_Closing">
     <Grid>
         <m:Map x:Name="map" CredentialsProvider="AvWJ7o3gamZ5qF8w-S7xZhIVvdJuK6O-Gl1ydDUvwgmCujidkjh5iFk6RAgRSsXn"  Center="-2.548926,118.0148634" ZoomLevel="4" Mode="AerialWithLabels" Margin="406,10,10,10"/>
-        <Button x:Name="pendaftaranButton" Content="Pendaftaran Peserta" HorizontalAlignment="Left" Margin="139,16,0,0" VerticalAlignment="Top" Width="134" Click="pendaftaranButton_Click"/>
-        <Label Content="ID Latihan" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="idSimulationLabel" Content="###" HorizontalAlignment="Left" Margin="10,36,0,0" VerticalAlignment="Top" Height="61" Width="124" FontSize="36"/>
-        <Button x:Name="mulaiButton" Content="Mulai Latihan" HorizontalAlignment="Left" Margin="139,41,0,0" VerticalAlignment="Top" Width="134" IsEnabled="False" Click="mulaiButton_Click"/>
-        <Button x:Name="akhiriButton" Content="Akhiri Latihan" HorizontalAlignment="Left" Margin="139,66,0,0" VerticalAlignment="Top" Width="134" IsEnabled="False" Click="akhiriButton_Click"/>
-        <DataGrid x:Name="pesertaDataGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="120" Margin="10,128,0,0" VerticalAlignment="Top" Width="391" >
+        <DataGrid x:Name="pesertaDataGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="200" Margin="10,193,0,0" VerticalAlignment="Top" Width="391" >
             <DataGrid.Columns>
                 <DataGridTextColumn Header="No" Binding="{Binding nomerUrut}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Nomer Induk" Binding="{Binding nomerInduk}" IsReadOnly="True"/>
@@ -20,46 +15,56 @@
                 <DataGridTextColumn Header="Senjata" Binding="{Binding senjata}" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
-        <Label Content="Daftar Peserta" HorizontalAlignment="Left" Margin="10,102,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.289,-0.462"/>
-        <Button x:Name="loadButton" Content="Load..." HorizontalAlignment="Left" Margin="278,16,0,0" VerticalAlignment="Top" Width="123" Click="loadButton_Click"/>
-        <Button x:Name="saveButton" Content="Save..." HorizontalAlignment="Left" Margin="278,41,0,0" VerticalAlignment="Top" Width="123" IsEnabled="False" Click="saveButton_Click"/>
-        <TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="156" Margin="10,268,0,0" VerticalAlignment="Top" Width="391">
-            <TabItem Header="Debug">
+        <Label Content="Daftar Peserta" HorizontalAlignment="Left" Margin="10,167,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.289,-0.462"/>
+        <TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="156" Margin="10,11,0,0" VerticalAlignment="Top" Width="391">
+            <TabItem x:Name="latihanTabItem" Header="Latihan" HorizontalAlignment="Left" Height="22" VerticalAlignment="Top" Width="55">
                 <Grid Background="#FFE5E5E5">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="25*"/>
-                        <ColumnDefinition Width="52*"/>
+                        <ColumnDefinition Width="28*"/>
+                        <ColumnDefinition Width="27*"/>
                     </Grid.ColumnDefinitions>
-                    <CheckBox x:Name="peristiwaCheckBox" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="True" Margin="10,10,0,0" Width="365" Content="Catat Peristiwa" Grid.ColumnSpan="2"/>
-                    <ScrollViewer CanContentScroll="True" HorizontalAlignment="Left" Height="88" VerticalAlignment="Top" Width="365" HorizontalScrollBarVisibility="Auto"  VerticalScrollBarVisibility="Auto" FontFamily="Consolas" FontSize="10" Margin="10,30,0,0" Grid.ColumnSpan="2">
-                        <TextBlock x:Name="peristiwaTextBlock" HorizontalAlignment="Left" VerticalAlignment="Top" Height="Auto" Width="Auto" IsEnabled="False"/>
-                    </ScrollViewer>
+                    <Button x:Name="pendaftaranButton" Content="Pendaftaran Peserta" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="134" Click="pendaftaranButton_Click"/>
+                    <Button x:Name="mulaiButton" Content="Mulai Latihan" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="134" IsEnabled="False" Click="mulaiButton_Click"/>
+                    <Button x:Name="akhiriButton" Content="Akhiri Latihan" HorizontalAlignment="Left" Margin="10,60,0,0" VerticalAlignment="Top" Width="134" IsEnabled="False" Click="akhiriButton_Click"/>
+                    <Button x:Name="saveButton" Content="Simpan Latihan..." HorizontalAlignment="Left" Margin="10,85,0,0" VerticalAlignment="Top" Width="134" IsEnabled="False" Click="saveButton_Click"/>
+                    <Label Content="Kapasitas Peluru" HorizontalAlignment="Left" Margin="83,4,0,0" VerticalAlignment="Top" Grid.Column="1"/>
+                    <TextBox x:Name="ammoTextBox" HorizontalAlignment="Left" HorizontalContentAlignment="Right"  Height="59" Margin="83,30,0,0" TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="91" FontSize="36" Grid.Column="1"/>
+                    <Label x:Name="idSimulationLabel" Content="###" HorizontalAlignment="Left" Margin="149,30,0,0" VerticalAlignment="Top" Height="61" Width="96" FontSize="36" Grid.ColumnSpan="2"/>
+                    <Label Content="ID Latihan" HorizontalAlignment="Left" Margin="149,4,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
                 </Grid>
             </TabItem>
-            <TabItem x:Name="replayTab" Header="Replay" Height="22" VerticalAlignment="Top">
+            <TabItem x:Name="replayTabItem" Header="Replay" Height="22" VerticalAlignment="Top">
                 <Grid Background="#FFE5E5E5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="25*"/>
                         <ColumnDefinition Width="64*"/>
                         <ColumnDefinition Width="5*"/>
                     </Grid.ColumnDefinitions>
-                    <ProgressBar x:Name="replayProgressBar" HorizontalAlignment="Left" Height="17" Margin="10,41,0,0" VerticalAlignment="Top" Width="365" Grid.ColumnSpan="3" Value="100"/>
-                    <Label x:Name="replayProgressLabel" Content="0:00.000" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="150"/>
-                    <Label x:Name="replayLengthLabel" Content="0:00.000" Grid.Column="1" HorizontalAlignment="Right" HorizontalContentAlignment="Right"  Margin="0,10,10,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="150"/>
-                    <Button x:Name="playButton" IsEnabled="False" Content="Play" HorizontalAlignment="Left" Margin="10,63,0,0" VerticalAlignment="Top" Width="75" Click="playButton_Click"/>
-                    <Button x:Name="stopButton" IsEnabled="False" Content="Stop" HorizontalAlignment="Left" Margin="90,63,0,0" VerticalAlignment="Top" Width="75" Click="stopButton_Click" Grid.ColumnSpan="2"/>
-                    <ComboBox x:Name="playSpeedComboBox" Grid.Column="1" HorizontalAlignment="Left" Margin="68,62,0,0" VerticalAlignment="Top" Width="50" SelectedIndex="2" SelectionChanged="playSpeedComboBox_SelectionChanged">
+                    <ProgressBar x:Name="replayProgressBar" HorizontalAlignment="Left" Height="17" Margin="10,61,0,0" VerticalAlignment="Top" Width="365" Grid.ColumnSpan="3" Value="100"/>
+                    <Label x:Name="replayProgressLabel" Content="0:00.000" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="150" Grid.ColumnSpan="2"/>
+                    <Label x:Name="replayLengthLabel" Content="0:00.000" Grid.Column="1" HorizontalAlignment="Right" HorizontalContentAlignment="Right"  Margin="0,35,10,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="150"/>
+                    <Button x:Name="playButton" IsEnabled="False" Content="Play" HorizontalAlignment="Left" Margin="10,83,0,0" VerticalAlignment="Top" Width="75" Click="playButton_Click"/>
+                    <Button x:Name="stopButton" IsEnabled="False" Content="Stop" HorizontalAlignment="Left" Margin="90,83,0,0" VerticalAlignment="Top" Width="75" Click="stopButton_Click" Grid.ColumnSpan="2"/>
+                    <ComboBox x:Name="playSpeedComboBox" Grid.Column="1" HorizontalAlignment="Left" Margin="68,83,0,0" VerticalAlignment="Top" Width="50" SelectedIndex="2" SelectionChanged="playSpeedComboBox_SelectionChanged">
                         <ComboBoxItem Content="0.25x"/>
                         <ComboBoxItem Content="0.5x"/>
                         <ComboBoxItem Content="1x"/>
                         <ComboBoxItem Content="2x"/>
                         <ComboBoxItem Content="4x"/>
                     </ComboBox>
-                    <CheckBox x:Name="skipRegistrationCheckBox" Content="Lewati Masa Registrasi" Grid.Column="1" HorizontalAlignment="Left" Margin="123,66,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="150" IsChecked="True" Checked="skipRegistrationCheckBox_Checked" Unchecked="skipRegistrationCheckBox_Unchecked"/>
+                    <CheckBox x:Name="skipRegistrationCheckBox" Content="Lompati Masa Registrasi" Grid.Column="1" HorizontalAlignment="Left" Margin="36,13,0,0" VerticalAlignment="Top" Width="150" IsChecked="True" Checked="skipRegistrationCheckBox_Checked" Unchecked="skipRegistrationCheckBox_Unchecked"/>
+                    <Button x:Name="loadButton" Content="Buka Latihan..." HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="123" Click="loadButton_Click" Grid.ColumnSpan="2"/>
                 </Grid>
             </TabItem>
+            <TabItem x:Name="pantauTabItem" Header="Pantau" HorizontalAlignment="Left" Height="22" VerticalAlignment="Top" Width="55">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
         </TabControl>
-        <Label Content="Kapasitas Peluru" HorizontalAlignment="Left" Margin="242,97,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="ammoTextBox" HorizontalAlignment="Left" HorizontalContentAlignment="Right"  Height="23" Margin="338,100,0,0" TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="58"/>
+        <CheckBox x:Name="peristiwaCheckBox" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="True" Margin="10,398,0,0" Width="365" Content="Catat Peristiwa"/>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="88" Margin="10,418,0,0" VerticalAlignment="Top" Width="391">
+            <ScrollViewer CanContentScroll="True" HorizontalAlignment="Left" Height="88" VerticalAlignment="Top" Width="390" HorizontalScrollBarVisibility="Auto"  VerticalScrollBarVisibility="Auto" FontFamily="Consolas" FontSize="10" Margin="0,0,-1,-2">
+                <TextBlock x:Name="peristiwaTextBlock" HorizontalAlignment="Left" VerticalAlignment="Top" Height="Auto" Width="Auto" IsEnabled="False"/>
+            </ScrollViewer>
+        </Border>
     </Grid>
 </Window>
