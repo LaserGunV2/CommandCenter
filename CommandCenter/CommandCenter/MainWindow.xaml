@@ -4,8 +4,12 @@
         xmlns:m="clr-namespace:Microsoft.Maps.MapControl.WPF;assembly=Microsoft.Maps.MapControl.WPF"
         Title="Command Center" Height="547" Width="923" Closing="Window_Closing">
     <Grid>
-        <m:Map x:Name="map" CredentialsProvider="AvWJ7o3gamZ5qF8w-S7xZhIVvdJuK6O-Gl1ydDUvwgmCujidkjh5iFk6RAgRSsXn"  Center="-2.548926,118.0148634" ZoomLevel="4" Mode="AerialWithLabels" Margin="406,10,10,10"/>
-        <DataGrid x:Name="pesertaDataGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="200" Margin="10,193,0,0" VerticalAlignment="Top" Width="391" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="11*"/>
+            <RowDefinition Height="118*"/>
+        </Grid.RowDefinitions>
+        <m:Map x:Name="map" CredentialsProvider="AvWJ7o3gamZ5qF8w-S7xZhIVvdJuK6O-Gl1ydDUvwgmCujidkjh5iFk6RAgRSsXn"  Center="-2.548926,118.0148634" ZoomLevel="4" Mode="AerialWithLabels" Margin="406,30,10,10" Grid.RowSpan="2"/>
+        <DataGrid x:Name="pesertaDataGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="190" Margin="10,159,0,0" VerticalAlignment="Top" Width="391" Grid.Row="1" >
             <DataGrid.Columns>
                 <DataGridTextColumn Header="No" Binding="{Binding nomerUrut}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Nomer Induk" Binding="{Binding nomerInduk}" IsReadOnly="True"/>
@@ -15,8 +19,8 @@
                 <DataGridTextColumn Header="Senjata" Binding="{Binding senjata}" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
-        <Label Content="Daftar Peserta" HorizontalAlignment="Left" Margin="10,167,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.289,-0.462"/>
-        <TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="156" Margin="10,11,0,0" VerticalAlignment="Top" Width="391">
+        <Label Content="Daftar Peserta" HorizontalAlignment="Left" Margin="10,128,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.289,-0.462" Grid.Row="1"/>
+        <TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="156" Margin="10,11,0,0" VerticalAlignment="Top" Width="391" Grid.RowSpan="2">
             <TabItem x:Name="latihanTabItem" Header="Latihan" HorizontalAlignment="Left" Height="22" VerticalAlignment="Top" Width="55">
                 <Grid Background="#FFE5E5E5">
                     <Grid.ColumnDefinitions>
@@ -57,14 +61,24 @@
                 </Grid>
             </TabItem>
             <TabItem x:Name="pantauTabItem" Header="Pantau" HorizontalAlignment="Left" Height="22" VerticalAlignment="Top" Width="55">
-                <Grid Background="#FFE5E5E5"/>
+                <Grid Background="#FFE5E5E5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="ID Latihan" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="96"/>
+                    <TextBox x:Name="idLatihanTextBox" HorizontalAlignment="Left" Height="61" Margin="10,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="96" FontStyle="Italic" FontSize="36"/>
+                    <Button x:Name="pantauLatihanButton" Content="Pantau Latihan" HorizontalAlignment="Left" Margin="111,13,0,0" VerticalAlignment="Top" Width="134" Click="pendaftaranButton_Click"/>
+                    <Button x:Name="pantauLatihanButton_Copy" Content="Berhenti Memantau" HorizontalAlignment="Left" Margin="111,38,0,0" VerticalAlignment="Top" Width="134" Click="pendaftaranButton_Click"/>
+                </Grid>
             </TabItem>
         </TabControl>
-        <CheckBox x:Name="peristiwaCheckBox" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="True" Margin="10,398,0,0" Width="365" Content="Catat Peristiwa"/>
-        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="88" Margin="10,418,0,0" VerticalAlignment="Top" Width="391">
+        <CheckBox x:Name="peristiwaCheckBox" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="True" Margin="10,354,0,0" Width="365" Content="Catat Peristiwa" Grid.Row="1"/>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="88" Margin="10,374,0,0" VerticalAlignment="Top" Width="391" Grid.Row="1">
             <ScrollViewer CanContentScroll="True" HorizontalAlignment="Left" Height="88" VerticalAlignment="Top" Width="390" HorizontalScrollBarVisibility="Auto"  VerticalScrollBarVisibility="Auto" FontFamily="Consolas" FontSize="10" Margin="0,0,-1,-2">
                 <TextBlock x:Name="peristiwaTextBlock" HorizontalAlignment="Left" VerticalAlignment="Top" Height="Auto" Width="Auto" IsEnabled="False"/>
             </ScrollViewer>
         </Border>
+        <CheckBox x:Name="showACheckBox" Content="Tampilkan Tim &quot;A&quot;" HorizontalAlignment="Left" Margin="406,10,0,0" VerticalAlignment="Top" Width="134" IsChecked="True"/>
+        <CheckBox x:Name="showBCheckBox" Content="Tampilkan Tim &quot;B&quot;" HorizontalAlignment="Left" Margin="545,10,0,0" VerticalAlignment="Top" Width="134" IsChecked="True"/>
     </Grid>
 </Window>
