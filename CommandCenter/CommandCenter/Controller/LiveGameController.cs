@@ -20,5 +20,17 @@ namespace CommandCenter.Controller
         {
             // void
         }
+
+        public String startRegistration(int initialAmmo)
+        {
+            Random random = new Random();
+            String gameId = "";
+            for (int i = 0; i < 3; i++)
+            {
+                gameId += random.Next(10);
+            }
+
+            return startRegistration(gameId, initialAmmo);
+        }
     }
 }

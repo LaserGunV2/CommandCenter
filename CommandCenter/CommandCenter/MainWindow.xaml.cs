@@ -40,6 +40,7 @@ namespace CommandCenter
         public EventsRecorder recorder;
         private LiveGameController liveGameController;
         private ReplayGameController replayController;
+        private WatchGameController watchController;
         public PrajuritDatabase prajuritDatabase;
 
         public double playSpeed = 1;
@@ -57,6 +58,7 @@ namespace CommandCenter
             recorder = new EventsRecorder();
             liveGameController = new LiveGameController(this);
             replayController = new ReplayGameController(this);
+            watchController = new WatchGameController(this);
 
             mapDrawer = new MapDrawer(map, prajurits);
         }
@@ -290,6 +292,10 @@ namespace CommandCenter
 
         private void pantauLatihanButton_Click(object sender, RoutedEventArgs e)
         {
+            watchController.watchExercise(pantauIdLatihanTextBox.Text);
+            setActiveTab(pantauTabItem);
+            pantauIdLatihanTextBox.IsEnabled = false;
+            stopPantauButton.IsEnabled = true;
         }
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CommandCenter.Model.Protocol
 {
-    class JSONPacket
+    public class JSONPacket
     {
         private Dictionary<string, string> parameters = new Dictionary<string,string>();
 

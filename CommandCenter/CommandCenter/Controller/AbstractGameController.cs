@@ -14,7 +14,7 @@ using CommandCenter.Model.Protocol;
 
 namespace CommandCenter.Controller
 {
-    abstract class AbstractGameController
+    public abstract class AbstractGameController
     {
         public enum State { IDLE, REGISTRATION, EXERCISE };
 
@@ -27,6 +27,7 @@ namespace CommandCenter.Controller
         protected EventsRecorder recorder;
         protected PrajuritDatabase prajuritDatabase;
         protected int initialAmmo;
+        protected List<IPAddress> watchers;
 
         public AbstractGameController(MainWindow parent, UDPCommunication communication, EventsRecorder recorder)
         {
@@ -36,18 +37,7 @@ namespace CommandCenter.Controller
             this.senjatas = parent.senjatas;
             this.recorder = recorder;
             this.prajuritDatabase = parent.prajuritDatabase;
-        }
-
-        public String startRegistration(int initialAmmo)
-        {
-            Random random = new Random();
-            String gameId = "";
-            for (int i = 0; i < 3; i++)
-            {
-                gameId += random.Next(10);
-            }
-
-            return startRegistration(gameId, initialAmmo);
+            this.watchers = new List<IPAddress>();
         }
 
         public String startRegistration(string gameId, int initialAmmo)
@@ -65,6 +55,7 @@ namespace CommandCenter.Controller
                 this.recorder.setProperty(EventsRecorder.PROP_GAMEID, gameId);
                 this.recorder.setProperty(EventsRecorder.PROP_AMMO, "" + initialAmmo);
                 communication.listenAsync(this);
+                watchers.Clear();
                 this.state = State.REGISTRATION;
             }
             catch (Exception e)
@@ -75,7 +66,6 @@ namespace CommandCenter.Controller
             parent.writeLog("Pendaftaran dibuka, game id = " + gameId);
             return gameId;
         }
-
 
         public void startExercise()
         {
@@ -204,6 +194,29 @@ namespace CommandCenter.Controller
                     // Reply with pong, and let the rest of parameters be the same.
                     inPacket.setParameter("type", "pong");
                     communication.send(address, inPacket);
+                }
+                else if (type.Equals("pantau/register"))
+                {
+                    if (inPacket.getParameter("gameid").Equals(gameId))
+                    {
+                        JSONPacket outPacket = new JSONPacket("pantau/confirm");
+                        if (state == State.REGISTRATION && prajurits.Count == 0)
+                        {
+                            watchers.Add(address);
+                            outPacket.setParameter("status", "ok");
+                            outPacket.setParameter("ammo", "" + initialAmmo);
+                        }
+                        else
+                        {
+                            outPacket.setParameter("status", "Tidak bisa pantau karena sudah ada prajurit yang bergabung.");
+                        }
+                        communication.send(address, outPacket, UDPCommunication.IN_PORT);
+                        parent.writeLog(address + " joined as watcher");
+                    }
+                    else
+                    {
+                        parent.writeLog("Watch request from " + address + " is ignored, as the game id " + inPacket.getParameter("gameid") + " mismatched");
+                    }
                 }
                 else
                 {

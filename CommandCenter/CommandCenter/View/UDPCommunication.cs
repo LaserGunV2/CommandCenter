@@ -12,10 +12,10 @@ using System.Threading.Tasks;
 
 namespace CommandCenter.View
 {
-    class UDPCommunication
+    public class UDPCommunication
     {
-        const int IN_PORT = 21500;
-        const int OUT_PORT = 21501;
+        public const int IN_PORT = 21500;
+        public const int OUT_PORT = 21501;
 
         MainWindow parent;
         AbstractGameController controller = null;
@@ -69,7 +69,12 @@ namespace CommandCenter.View
 
         public virtual void send(IPAddress address, JSONPacket outPacket)
         {
-            UdpClient client = new UdpClient(address + "", OUT_PORT);
+            send(address, outPacket, OUT_PORT);
+        }
+
+        public void send(IPAddress address, JSONPacket outPacket, int port)
+        {
+            UdpClient client = new UdpClient(address + "", port);
             string sendString = outPacket.ToString();
             Byte[] sendBytes = Encoding.UTF8.GetBytes(sendString);
             try
