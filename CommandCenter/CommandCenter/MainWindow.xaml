@@ -67,7 +67,7 @@
                     </Grid.ColumnDefinitions>
                     <Label Content="ID Latihan" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="96"/>
                     <TextBox x:Name="idLatihanTextBox" HorizontalAlignment="Left" Height="61" Margin="10,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="96" FontStyle="Italic" FontSize="36"/>
-                    <Button x:Name="pantauLatihanButton" Content="Pantau Latihan" HorizontalAlignment="Left" Margin="111,13,0,0" VerticalAlignment="Top" Width="134" Click="pendaftaranButton_Click"/>
+                    <Button x:Name="pantauLatihanButton" Content="Pantau Latihan" HorizontalAlignment="Left" Margin="111,13,0,0" VerticalAlignment="Top" Width="134" Click="pantauLatihanButton_Click"/>
                     <Button x:Name="pantauLatihanButton_Copy" Content="Berhenti Memantau" HorizontalAlignment="Left" Margin="111,38,0,0" VerticalAlignment="Top" Width="134" Click="pendaftaranButton_Click"/>
                 </Grid>
             </TabItem>

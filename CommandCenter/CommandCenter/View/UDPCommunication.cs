@@ -1,4 +1,5 @@
-﻿using CommandCenter.Model.Protocol;
+﻿using CommandCenter.Controller;
+using CommandCenter.Model.Protocol;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

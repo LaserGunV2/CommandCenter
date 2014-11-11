@@ -23,7 +23,7 @@ namespace CommandCenter.Controller
         long skippedMilliseconds;
 
         public ReplayGameController(MainWindow parent)
-            : base(parent, new SilentUDPCommunication(parent), new SilentEventsRecorder())
+            : base(parent, new ReplaySilentUDPCommunication(parent), new ReplaySilentEventsRecorder())
         {
             stopwatch = new Stopwatch();
             eventTimer = new Timer();
@@ -113,11 +113,11 @@ namespace CommandCenter.Controller
         }
     }
 
-    class SilentUDPCommunication : UDPCommunication
+    class ReplaySilentUDPCommunication : UDPCommunication
     {
         public MainWindow parent;
 
-        public SilentUDPCommunication(MainWindow parent) : base(parent)
+        public ReplaySilentUDPCommunication(MainWindow parent) : base(parent)
         {
             this.parent = parent;
         }
@@ -134,7 +134,7 @@ namespace CommandCenter.Controller
         }
     }
 
-    class SilentEventsRecorder : EventsRecorder
+    class ReplaySilentEventsRecorder : EventsRecorder
     {
         public override void startRecording()
         {

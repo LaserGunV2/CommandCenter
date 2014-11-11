@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Net.Sockets;
 using CommandCenter.Model.Events;
 
-namespace CommandCenter.Model.Protocol
+namespace CommandCenter.Controller
 {
     class LiveGameController : AbstractGameController
     {

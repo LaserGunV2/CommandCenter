@@ -287,5 +287,9 @@ namespace CommandCenter
                 pantauTabItem.IsEnabled = (activeTab == pantauTabItem);
             }
         }
+
+        private void pantauLatihanButton_Click(object sender, RoutedEventArgs e)
+        {
+        }
     }
 }

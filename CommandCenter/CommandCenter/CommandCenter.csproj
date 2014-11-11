@@ -101,6 +101,7 @@
     </ApplicationDefinition>
     <Compile Include="Controller\AbstractGameController.cs" />
     <Compile Include="Controller\ReplayGameController.cs" />
+    <Compile Include="Controller\WatchGameController.cs" />
     <Compile Include="Model\Event.cs" />
     <Compile Include="Model\EventsRecorder.cs" />
     <Compile Include="View\PrajuritDatabase.cs" />

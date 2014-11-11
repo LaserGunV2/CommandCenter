@@ -9,8 +9,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 using CommandCenter.Model.Events;
+using CommandCenter.Model;
+using CommandCenter.Model.Protocol;
 
-namespace CommandCenter.Model.Protocol
+namespace CommandCenter.Controller
 {
     abstract class AbstractGameController
     {
