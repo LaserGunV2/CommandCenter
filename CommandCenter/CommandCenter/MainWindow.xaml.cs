@@ -133,6 +133,7 @@ namespace CommandCenter
         {
             liveGameController.stopExercise();
             replayController.stopPlayback();
+            watchController.stopExercise();
             prajuritDatabase.closeConnection();
             EventsRecorder.closeConnection();
         }
@@ -295,7 +296,16 @@ namespace CommandCenter
             watchController.watchExercise(pantauIdLatihanTextBox.Text);
             setActiveTab(pantauTabItem);
             pantauIdLatihanTextBox.IsEnabled = false;
+            pantauLatihanButton.IsEnabled = false;
             stopPantauButton.IsEnabled = true;
+        }
+
+        private void stopPantauButton_Click(object sender, RoutedEventArgs e)
+        {
+            watchController.stopExercise();
+            pantauIdLatihanTextBox.IsEnabled = true;
+            pantauLatihanButton.IsEnabled = true;
+            stopPantauButton.IsEnabled = false;           
         }
     }
 }

@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 using CommandCenter.Model.Events;
+using CommandCenter.Model.Protocol;
 
 namespace CommandCenter.Controller
 {
@@ -31,6 +32,15 @@ namespace CommandCenter.Controller
             }
 
             return startRegistration(gameId, initialAmmo);
+        }
+
+        public override void handlePacket(IPAddress address, JSONPacket inPacket)
+        {
+            base.handlePacket(address, inPacket);
+            foreach(IPAddress watcher in watchers) {
+                parent.writeLog("Kirim ke pemantau " + watcher + " pesan " + inPacket);
+                communication.send(watcher, inPacket);
+            }
         }
     }
 }

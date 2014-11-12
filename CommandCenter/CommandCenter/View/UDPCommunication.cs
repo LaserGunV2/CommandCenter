@@ -17,8 +17,8 @@ namespace CommandCenter.View
         public const int IN_PORT = 21500;
         public const int OUT_PORT = 21501;
 
-        MainWindow parent;
-        AbstractGameController controller = null;
+        protected MainWindow parent;
+        protected AbstractGameController controller = null;
         Thread thread = null;
 
         public UDPCommunication(MainWindow parent)

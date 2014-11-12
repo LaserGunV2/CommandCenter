@@ -75,7 +75,7 @@ namespace CommandCenter.Controller
             parent.writeLog("Permainan dimulai");
         }
 
-        public void stopExercise()
+        public virtual void stopExercise()
         {
             if (state == State.IDLE)
             {
@@ -101,7 +101,7 @@ namespace CommandCenter.Controller
             parent.writeLog("Permainan diakhiri");
         }
 
-        public void handlePacket(IPAddress address, JSONPacket inPacket)
+        public virtual void handlePacket(IPAddress address, JSONPacket inPacket)
         {
             try
             {
