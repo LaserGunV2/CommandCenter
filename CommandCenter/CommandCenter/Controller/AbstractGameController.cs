@@ -21,7 +21,7 @@ namespace CommandCenter.Controller
         protected MainWindow parent;
         protected UDPCommunication communication;
         protected State state;
-        protected String gameId = null;
+        public String gameId = null;
         protected List<Prajurit> prajurits;
         protected Dictionary<int, Senjata> senjatas;
         protected EventsRecorder recorder;

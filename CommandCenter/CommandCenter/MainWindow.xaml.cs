@@ -14,6 +14,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -304,7 +305,15 @@ namespace CommandCenter
 
         private void pantauLatihanButton_Click(object sender, RoutedEventArgs e)
         {
-            watchController.watchExercise(pantauIdLatihanTextBox.Text);
+            Regex regex = new Regex(@"^\d\d\d$");
+            if (regex.Match(pantauIdLatihanTextBox.Text).Success)
+            {
+                watchController.watchExercise(pantauIdLatihanTextBox.Text);
+            }
+            else
+            {
+                MessageBox.Show("Isi ID latihan dengan tiga dijit angka!", "Kesalahan masukan");
+            }
         }
 
         private void stopPantauButton_Click(object sender, RoutedEventArgs e)

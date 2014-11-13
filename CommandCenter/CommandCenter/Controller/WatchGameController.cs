@@ -76,7 +76,7 @@ namespace CommandCenter.Controller
                         byte[] receivedBytes = client.Receive(ref endPoint);
                         parent.writeLog("Terima dari " + endPoint + ": " + Encoding.ASCII.GetString(receivedBytes));
                         JSONPacket inPacket = JSONPacket.createFromJSONBytes(receivedBytes);
-                        if (inPacket.getParameter("type").Equals("pantau/confirm"))
+                        if (inPacket.getParameter("type").Equals("pantau/confirm") && inPacket.getParameter("gameid").Equals(controller.gameId))
                         {
                             if (inPacket.getParameter("status").Equals("ok"))
                             {
@@ -91,6 +91,10 @@ namespace CommandCenter.Controller
                                 parent.writeLog("Pantau ditolak: " + inPacket.getParameter("status"));
                             }
                             return;
+                        }
+                        else
+                        {
+                            parent.writeLog("Paket diabaikan: " + inPacket);
                         }
                     }
                     catch (SocketException)
