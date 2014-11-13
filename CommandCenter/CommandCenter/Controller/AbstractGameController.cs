@@ -67,7 +67,7 @@ namespace CommandCenter.Controller
             return gameId;
         }
 
-        public void startExercise()
+        public virtual void startExercise()
         {
             this.state = State.EXERCISE;
             parent.mapDrawer.showEveryone();
@@ -75,7 +75,7 @@ namespace CommandCenter.Controller
             parent.writeLog("Permainan dimulai");
         }
 
-        public virtual void stopExercise()
+        public virtual void stopExercise(bool force)
         {
             if (state == State.IDLE)
             {
@@ -83,7 +83,7 @@ namespace CommandCenter.Controller
             }
 
             // Stop incoming communication
-            communication.stopListenAsync();
+            communication.stopListenAsync(force);
             this.state = State.IDLE;
 
             // Send endgame signal
@@ -216,6 +216,21 @@ namespace CommandCenter.Controller
                     else
                     {
                         parent.writeLog("Watch request from " + address + " is ignored, as the game id " + inPacket.getParameter("gameid") + " mismatched");
+                    }
+                }
+                else if (type.Equals("pantau/state"))
+                {
+                    if (inPacket.getParameter("state").Equals("START"))
+                    {
+                        startExercise();
+                    }
+                    else if (inPacket.getParameter("state").Equals("STOP"))
+                    {
+                        stopExercise(false);
+                    }
+                    else
+                    {
+                        parent.writeLog("Unknown state set: " + inPacket.getParameter("state"));
                     }
                 }
                 else

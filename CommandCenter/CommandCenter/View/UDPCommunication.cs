@@ -19,6 +19,7 @@ namespace CommandCenter.View
 
         protected MainWindow parent;
         protected AbstractGameController controller = null;
+        private bool softAbort;
         Thread thread = null;
 
         public UDPCommunication(MainWindow parent)
@@ -34,7 +35,8 @@ namespace CommandCenter.View
                 client = new UdpClient(IN_PORT);
                 client.Client.ReceiveTimeout = 1000;
                 IPEndPoint endPoint = new IPEndPoint(IPAddress.Any, 0);
-                while (true)
+                softAbort = false;
+                while (!softAbort)
                 {
                     try
                     {
@@ -49,14 +51,22 @@ namespace CommandCenter.View
                     }
                     catch (JsonReaderException jre)
                     {
-                        parent.writeLog(jre.Message);
+                        parent.writeLog("Error: " + jre);
                     }
                 }
+                client.Close();
+                parent.writeLog("Communcation soft-closed");
             }
             catch (ThreadAbortException)
             {
                 client.Close();
+                parent.writeLog("Communcation hard-closed");
+
                 return;
+            }
+            catch (Exception e)
+            {
+                parent.writeLog("Error: " + e);
             }
         }
 
@@ -88,11 +98,18 @@ namespace CommandCenter.View
             }
         }
 
-        public void stopListenAsync()
+        public void stopListenAsync(bool force)
         {
-            if (thread != null)
-            { 
-                thread.Abort();
+            if (force)
+            {
+                if (thread != null)
+                {
+                    thread.Abort();
+                }
+            }
+            else
+            {
+                softAbort = true;
             }
         }
     }

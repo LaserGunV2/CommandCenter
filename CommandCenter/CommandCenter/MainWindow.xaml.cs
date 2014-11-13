@@ -107,7 +107,7 @@ namespace CommandCenter
         {
             prajuritDatabase.saveNamesToDatabase(prajurits);
             idSimulationLabel.Content = "###";
-            liveGameController.stopExercise();
+            liveGameController.stopExercise(true);
 
             pendaftaranButton.IsEnabled = true;
             mulaiButton.IsEnabled = false;
@@ -131,9 +131,9 @@ namespace CommandCenter
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            liveGameController.stopExercise();
+            liveGameController.stopExercise(true);
             replayController.stopPlayback();
-            watchController.stopExercise();
+            watchController.stopExercise(true);
             prajuritDatabase.closeConnection();
             EventsRecorder.closeConnection();
         }
@@ -255,6 +255,17 @@ namespace CommandCenter
             }));     
         }
 
+        public void setWatchingEnabled(bool isWatching)
+        {
+            Dispatcher.InvokeAsync((Action)(() =>
+            {
+                pantauIdLatihanTextBox.IsEnabled = !isWatching;
+                pantauLatihanButton.IsEnabled = !isWatching;
+                stopPantauButton.IsEnabled = isWatching;
+                setActiveTab(isWatching ? pantauTabItem : null);
+            }));     
+        }
+
         private void playSpeedComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             string selectedValue = (e.AddedItems[0] as ComboBoxItem).Content as string;
@@ -294,18 +305,11 @@ namespace CommandCenter
         private void pantauLatihanButton_Click(object sender, RoutedEventArgs e)
         {
             watchController.watchExercise(pantauIdLatihanTextBox.Text);
-            setActiveTab(pantauTabItem);
-            pantauIdLatihanTextBox.IsEnabled = false;
-            pantauLatihanButton.IsEnabled = false;
-            stopPantauButton.IsEnabled = true;
         }
 
         private void stopPantauButton_Click(object sender, RoutedEventArgs e)
         {
-            watchController.stopExercise();
-            pantauIdLatihanTextBox.IsEnabled = true;
-            pantauLatihanButton.IsEnabled = true;
-            stopPantauButton.IsEnabled = false;           
+            watchController.stopExercise(true);
         }
     }
 }

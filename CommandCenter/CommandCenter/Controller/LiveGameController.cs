@@ -42,5 +42,29 @@ namespace CommandCenter.Controller
                 communication.send(watcher, inPacket);
             }
         }
+
+        public override void startExercise()
+        {
+            base.startExercise();
+            foreach (IPAddress watcher in watchers)
+            {
+                JSONPacket packet = new JSONPacket("pantau/state");
+                packet.setParameter("state", "START");
+                parent.writeLog("Kirim ke pemantau " + watcher + " pesan " + packet);
+                communication.send(watcher, packet);
+            }
+        }
+
+        public override void stopExercise(bool force)
+        {
+            base.stopExercise(force);
+            foreach (IPAddress watcher in watchers)
+            {
+                JSONPacket packet = new JSONPacket("pantau/state");
+                packet.setParameter("state", "STOP");
+                parent.writeLog("Kirim ke pemantau " + watcher + " pesan " + packet);
+                communication.send(watcher, packet);
+            }
+        }
     }
 }

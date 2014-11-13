@@ -29,12 +29,14 @@ namespace CommandCenter.Controller
             packet.setParameter("gameid", gameId);
             modifiedCommunication.broadcast(packet);
             modifiedCommunication.listenWatchConfirmationAsync(this);
+            parent.setWatchingEnabled(true);
         }
 
-        public override void stopExercise()
+        public override void stopExercise(bool force)
         {
-            base.stopExercise();
+            base.stopExercise(force);
             modifiedCommunication.stopListenWatchConfirmationAsync();
+            parent.setWatchingEnabled(false);
         }
     }
 
@@ -95,16 +97,19 @@ namespace CommandCenter.Controller
                     {
                         // void
                     }
-                    catch (Exception e)
+                    catch (ThreadAbortException)
                     {
-                        parent.writeLog(e.Message);
+                        client.Close();
+                        return;
                     }
                 }
             }
             catch (ThreadAbortException)
             {
-                client.Close();
-                return;
+            }
+            catch (Exception e)
+            {
+                parent.writeLog("Error: " + e);
             }
         }
 

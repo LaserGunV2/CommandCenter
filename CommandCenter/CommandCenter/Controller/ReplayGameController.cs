@@ -74,7 +74,7 @@ namespace CommandCenter.Controller
                 }
                 else if (scheduledEvent.packet.Equals(EventsRecorder.STOP))
                 {
-                    stopExercise();
+                    stopExercise(true);
                 }
                 else
                 {
