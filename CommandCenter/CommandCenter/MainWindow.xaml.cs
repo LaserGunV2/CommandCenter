@@ -25,6 +25,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Text.RegularExpressions;
 
 namespace CommandCenter
 {
@@ -61,6 +62,7 @@ namespace CommandCenter
             watchController = new WatchGameController(this);
 
             mapDrawer = new MapDrawer(map, prajurits);
+            mapDrawer.setVisibility(showACheckBox.IsChecked.Value, showBCheckBox.IsChecked.Value); //check checkbox Tim
         }
 
         private void pendaftaranButton_Click(object sender, RoutedEventArgs e)
@@ -95,6 +97,9 @@ namespace CommandCenter
 
         private void mulaiButton_Click(object sender, RoutedEventArgs e)
         {
+            //check checkbox value
+            mapDrawer.setVisibility(showACheckBox.IsChecked.Value, showBCheckBox.IsChecked.Value);
+
             prajuritDatabase.saveNamesToDatabase(prajurits);
             pendaftaranButton.IsEnabled = false;
             mulaiButton.IsEnabled = false;
@@ -296,6 +301,20 @@ namespace CommandCenter
             setActiveTab(pantauTabItem);
             pantauIdLatihanTextBox.IsEnabled = false;
             stopPantauButton.IsEnabled = true;
+        }
+
+		public void setVisible(object sender, RoutedEventArgs e)
+        {
+            mapDrawer.setVisibility(showACheckBox.IsChecked.Value, showBCheckBox.IsChecked.Value);
+            mapDrawer.updateVisibility();
+        }
+
+        private void CharValidationTextBox(object sender, KeyEventArgs e)
+        {
+            if (e.Key.Equals('A') || e.Key.Equals('B'))
+            {
+                e.Handled = true;
+            }
         }
     }
 }

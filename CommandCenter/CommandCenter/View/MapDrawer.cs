@@ -19,6 +19,8 @@ namespace CommandCenter.View
     {
         Map map;
         List<Prajurit> prajurits;
+        bool checkA;
+        bool checkB;
 
         private double? lastZoomLevel = null;
 
@@ -26,6 +28,8 @@ namespace CommandCenter.View
         {
             this.map = map;
             this.prajurits = prajurits;
+            this.checkA = false;
+            this.checkB = false;
             map.ViewChangeStart += mapViewChangeStart;
             map.ViewChangeEnd += mapViewChangeEnd;
         }
@@ -44,49 +48,30 @@ namespace CommandCenter.View
                     prajurit.pushpin.Width = 60;
                     prajurit.pushpin.RenderTransformOrigin = new Point(0.5, 0.5);
                     prajurit.pushpin.Margin = new Thickness(-prajurit.pushpin.Height / 2, -prajurit.pushpin.Width / 2, 0, 0);
-                    //prajurit.pushpin.RenderTransform = new RotateTransform(80);
                     
-                    prajurit.assignedPushPin = new Pushpin();
                     prajurit.assignedText = setTextBlockToMap(prajurit);
                     prajurit.assignedAccuracy = createAccuracyCircle(prajurit);
                     updateAccuracyCircle(prajurit);
-                    //prajurit.assignedPushPin.Template = setTemplateStatePosture(prajurit);
-                    //prajurit.assignedPushPin.Location = prajurit.location;
 
-                    ToolTipService.SetToolTip(prajurit.pushpin, prajurit.nama);
-                    /* start add textblock to layer */
-                    MapLayer.SetPosition(prajurit.assignedText, prajurit.location);
-                    map.Children.Add(prajurit.assignedText);
-                    /* end add textblock to layer */
-                    /* start add accuracy to layer */
-                    MapLayer.SetPosition(prajurit.assignedAccuracy, prajurit.location);
-                    map.Children.Add(prajurit.assignedAccuracy);
-                    /* end add accuracy to layer */
-                    /* start add prajurit to layer */
-                    MapLayer.SetPosition(prajurit.pushpin, prajurit.location);
-                    map.Children.Add(prajurit.pushpin);
-                    /* end add prajurit to layer */
-
+                    draw(prajurit);
+                    if (prajurit.group.Equals("A") && checkA.Equals(false))
+                    {
+                        updateToHide(prajurit);
+                    }
+                    else if(prajurit.group.Equals("B") && checkA.Equals(false)) 
+                    {
+                        updateToHide(prajurit);
+                    }
                 }
                 // Update and draw the push pin if available
                 if (prajurit.pushpin != null)
                 {
                     // Note: Bing Maps fix to force update. Hopefully it would work
-                    //prajurit.assignedPushPin.Location = new Location(prajurit.location);
-                    //prajurit.assignedPushPin.Heading = (180 + prajurit.heading) % 360;
-                    //prajurit.assignedPushPin.Template = setTemplateStatePosture(prajurit);
-
                     String newImg = setPositionPrajurit(prajurit); 
                     prajurit.pushpin.Source = new BitmapImage(new Uri(newImg, UriKind.Relative)); 
-                    
                     prajurit.pushpin.RenderTransform = new RotateTransform((180 + prajurit.heading) % 360);
-                    MapLayer.SetPosition(prajurit.pushpin, prajurit.location);
-                    /* start update textblock and accuracy */
-                    setPositionText(prajurit);
-                    MapLayer.SetPosition(prajurit.assignedText, prajurit.location);
-                    updateAccuracyCircle(prajurit);
-                    MapLayer.SetPosition(prajurit.assignedAccuracy, prajurit.location);
-                    /* end update textblock and accuracy */
+
+                    updateIfExist(prajurit);
                 }
                 // Refresh map, if map is ready.
                 if (map.ActualHeight > 0 && map.ActualWidth > 0)
@@ -94,6 +79,54 @@ namespace CommandCenter.View
                     map.SetView(map.BoundingRectangle);
                 }
             }));
+        }
+
+        private void draw(Prajurit prajurit) {
+            ToolTipService.SetToolTip(prajurit.pushpin, prajurit.nama);
+            /* start add textblock to layer */
+            MapLayer.SetPosition(prajurit.assignedText, prajurit.location);
+            map.Children.Add(prajurit.assignedText);
+            /* end add textblock to layer */
+            /* start add accuracy to layer */
+            MapLayer.SetPosition(prajurit.assignedAccuracy, prajurit.location);
+            map.Children.Add(prajurit.assignedAccuracy);
+            /* end add accuracy to layer */
+            /* start add prajurit to layer */
+            MapLayer.SetPosition(prajurit.pushpin, prajurit.location);
+            map.Children.Add(prajurit.pushpin);
+            /* end add prajurit to layer */
+        }
+
+        private void updateIfExist(Prajurit prajurit)
+        {
+            MapLayer.SetPosition(prajurit.pushpin, prajurit.location);
+            /* start update textblock and accuracy */
+            setPositionText(prajurit);
+            MapLayer.SetPosition(prajurit.assignedText, prajurit.location);
+            updateAccuracyCircle(prajurit);
+            MapLayer.SetPosition(prajurit.assignedAccuracy, prajurit.location);
+            /* end update textblock and accuracy */
+        }
+
+        private void updateToHide(Prajurit prajurit) {
+            prajurit.pushpin.Visibility = Visibility.Hidden;
+            MapLayer.SetPosition(prajurit.pushpin, prajurit.location);
+            prajurit.assignedText.Visibility = Visibility.Hidden;
+            MapLayer.SetPosition(prajurit.assignedText, prajurit.location);
+            prajurit.assignedAccuracy.Visibility = Visibility.Hidden;
+            MapLayer.SetPosition(prajurit.assignedAccuracy, prajurit.location);
+            //MapLayer.SetZIndex(prajurit.pushpin, -1000);
+        }
+
+        private void updateToShow(Prajurit prajurit)
+        {
+            prajurit.pushpin.Visibility = Visibility.Visible;
+            MapLayer.SetPosition(prajurit.pushpin, prajurit.location);
+            prajurit.assignedText.Visibility = Visibility.Visible;
+            MapLayer.SetPosition(prajurit.assignedText, prajurit.location);
+            prajurit.assignedAccuracy.Visibility = Visibility.Visible;
+            MapLayer.SetPosition(prajurit.assignedAccuracy, prajurit.location);
+            //MapLayer.SetZIndex(prajurit.pushpin, -1000);
         }
 
         // Show accuracy in map
@@ -307,6 +340,46 @@ namespace CommandCenter.View
                 }
             }
             lastZoomLevel = null;
+        }
+
+        private void checkTim(object sender, RoutedEventArgs e)
+        {
+            CheckBox check = sender as CheckBox;
+            MessageBox.Show(check.IsChecked.Value.ToString());
+        }
+
+        public void updateVisibility() {
+            foreach (Prajurit prajurit in prajurits)
+            {
+                if (prajurit.group.Equals("A"))
+                {
+                    if (checkA.Equals(true))
+                    {
+                        updateToShow(prajurit);
+                    }
+                    else 
+                    {
+                        updateToHide(prajurit);
+                    }
+                }
+                else if (prajurit.group.Equals("B"))
+                {
+                    if (checkB.Equals(true))
+                    {
+                        updateToShow(prajurit);
+                    }
+                    else
+                    {
+                        updateToHide(prajurit);
+                    }
+                }
+            }
+        }
+
+        public void setVisibility(bool checkBoxA, bool checkBoxB)
+        {
+            this.checkA = checkBoxA;
+            this.checkB = checkBoxB;
         }
     }
 }
