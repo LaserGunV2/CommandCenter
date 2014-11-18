@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 using CommandCenter.Model.Events;
+using CommandCenter.Model.Protocol;
 
 namespace CommandCenter.Controller
 {
@@ -31,6 +32,39 @@ namespace CommandCenter.Controller
             }
 
             return startRegistration(gameId, initialAmmo);
+        }
+
+        public override void handlePacket(IPAddress address, JSONPacket inPacket)
+        {
+            base.handlePacket(address, inPacket);
+            foreach(IPAddress watcher in watchers) {
+                parent.writeLog("Kirim ke pemantau " + watcher + " pesan " + inPacket);
+                communication.send(watcher, inPacket);
+            }
+        }
+
+        public override void startExercise()
+        {
+            base.startExercise();
+            foreach (IPAddress watcher in watchers)
+            {
+                JSONPacket packet = new JSONPacket("pantau/state");
+                packet.setParameter("state", "START");
+                parent.writeLog("Kirim ke pemantau " + watcher + " pesan " + packet);
+                communication.send(watcher, packet);
+            }
+        }
+
+        public override void stopExercise(bool force)
+        {
+            base.stopExercise(force);
+            foreach (IPAddress watcher in watchers)
+            {
+                JSONPacket packet = new JSONPacket("pantau/state");
+                packet.setParameter("state", "STOP");
+                parent.writeLog("Kirim ke pemantau " + watcher + " pesan " + packet);
+                communication.send(watcher, packet);
+            }
         }
     }
 }

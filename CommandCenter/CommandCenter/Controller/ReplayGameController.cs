@@ -74,7 +74,7 @@ namespace CommandCenter.Controller
                 }
                 else if (scheduledEvent.packet.Equals(EventsRecorder.STOP))
                 {
-                    stopExercise();
+                    stopExercise(true);
                 }
                 else
                 {
@@ -115,8 +115,6 @@ namespace CommandCenter.Controller
 
     class ReplaySilentUDPCommunication : UDPCommunication
     {
-        public MainWindow parent;
-
         public ReplaySilentUDPCommunication(MainWindow parent) : base(parent)
         {
             this.parent = parent;

@@ -14,6 +14,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -112,7 +113,7 @@ namespace CommandCenter
         {
             prajuritDatabase.saveNamesToDatabase(prajurits);
             idSimulationLabel.Content = "###";
-            liveGameController.stopExercise();
+            liveGameController.stopExercise(true);
 
             pendaftaranButton.IsEnabled = true;
             mulaiButton.IsEnabled = false;
@@ -136,8 +137,9 @@ namespace CommandCenter
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            liveGameController.stopExercise();
+            liveGameController.stopExercise(true);
             replayController.stopPlayback();
+            watchController.stopExercise(true);
             prajuritDatabase.closeConnection();
             EventsRecorder.closeConnection();
         }
@@ -259,6 +261,17 @@ namespace CommandCenter
             }));     
         }
 
+        public void setWatchingEnabled(bool isWatching)
+        {
+            Dispatcher.InvokeAsync((Action)(() =>
+            {
+                pantauIdLatihanTextBox.IsEnabled = !isWatching;
+                pantauLatihanButton.IsEnabled = !isWatching;
+                stopPantauButton.IsEnabled = isWatching;
+                setActiveTab(isWatching ? pantauTabItem : null);
+            }));     
+        }
+
         private void playSpeedComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             string selectedValue = (e.AddedItems[0] as ComboBoxItem).Content as string;
@@ -297,10 +310,20 @@ namespace CommandCenter
 
         private void pantauLatihanButton_Click(object sender, RoutedEventArgs e)
         {
-            watchController.watchExercise(pantauIdLatihanTextBox.Text);
-            setActiveTab(pantauTabItem);
-            pantauIdLatihanTextBox.IsEnabled = false;
-            stopPantauButton.IsEnabled = true;
+            Regex regex = new Regex(@"^\d\d\d$");
+            if (regex.Match(pantauIdLatihanTextBox.Text).Success)
+            {
+                watchController.watchExercise(pantauIdLatihanTextBox.Text);
+            }
+            else
+            {
+                MessageBox.Show("Isi ID latihan dengan tiga dijit angka!", "Kesalahan masukan");
+            }
+        }
+
+        private void stopPantauButton_Click(object sender, RoutedEventArgs e)
+        {
+            watchController.stopExercise(true);
         }
 
 		public void setVisible(object sender, RoutedEventArgs e)
