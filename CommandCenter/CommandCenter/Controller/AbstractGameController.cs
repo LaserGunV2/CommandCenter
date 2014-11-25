@@ -149,6 +149,7 @@ namespace CommandCenter.Controller
                         Prajurit prajurit = prajurits[index];
                         prajurit.setLocation(inPacket.getParameter("location"));
                         prajurit.heading = Double.Parse(inPacket.getParameter("heading"));
+                        prajurit.accuracy = Int32.Parse(inPacket.getParameter("accuracy"));
                         try
                         {
                             string[] prajuritState = inPacket.getParameter("state").Split('/');
