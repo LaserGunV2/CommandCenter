@@ -1,6 +1,7 @@
 ﻿using CommandCenter.Controller;
 using CommandCenter.Model.Protocol;
 using Newtonsoft.Json;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,7 +42,7 @@ namespace CommandCenter.View
                     try
                     {
                         byte[] receivedBytes = client.Receive(ref endPoint);
-                        parent.writeLog("Terima dari " + endPoint + ": " + Encoding.ASCII.GetString(receivedBytes));
+                        parent.writeLog(LogLevel.Info, "Terima dari " + endPoint + ": " + Encoding.ASCII.GetString(receivedBytes));
                         JSONPacket inPacket = JSONPacket.createFromJSONBytes(receivedBytes);
                         controller.handlePacket(endPoint.Address, inPacket);
                     }
@@ -51,22 +52,22 @@ namespace CommandCenter.View
                     }
                     catch (JsonReaderException jre)
                     {
-                        parent.writeLog("Error: " + jre);
+                        parent.writeLog(LogLevel.Error, "Error: " + jre);
                     }
                 }
                 client.Close();
-                parent.writeLog("Communcation soft-closed");
+                parent.writeLog(LogLevel.Info, "Communcation soft-closed");
             }
             catch (ThreadAbortException)
             {
                 client.Close();
-                parent.writeLog("Communcation hard-closed");
+                parent.writeLog(LogLevel.Info, "Communcation hard-closed");
 
                 return;
             }
             catch (Exception e)
             {
-                parent.writeLog("Error: " + e);
+                parent.writeLog(LogLevel.Error, "Error: " + e);
             }
         }
 
@@ -90,11 +91,11 @@ namespace CommandCenter.View
             try
             {
                 client.Send(sendBytes, sendBytes.Length);
-                parent.writeLog("Kirim ke " + address + ": " + sendString);
+                parent.writeLog(LogLevel.Info, "Kirim ke " + address + ": " + sendString);
             }
             catch (Exception e)
             {
-                parent.writeLog("Error: " + e);
+                parent.writeLog(LogLevel.Error, "Error: " + e);
             }
         }
 

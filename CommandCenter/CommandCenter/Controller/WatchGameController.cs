@@ -2,6 +2,7 @@
 using CommandCenter.Model.Protocol;
 using CommandCenter.View;
 using Newtonsoft.Json;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,7 +54,7 @@ namespace CommandCenter.Controller
         public override void send(IPAddress address, JSONPacket outPacket)
         {
             string sendString = outPacket.ToString();
-            this.parent.writeLog("Pura-pura kirim ke " + address + ": " + sendString);
+            this.parent.writeLog(LogLevel.Info, "Pura-pura kirim ke " + address + ": " + sendString);
         }
 
         public void broadcast(JSONPacket outPacket)
@@ -74,7 +75,7 @@ namespace CommandCenter.Controller
                     try
                     {
                         byte[] receivedBytes = client.Receive(ref endPoint);
-                        parent.writeLog("Terima dari " + endPoint + ": " + Encoding.ASCII.GetString(receivedBytes));
+                        parent.writeLog(LogLevel.Info, "Terima dari " + endPoint + ": " + Encoding.ASCII.GetString(receivedBytes));
                         JSONPacket inPacket = JSONPacket.createFromJSONBytes(receivedBytes);
                         if (inPacket.getParameter("type").Equals("pantau/confirm") && inPacket.getParameter("gameid").Equals(controller.gameId))
                         {
@@ -88,13 +89,13 @@ namespace CommandCenter.Controller
                             else
                             {
                                 client.Close();
-                                parent.writeLog("Pantau ditolak: " + inPacket.getParameter("status"));
+                                parent.writeLog(LogLevel.Warn, "Pantau ditolak: " + inPacket.getParameter("status"));
                             }
                             return;
                         }
                         else
                         {
-                            parent.writeLog("Paket diabaikan: " + inPacket);
+                            parent.writeLog(LogLevel.Warn, "Paket diabaikan karena belum memantau: " + inPacket);
                         }
                     }
                     catch (SocketException)
@@ -113,7 +114,7 @@ namespace CommandCenter.Controller
             }
             catch (Exception e)
             {
-                parent.writeLog("Error: " + e);
+                parent.writeLog(LogLevel.Error, "Error: " + e);
             }
         }
 

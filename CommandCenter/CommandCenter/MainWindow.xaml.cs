@@ -27,6 +27,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Text.RegularExpressions;
+using NLog;
 
 namespace CommandCenter
 {
@@ -48,9 +49,13 @@ namespace CommandCenter
         public double playSpeed = 1;
         public bool skipRegistration = true;
 
+        private Logger logger;
+
         public MainWindow()
         {
             InitializeComponent();
+
+            logger = LogManager.GetCurrentClassLogger();
 
             prajuritDatabase = new PrajuritDatabase();
             prajurits = new List<Prajurit>();
@@ -124,8 +129,9 @@ namespace CommandCenter
             updateReplayLength();
         }
 
-        public void writeLog(String s)
+        public void writeLog(LogLevel level, String s)
         {
+            logger.Log(level, s);
             Dispatcher.InvokeAsync((Action)(() =>
             {
                 if ((bool)peristiwaCheckBox.IsChecked)
@@ -169,12 +175,12 @@ namespace CommandCenter
                 if (saveDialog.ShowDialog() == true)
                 {
                     File.Copy(EventsRecorder.FILENAME, saveDialog.FileName, true);
-                    writeLog("Replay disimpan ke " + saveDialog.FileName);
+                    writeLog(LogLevel.Info, "Replay disimpan ke " + saveDialog.FileName);
                 }
             }
             catch (Exception ex)
             {
-                writeLog(ex.ToString());
+                writeLog(LogLevel.Error, ex.ToString());
             }
         }
 
@@ -191,12 +197,12 @@ namespace CommandCenter
                     updateReplayLength();
                     playButton.IsEnabled = true;
                     tabControl.SelectedIndex = 1;
-                    writeLog("Replay dibaca dari " + openDialog.FileName);
+                    writeLog(LogLevel.Info, "Replay dibaca dari " + openDialog.FileName);
                 }
             }
             catch (Exception ex)
             {
-                writeLog(ex.ToString());
+                writeLog(LogLevel.Error, ex.ToString());
             }
 
         }
@@ -216,7 +222,7 @@ namespace CommandCenter
             }
             catch (Exception e)
             {
-                writeLog(e.ToString());
+                writeLog(LogLevel.Error, e.ToString());
             }
         }
 

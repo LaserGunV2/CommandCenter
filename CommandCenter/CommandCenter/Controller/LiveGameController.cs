@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Net.Sockets;
 using CommandCenter.Model.Events;
 using CommandCenter.Model.Protocol;
+using NLog;
 
 namespace CommandCenter.Controller
 {
@@ -38,7 +39,7 @@ namespace CommandCenter.Controller
         {
             base.handlePacket(address, inPacket);
             foreach(IPAddress watcher in watchers) {
-                parent.writeLog("Kirim ke pemantau " + watcher + " pesan " + inPacket);
+                parent.writeLog(LogLevel.Info, "Kirim ke pemantau " + watcher + " pesan " + inPacket);
                 communication.send(watcher, inPacket);
             }
         }
@@ -50,7 +51,7 @@ namespace CommandCenter.Controller
             {
                 JSONPacket packet = new JSONPacket("pantau/state");
                 packet.setParameter("state", "START");
-                parent.writeLog("Kirim ke pemantau " + watcher + " pesan " + packet);
+                parent.writeLog(LogLevel.Info, "Kirim ke pemantau " + watcher + " pesan " + packet);
                 communication.send(watcher, packet);
             }
         }
@@ -62,7 +63,7 @@ namespace CommandCenter.Controller
             {
                 JSONPacket packet = new JSONPacket("pantau/state");
                 packet.setParameter("state", "STOP");
-                parent.writeLog("Kirim ke pemantau " + watcher + " pesan " + packet);
+                parent.writeLog(LogLevel.Info, "Kirim ke pemantau " + watcher + " pesan " + packet);
                 communication.send(watcher, packet);
             }
         }

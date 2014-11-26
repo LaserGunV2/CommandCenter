@@ -11,6 +11,7 @@ using System.Net.Sockets;
 using CommandCenter.Model.Events;
 using CommandCenter.Model;
 using CommandCenter.Model.Protocol;
+using NLog;
 
 namespace CommandCenter.Controller
 {
@@ -60,10 +61,10 @@ namespace CommandCenter.Controller
             }
             catch (Exception e)
             {
-                parent.writeLog(e.ToString());
+                parent.writeLog(LogLevel.Error, e.ToString());
                 return null;
             }
-            parent.writeLog("Pendaftaran dibuka, game id = " + gameId);
+            parent.writeLog(LogLevel.Info, "Pendaftaran dibuka, game id = " + gameId);
             return gameId;
         }
 
@@ -72,7 +73,7 @@ namespace CommandCenter.Controller
             this.state = State.EXERCISE;
             parent.mapDrawer.showEveryone();
             recorder.record(null, EventsRecorder.START);
-            parent.writeLog("Permainan dimulai");
+            parent.writeLog(LogLevel.Info, "Permainan dimulai");
         }
 
         public virtual void stopExercise(bool force)
@@ -98,7 +99,7 @@ namespace CommandCenter.Controller
             gameId = null;
 
             parent.refreshTable();
-            parent.writeLog("Permainan diakhiri");
+            parent.writeLog(LogLevel.Info, "Permainan diakhiri");
         }
 
         public virtual void handlePacket(IPAddress address, JSONPacket inPacket)
@@ -133,12 +134,12 @@ namespace CommandCenter.Controller
                         }
                         else
                         {
-                            parent.writeLog("Registration from " + address + " is ignored as we are not in registration phase");
+                            parent.writeLog(LogLevel.Warn, "Registration from " + address + " is ignored as we are not in registration phase");
                         }
                     }
                     else
                     {
-                        parent.writeLog("Registration from " + address + " with game id " + inPacket.getParameter("gameid") + " is ignored");
+                        parent.writeLog(LogLevel.Warn, "Registration from " + address + " with game id " + inPacket.getParameter("gameid") + " is ignored");
                     }
                 }
                 else if (type.Equals("event/update"))
@@ -180,7 +181,7 @@ namespace CommandCenter.Controller
                     }
                     else
                     {
-                        parent.writeLog("Update event is ignored when state is idle.");
+                        parent.writeLog(LogLevel.Warn, "Update event is ignored when state is idle.");
                     }
                 }
                 else if (type.Equals("ping"))
@@ -205,11 +206,11 @@ namespace CommandCenter.Controller
                             outPacket.setParameter("status", "Tidak bisa pantau karena sudah ada prajurit yang bergabung.");
                         }
                         communication.send(address, outPacket, UDPCommunication.IN_PORT);
-                        parent.writeLog(address + " joined as watcher");
+                        parent.writeLog(LogLevel.Info, address + " joined as watcher");
                     }
                     else
                     {
-                        parent.writeLog("Watch request from " + address + " is ignored, as the game id " + inPacket.getParameter("gameid") + " mismatched");
+                        parent.writeLog(LogLevel.Warn, "Watch request from " + address + " is ignored, as the game id " + inPacket.getParameter("gameid") + " mismatched");
                     }
                 }
                 else if (type.Equals("pantau/state"))
@@ -224,17 +225,17 @@ namespace CommandCenter.Controller
                     }
                     else
                     {
-                        parent.writeLog("Unknown state set: " + inPacket.getParameter("state"));
+                        parent.writeLog(LogLevel.Error, "Unknown state set: " + inPacket.getParameter("state"));
                     }
                 }
                 else
                 {
-                    parent.writeLog("Unknown type: " + type);
+                    parent.writeLog(LogLevel.Error, "Unknown type: " + type);
                 }
             }
             catch (Exception e)
             {
-                parent.writeLog("Unhandled exception: " + e);
+                parent.writeLog(LogLevel.Error, "Unhandled exception: " + e);
             }
         }
 

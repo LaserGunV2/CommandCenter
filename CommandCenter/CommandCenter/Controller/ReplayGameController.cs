@@ -2,6 +2,7 @@
 using CommandCenter.Model.Events;
 using CommandCenter.Model.Protocol;
 using CommandCenter.View;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -78,7 +79,7 @@ namespace CommandCenter.Controller
                 }
                 else
                 {
-                    parent.writeLog("Pura-pura terima dari " + scheduledEvent.sender + ": " + scheduledEvent.packet);
+                    parent.writeLog(LogLevel.Info, "Pura-pura terima dari " + scheduledEvent.sender + ": " + scheduledEvent.packet);
                     this.handlePacket(scheduledEvent.sender, JSONPacket.createFromJSONBytes(Encoding.UTF8.GetBytes(scheduledEvent.packet)));
                 }
             }
@@ -128,7 +129,7 @@ namespace CommandCenter.Controller
         public override void send(IPAddress address, JSONPacket outPacket)
         {
             string sendString = outPacket.ToString();
-            this.parent.writeLog("Pura-pura kirim ke " + address + ": " + sendString);
+            this.parent.writeLog(LogLevel.Info, "Pura-pura kirim ke " + address + ": " + sendString);
         }
     }
 

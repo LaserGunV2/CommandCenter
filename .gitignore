@@ -172,4 +172,5 @@ UpgradeLog*.htm
 FakesAssemblies/
 
 /CommandCenter/CommandCenter/bin/Release/*.internal-sqlite
+/CommandCenter/CommandCenter/bin/Release/*.log
 **/Thumbs.db
