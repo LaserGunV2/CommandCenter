@@ -150,16 +150,9 @@ namespace CommandCenter.Controller
                         prajurit.setLocation(inPacket.getParameter("location"));
                         prajurit.heading = Double.Parse(inPacket.getParameter("heading"));
                         prajurit.accuracy = Int32.Parse(inPacket.getParameter("accuracy"));
-                        try
-                        {
-                            string[] prajuritState = inPacket.getParameter("state").Split('/');
-                            prajurit.state = (prajuritState[0].Equals("alive") ? Prajurit.State.NORMAL : Prajurit.State.DEAD);
-                            prajurit.posture = (prajuritState[1].Equals("stand") ? Prajurit.Posture.STAND : Prajurit.Posture.CRAWL);
-                        }
-                        catch (KeyNotFoundException)
-                        {
-                            parent.writeLog("WARNING: you didn't send state attribute. [TODO remove after everyone implemented]");
-                        }
+                        string[] prajuritState = inPacket.getParameter("state").Split('/');
+                        prajurit.state = (prajuritState[0].Equals("alive") ? Prajurit.State.NORMAL : Prajurit.State.DEAD);
+                        prajurit.posture = (prajuritState[1].Equals("stand") ? Prajurit.Posture.STAND : Prajurit.Posture.CRAWL);
                         if (inPacket.getParameter("action").Equals("hit"))
                         {
                             int idSenjata = Int32.Parse(inPacket.getParameter("idsenjata"));
