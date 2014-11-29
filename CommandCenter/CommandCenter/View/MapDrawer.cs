@@ -69,7 +69,7 @@ namespace CommandCenter.View
                     // Note: Bing Maps fix to force update. Hopefully it would work
                     String newImg = setPositionPrajurit(prajurit); 
                     prajurit.pushpin.Source = new BitmapImage(new Uri(newImg, UriKind.Relative)); 
-                    prajurit.pushpin.RenderTransform = new RotateTransform((180 + prajurit.heading) % 360);
+                    prajurit.pushpin.RenderTransform = new RotateTransform(prajurit.heading % 360);
 
                     updateIfExist(prajurit);
                 }
