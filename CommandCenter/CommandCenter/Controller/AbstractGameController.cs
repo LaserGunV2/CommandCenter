@@ -205,6 +205,7 @@ namespace CommandCenter.Controller
                         {
                             watchers.Add(address);
                             outPacket.setParameter("status", "ok");
+                            outPacket.setParameter("gameid", gameId);
                             outPacket.setParameter("ammo", "" + initialAmmo);
                         }
                         else

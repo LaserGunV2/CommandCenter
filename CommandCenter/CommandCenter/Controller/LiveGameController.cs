@@ -38,9 +38,13 @@ namespace CommandCenter.Controller
         public override void handlePacket(IPAddress address, JSONPacket inPacket)
         {
             base.handlePacket(address, inPacket);
-            foreach(IPAddress watcher in watchers) {
-                parent.writeLog(LogLevel.Info, "Kirim ke pemantau " + watcher + " pesan " + inPacket);
-                communication.send(watcher, inPacket);
+            if (!inPacket.getParameter("type").StartsWith("pantau/"))
+            {
+                foreach (IPAddress watcher in watchers)
+                {
+                    parent.writeLog(LogLevel.Info, "Kirim ke pemantau " + watcher + " pesan " + inPacket);
+                    communication.send(watcher, inPacket, UDPCommunication.IN_PORT);
+                }
             }
         }
 
@@ -52,7 +56,7 @@ namespace CommandCenter.Controller
                 JSONPacket packet = new JSONPacket("pantau/state");
                 packet.setParameter("state", "START");
                 parent.writeLog(LogLevel.Info, "Kirim ke pemantau " + watcher + " pesan " + packet);
-                communication.send(watcher, packet);
+                communication.send(watcher, packet, UDPCommunication.IN_PORT);
             }
         }
 
@@ -64,7 +68,7 @@ namespace CommandCenter.Controller
                 JSONPacket packet = new JSONPacket("pantau/state");
                 packet.setParameter("state", "STOP");
                 parent.writeLog(LogLevel.Info, "Kirim ke pemantau " + watcher + " pesan " + packet);
-                communication.send(watcher, packet);
+                communication.send(watcher, packet, UDPCommunication.IN_PORT);
             }
         }
     }

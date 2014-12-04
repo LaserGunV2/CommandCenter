@@ -91,7 +91,7 @@ namespace CommandCenter.View
             try
             {
                 client.Send(sendBytes, sendBytes.Length);
-                parent.writeLog(LogLevel.Info, "Kirim ke " + address + ": " + sendString);
+                parent.writeLog(LogLevel.Info, "Kirim ke " + address + ":" + port + "/" + sendString);
             }
             catch (Exception e)
             {
