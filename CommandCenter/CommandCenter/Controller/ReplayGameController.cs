@@ -69,8 +69,13 @@ namespace CommandCenter.Controller
                 {
                     startRegistration(player.getProperty(EventsRecorder.PROP_GAMEID), Int32.Parse(player.getProperty(EventsRecorder.PROP_AMMO)));
                 }
-                else if (scheduledEvent.packet.Equals(EventsRecorder.START))
+                else if (scheduledEvent.packet.StartsWith(EventsRecorder.START))
                 {
+                    string[] tokens = scheduledEvent.packet.Split('/');
+                    for (int i = 0; i < tokens[1].Length; i++)
+                    {
+                        prajurits[i].group = "" + tokens[1][i];
+                    }
                     startExercise();
                 }
                 else if (scheduledEvent.packet.Equals(EventsRecorder.STOP))

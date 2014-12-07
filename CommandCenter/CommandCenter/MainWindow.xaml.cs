@@ -26,7 +26,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Text.RegularExpressions;
 using NLog;
 
 namespace CommandCenter
@@ -110,6 +109,7 @@ namespace CommandCenter
             pendaftaranButton.IsEnabled = false;
             mulaiButton.IsEnabled = false;
             akhiriButton.IsEnabled = true;
+            pesertaDataGrid.IsEnabled = false;
 
             liveGameController.startExercise();
         }
@@ -124,6 +124,7 @@ namespace CommandCenter
             mulaiButton.IsEnabled = false;
             akhiriButton.IsEnabled = false;
             saveButton.IsEnabled = true;
+            pesertaDataGrid.IsEnabled = true;
             setActiveTab(null);
             ammoTextBox.IsEnabled = true;
             updateReplayLength();

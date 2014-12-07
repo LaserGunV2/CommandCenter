@@ -70,9 +70,15 @@ namespace CommandCenter.Controller
 
         public virtual void startExercise()
         {
+            string prajuritGroups = "";
+            for (int i = 0; i < prajurits.Count; i++)
+            {
+                prajuritGroups += prajurits[i].group;
+            }
+
             this.state = State.EXERCISE;
             parent.mapDrawer.showEveryone();
-            recorder.record(null, EventsRecorder.START);
+            recorder.record(null, EventsRecorder.START + "/" + prajuritGroups);
             parent.writeLog(LogLevel.Info, "Permainan dimulai");
         }
 
@@ -199,6 +205,7 @@ namespace CommandCenter.Controller
                         {
                             watchers.Add(address);
                             outPacket.setParameter("status", "ok");
+                            outPacket.setParameter("gameid", gameId);
                             outPacket.setParameter("ammo", "" + initialAmmo);
                         }
                         else
@@ -215,8 +222,13 @@ namespace CommandCenter.Controller
                 }
                 else if (type.Equals("pantau/state"))
                 {
-                    if (inPacket.getParameter("state").Equals("START"))
+                    if (inPacket.getParameter("state").StartsWith("START"))
                     {
+                        string[] tokens = inPacket.getParameter("state").Split('/');
+                        for (int i = 0; i < tokens[1].Length; i++)
+                        {
+                            prajurits[i].group = "" + tokens[1][i];
+                        }
                         startExercise();
                     }
                     else if (inPacket.getParameter("state").Equals("STOP"))
