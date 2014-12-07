@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -23,9 +24,23 @@ namespace CommandCenter.View
         private bool softAbort;
         Thread thread = null;
 
+        protected String ipBroadcast;
+
         public UDPCommunication(MainWindow parent)
         {
             this.parent = parent;
+            var card = NetworkInterface.GetAllNetworkInterfaces().FirstOrDefault();
+            if (card != null)
+            {
+                var addss = card.GetIPProperties().GatewayAddresses.FirstOrDefault();
+                String address = addss.Address + "";
+                // make broadcast address 
+                while (!address[address.Length - 1].Equals('.'))
+                {
+                    address = address.Remove(address.Length - 1); //Remove last digit gateway address 
+                }
+                ipBroadcast = address + "255";//add 255 broadcast
+            }
         }
 
         private void listen()
