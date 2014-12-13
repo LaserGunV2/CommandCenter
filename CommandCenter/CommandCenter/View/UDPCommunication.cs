@@ -29,18 +29,23 @@ namespace CommandCenter.View
         public UDPCommunication(MainWindow parent)
         {
             this.parent = parent;
-
+            string hostName = Dns.GetHostName(); // Retrive the Name of HOST
+            string myIP = Dns.GetHostByName(hostName).AddressList[0].ToString();
+            IPAddress address = IPAddress.Parse(myIP);
             var card = NetworkInterface.GetAllNetworkInterfaces().FirstOrDefault();
-            if (card != null)
+            string sMask = card.GetIPProperties().UnicastAddresses.LastOrDefault().IPv4Mask.ToString(); //Retrive subnet mask IPv4
+            IPAddress subnetMask = IPAddress.Parse(sMask);
+            byte[] ipAdressBytes = address.GetAddressBytes();
+            byte[] subnetMaskBytes = subnetMask.GetAddressBytes();
+            byte[] broadcastAddress = new byte[ipAdressBytes.Length];
+            for (int i = 0; i < broadcastAddress.Length; i++)
             {
-                var addss = card.GetIPProperties().GatewayAddresses.FirstOrDefault();
-                String address = addss.Address + "";
-                // make broadcast address 
-                while (!address[address.Length - 1].Equals('.'))
-                {
-                    address = address.Remove(address.Length - 1); //Remove last digit gateway address 
-                }
-                ipBroadcast = address + "255";//add 255 broadcast
+                broadcastAddress[i] = (byte)(ipAdressBytes[i] | (subnetMaskBytes[i] ^ 255)); // OR ip address dengan subnet
+            }
+            ipBroadcast = "";
+            for (int i = 0; i < broadcastAddress.Length; i++) //for print only
+            {
+                ipBroadcast += broadcastAddress[i] + "";
             }
         }
 
