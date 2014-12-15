@@ -80,7 +80,7 @@ namespace CommandCenter
             }
             catch (FormatException)
             {
-                MessageBox.Show("Isi jumlah peluru dengan angka!", "Kesalahan masukan");
+                showError("Isi jumlah peluru dengan angka!");
                 return;
             }
 
@@ -324,7 +324,7 @@ namespace CommandCenter
             }
             else
             {
-                MessageBox.Show("Isi ID latihan dengan tiga dijit angka!", "Kesalahan masukan");
+                showError("Isi ID latihan dengan tiga dijit angka!");
             }
         }
 
@@ -345,6 +345,11 @@ namespace CommandCenter
             {
                 e.Handled = true;
             }
+        }
+
+        public void showError(string message)
+        {
+            MessageBox.Show(message, "Kesalahan!");
         }
     }
 }

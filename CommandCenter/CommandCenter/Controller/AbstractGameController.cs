@@ -210,7 +210,7 @@ namespace CommandCenter.Controller
                         }
                         else
                         {
-                            outPacket.setParameter("status", "Tidak bisa pantau karena sudah ada prajurit yang bergabung.");
+                            outPacket.setParameter("status", "Tidak bisa pantau karena sudah ada prajurit yang bergabung atau latihan sudah dimiulai.");
                         }
                         communication.send(address, outPacket, UDPCommunication.IN_PORT);
                         parent.writeLog(LogLevel.Info, address + " joined as watcher");

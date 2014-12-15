@@ -60,6 +60,7 @@ namespace CommandCenter.Controller
         public void broadcast(JSONPacket outPacket)
         {
             base.send(ipBroadcast, outPacket, UDPCommunication.IN_PORT);
+            parent.writeLog(LogLevel.Info, "Broadcast ke " + ipBroadcast.ToString());
         }
 
         private void listenWatchConfirmation()
@@ -77,9 +78,9 @@ namespace CommandCenter.Controller
                         byte[] receivedBytes = client.Receive(ref endPoint);
                         parent.writeLog(LogLevel.Info, "Terima dari " + endPoint + ": " + Encoding.ASCII.GetString(receivedBytes));
                         JSONPacket inPacket = JSONPacket.createFromJSONBytes(receivedBytes);
-                        if (inPacket.getParameter("type").Equals("pantau/confirm") && inPacket.getParameter("gameid").Equals(controller.gameId))
+                        if (inPacket.getParameter("type").Equals("pantau/confirm"))
                         {
-                            if (inPacket.getParameter("status").Equals("ok"))
+                            if (inPacket.getParameter("status").Equals("ok") && inPacket.getParameter("gameid").Equals(controller.gameId))
                             {
                                 String gameId = inPacket.getParameter("gameid");
                                 int ammo = Int32.Parse(inPacket.getParameter("ammo"));
@@ -89,7 +90,8 @@ namespace CommandCenter.Controller
                             else
                             {
                                 client.Close();
-                                parent.writeLog(LogLevel.Warn, "Pantau ditolak: " + inPacket.getParameter("status"));
+                                parent.showError("Pantau ditolak: " + inPacket.getParameter("status"));
+                                parent.setWatchingEnabled(false);
                             }
                             return;
                         }

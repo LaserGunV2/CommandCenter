@@ -202,6 +202,7 @@ namespace CommandCenter.View
             {
                 p.assignedText.Margin = new Thickness(5, 50, 0, 0); //Menghadap kiri atas
             }
+            p.assignedText.Background = new SolidColorBrush(convertCharToColor(p.group[0]));
         }
 
         //set image prajurit

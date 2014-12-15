@@ -54,7 +54,12 @@ namespace CommandCenter.Controller
             foreach (IPAddress watcher in watchers)
             {
                 JSONPacket packet = new JSONPacket("pantau/state");
-                packet.setParameter("state", "START");
+                string teamGroups = "";
+                for (int i = 0; i < prajurits.Count; i++)
+                {
+                    teamGroups += prajurits[i].group;
+                }
+                packet.setParameter("state", "START/" + teamGroups);
                 parent.writeLog(LogLevel.Info, "Kirim ke pemantau " + watcher + " pesan " + packet);
                 communication.send(watcher, packet, UDPCommunication.IN_PORT);
             }
