@@ -59,7 +59,7 @@ namespace CommandCenter.Controller
 
         public void broadcast(JSONPacket outPacket)
         {
-            base.send(IPAddress.Parse(ipBroadcast), outPacket, UDPCommunication.IN_PORT);
+            base.send(ipBroadcast, outPacket, UDPCommunication.IN_PORT);
         }
 
         private void listenWatchConfirmation()

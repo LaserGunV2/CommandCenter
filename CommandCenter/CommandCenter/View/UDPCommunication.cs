@@ -24,7 +24,7 @@ namespace CommandCenter.View
         private bool softAbort;
         Thread thread = null;
 
-        protected String ipBroadcast;
+        protected IPAddress ipBroadcast;
 
         public UDPCommunication(MainWindow parent)
         {
@@ -42,11 +42,12 @@ namespace CommandCenter.View
             {
                 broadcastAddress[i] = (byte)(ipAdressBytes[i] | (subnetMaskBytes[i] ^ 255)); // OR ip address dengan subnet
             }
-            ipBroadcast = "";
+            String ipBroadcastStr = "";
             for (int i = 0; i < broadcastAddress.Length; i++) //for print only
             {
-                ipBroadcast += broadcastAddress[i] + "";
+                ipBroadcastStr += broadcastAddress[i] + ".";
             }
+            ipBroadcast = IPAddress.Parse(ipBroadcastStr.Substring(0, ipBroadcastStr.Length - 1));
         }
 
         private void listen()
