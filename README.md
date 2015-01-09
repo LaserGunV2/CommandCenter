@@ -24,3 +24,8 @@ Untuk menjalankan program jadi, bisa download/copy dari direktori `CommandCenter
 
 * File `CommandCenter.exe`
 * Semua file berekstensi `.dll`
+
+Debugging
+---------
+
+Untuk membaca log file `CommandCenter.log` bisa menggunakan aplikasi [BareTail](http://www.baremetalsoft.com/baretail/)
