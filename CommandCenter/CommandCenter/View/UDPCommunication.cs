@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -24,30 +23,9 @@ namespace CommandCenter.View
         private bool softAbort;
         Thread thread = null;
 
-        protected IPAddress ipBroadcast;
-
         public UDPCommunication(MainWindow parent)
         {
             this.parent = parent;
-            string hostName = Dns.GetHostName(); // Retrive the Name of HOST
-            string myIP = Dns.GetHostByName(hostName).AddressList[0].ToString();
-            IPAddress address = IPAddress.Parse(myIP);
-            var card = NetworkInterface.GetAllNetworkInterfaces().FirstOrDefault();
-            string sMask = card.GetIPProperties().UnicastAddresses.LastOrDefault().IPv4Mask.ToString(); //Retrive subnet mask IPv4
-            IPAddress subnetMask = IPAddress.Parse(sMask);
-            byte[] ipAdressBytes = address.GetAddressBytes();
-            byte[] subnetMaskBytes = subnetMask.GetAddressBytes();
-            byte[] broadcastAddress = new byte[ipAdressBytes.Length];
-            for (int i = 0; i < broadcastAddress.Length; i++)
-            {
-                broadcastAddress[i] = (byte)(ipAdressBytes[i] | (subnetMaskBytes[i] ^ 255)); // OR ip address dengan subnet
-            }
-            String ipBroadcastStr = "";
-            for (int i = 0; i < broadcastAddress.Length; i++) //for print only
-            {
-                ipBroadcastStr += broadcastAddress[i] + ".";
-            }
-            ipBroadcast = IPAddress.Parse(ipBroadcastStr.Substring(0, ipBroadcastStr.Length - 1));
         }
 
         private void listen()
