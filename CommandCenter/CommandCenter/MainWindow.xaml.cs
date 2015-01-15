@@ -27,6 +27,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using NLog;
+using System.Windows.Markup;
 
 namespace CommandCenter
 {
@@ -52,6 +53,13 @@ namespace CommandCenter
 
         public MainWindow()
         {
+            //Change locale US (make sure language in application)    
+            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
+            CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-US");
+            XmlLanguage lang = XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag);
+            FrameworkElement.LanguageProperty.OverrideMetadata(typeof(FrameworkElement), new FrameworkPropertyMetadata(lang));
+            FrameworkContentElement.LanguageProperty.OverrideMetadata(typeof(System.Windows.Documents.TextElement), new FrameworkPropertyMetadata(lang));
+
             InitializeComponent();
 
             logger = LogManager.GetCurrentClassLogger();
@@ -102,16 +110,30 @@ namespace CommandCenter
 
         private void mulaiButton_Click(object sender, RoutedEventArgs e)
         {
-            //check checkbox value
-            mapDrawer.setVisibility(showACheckBox.IsChecked.Value, showBCheckBox.IsChecked.Value);
+            //Check idSenjata
+            Boolean idSenjataCheck = true;
+            foreach (Prajurit prajurit in prajurits)
+            { 
+                if(prajurit.senjata==null){
+                    MessageBox.Show("Belum semua ID Senjata didaftarkan");
+                    idSenjataCheck = false;
+                    break;
+                }
+            }
+            if (idSenjataCheck==true)
+            {
+                //check checkbox value
+                mapDrawer.setVisibility(showACheckBox.IsChecked.Value, showBCheckBox.IsChecked.Value);
 
-            prajuritDatabase.saveNamesToDatabase(prajurits);
-            pendaftaranButton.IsEnabled = false;
-            mulaiButton.IsEnabled = false;
-            akhiriButton.IsEnabled = true;
-            pesertaDataGrid.IsEnabled = false;
+                prajuritDatabase.saveNamesToDatabase(prajurits);
+                pendaftaranButton.IsEnabled = false;
+                mulaiButton.IsEnabled = false;
+                akhiriButton.IsEnabled = true;
+                pesertaDataGrid.IsEnabled = false;
 
-            liveGameController.startExercise();
+                liveGameController.startExercise();    
+            }
+            
         }
 
         private void akhiriButton_Click(object sender, RoutedEventArgs e)
