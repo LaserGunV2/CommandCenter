@@ -115,8 +115,8 @@ namespace CommandCenter
             foreach (Prajurit prajurit in prajurits)
             { 
                 if(prajurit.senjata==null){
-                    MessageBox.Show("Belum semua ID Senjata didaftarkan");
-                    idSenjataCheck = false;
+                    MessageBoxResult result = MessageBox.Show("Belum prajurit memiliki senjata. Apakah ingin melanjutkan?", "Konfirmasi", MessageBoxButton.YesNo);
+                    idSenjataCheck = result == MessageBoxResult.Yes;
                     break;
                 }
             }
