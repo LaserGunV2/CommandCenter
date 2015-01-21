@@ -19,9 +19,12 @@ namespace CommandCenter.Model.Events
         public const string PROP_GAMEID = "gameId";
         public const string PROP_AMMO = "ammo";
         public const string FILENAME = "events.internal-sqlite";
+        protected const int COMMIT_PERIOD = 100;
 
         SQLiteDataReader reader;
+        SQLiteTransaction transaction;
         Stopwatch stopwatch;
+        protected int commitCounter;
 
         public EventsRecorder()
         {
@@ -30,9 +33,10 @@ namespace CommandCenter.Model.Events
         public virtual void startRecording()
         {
             ConnectionSingleton.getInstance().resetDatabase();
-
             stopwatch = new Stopwatch();
             stopwatch.Start();
+            commitCounter = 0;
+            transaction = ConnectionSingleton.getInstance().connection.BeginTransaction();
             record(null, REGISTER);
         }
 
@@ -49,11 +53,19 @@ namespace CommandCenter.Model.Events
             {
                 throw new Exception("Warning: event not inserted + " + command.ToString());
             }
+            commitCounter++;
+            if (commitCounter > COMMIT_PERIOD)
+            {
+                commitCounter = 0;
+                transaction.Commit();
+                transaction = connection.BeginTransaction();
+            }
         }
 
         public virtual void stopRecording()
         {
             record(null, STOP);
+            transaction.Commit();
         }
 
         public virtual void setProperty(string name, string value)
