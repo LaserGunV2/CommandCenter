@@ -155,7 +155,7 @@ namespace CommandCenter
         public void writeLog(LogLevel level, String s)
         {
             logger.Log(level, s);
-            Dispatcher.InvokeAsync((Action)(() =>
+            Dispatcher.Invoke((Action)(() =>
             {
                 if ((bool)peristiwaCheckBox.IsChecked)
                 {
@@ -175,16 +175,9 @@ namespace CommandCenter
 
         public void refreshTable()
         {
-            pesertaDataGrid.Dispatcher.InvokeAsync((Action)(() =>
+            pesertaDataGrid.Dispatcher.Invoke((Action)(() =>
             {
-                try
-                {
-                    pesertaDataGrid.Items.Refresh();
-                } catch (InvalidOperationException)
-                {
-                    // void
-                }
-
+                pesertaDataGrid.Items.Refresh();
             }));            
         }
 
@@ -251,11 +244,11 @@ namespace CommandCenter
 
         public void updateReplayProgress(double progress)
         {
-            replayProgressBar.Dispatcher.InvokeAsync((Action)(() =>
+            replayProgressBar.Dispatcher.Invoke((Action)(() =>
             {
                 replayProgressBar.Value = progress;
             }));
-            replayProgressLabel.Dispatcher.InvokeAsync((Action)(() =>
+            replayProgressLabel.Dispatcher.Invoke((Action)(() =>
             {
                 long milliseconds = (int)(progress * 1000);
                 long seconds = milliseconds / 1000;
@@ -278,7 +271,7 @@ namespace CommandCenter
 
         public void setReplayingEnabled(bool isReplaying)
         {
-            Dispatcher.InvokeAsync((Action)(() =>
+            Dispatcher.Invoke((Action)(() =>
             {
                 ammoTextBox.IsEnabled = !isReplaying;
                 loadButton.IsEnabled = !isReplaying;
@@ -292,7 +285,7 @@ namespace CommandCenter
 
         public void setWatchingEnabled(bool isWatching)
         {
-            Dispatcher.InvokeAsync((Action)(() =>
+            Dispatcher.Invoke((Action)(() =>
             {
                 pantauIdLatihanTextBox.IsEnabled = !isWatching;
                 pantauLatihanButton.IsEnabled = !isWatching;

@@ -85,7 +85,11 @@ namespace CommandCenter.Controller
                 else
                 {
                     parent.writeLog(LogLevel.Info, "Pura-pura terima dari " + scheduledEvent.sender + ": " + scheduledEvent.packet);
-                    this.handlePacket(scheduledEvent.sender, JSONPacket.createFromJSONBytes(Encoding.UTF8.GetBytes(scheduledEvent.packet)));
+                    parent.pesertaDataGrid.Dispatcher.Invoke((Action)(() =>
+                    {
+                        this.handlePacket(scheduledEvent.sender, JSONPacket.createFromJSONBytes(Encoding.UTF8.GetBytes(scheduledEvent.packet)));
+                    }));            
+
                 }
             }
             Event nextEvent = player.getNextPlayEvent();

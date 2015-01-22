@@ -36,7 +36,7 @@ namespace CommandCenter.View
 
         public void updateMap(Prajurit prajurit)
         {
-            map.Dispatcher.InvokeAsync((Action)(() =>
+            map.Dispatcher.Invoke((Action)(() =>
             {
                 // Create a push pin if not yet done
                 if (prajurit.pushpin == null && prajurit.location != null)
@@ -297,7 +297,7 @@ namespace CommandCenter.View
 
         public void showEveryone()
         {
-            map.Dispatcher.InvokeAsync((Action)(() =>
+            map.Dispatcher.Invoke((Action)(() =>
             {
                 LocationCollection locations = new LocationCollection();
                 foreach (Prajurit prajurit in prajurits)
@@ -315,7 +315,7 @@ namespace CommandCenter.View
 
         public void clearMap()
         {
-            map.Dispatcher.InvokeAsync((Action)(() =>
+            map.Dispatcher.Invoke((Action)(() =>
             {
                 map.Children.Clear();
             }));
