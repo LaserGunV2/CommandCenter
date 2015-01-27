@@ -157,44 +157,51 @@ namespace CommandCenter.Controller
                 }
                 else if (type.Equals("event/update"))
                 {
-                    if (state != State.IDLE)
+                    if (inPacket.getParameter("gameid").Equals(gameId))
                     {
-                        int index = Int32.Parse(inPacket.getParameter("androidId")) - 1;
-                        Prajurit prajurit = prajurits[index];
-                        prajurit.setLocation(inPacket.getParameter("location"));
-                        prajurit.heading = Double.Parse(inPacket.getParameter("heading"));
-                        prajurit.accuracy = Int32.Parse(inPacket.getParameter("accuracy"));
-                        string[] prajuritState = inPacket.getParameter("state").Split('/');
-                        prajurit.state = (prajuritState[0].Equals("alive") ? Prajurit.State.NORMAL : Prajurit.State.DEAD);
-                        prajurit.posture = (prajuritState[1].Equals("stand") ? Prajurit.Posture.STAND : Prajurit.Posture.CRAWL);
-                        if (inPacket.getParameter("action").Equals("hit"))
+                        if (state != State.IDLE)
                         {
-                            int idSenjata = Int32.Parse(inPacket.getParameter("idsenjata"));
-                            int counter = Int32.Parse(inPacket.getParameter("counter"));
-                            if (state == State.REGISTRATION) {
-                                // Registration phase, senjata assign to prajurit.
-                                Senjata newSenjata = new Senjata(idSenjata, prajurit, counter, this.initialAmmo);
-                                prajurit.senjata = newSenjata;
-                                senjatas.Add(newSenjata.idSenjata, newSenjata);
-                            } else if (state == State.EXERCISE) {
-                                Senjata senjataPenembak = senjatas[idSenjata];
-                                senjataPenembak.currentCounter = counter;
-                                if (senjataPenembak.getRemainingAmmo() > 0) {
-                                    prajurit.state = Prajurit.State.HIT;
-                                    communication.send(prajurit.ipAddress, new JSONPacket("killed"));
+                            int index = Int32.Parse(inPacket.getParameter("androidId")) - 1;
+                            Prajurit prajurit = prajurits[index];
+                            prajurit.setLocation(inPacket.getParameter("location"));
+                            prajurit.heading = Double.Parse(inPacket.getParameter("heading"));
+                            prajurit.accuracy = Int32.Parse(inPacket.getParameter("accuracy"));
+                            string[] prajuritState = inPacket.getParameter("state").Split('/');
+                            prajurit.state = (prajuritState[0].Equals("alive") ? Prajurit.State.NORMAL : Prajurit.State.DEAD);
+                            prajurit.posture = (prajuritState[1].Equals("stand") ? Prajurit.Posture.STAND : Prajurit.Posture.CRAWL);
+                            if (inPacket.getParameter("action").Equals("hit"))
+                            {
+                                int idSenjata = Int32.Parse(inPacket.getParameter("idsenjata"));
+                                int counter = Int32.Parse(inPacket.getParameter("counter"));
+                                if (state == State.REGISTRATION) {
+                                    // Registration phase, senjata assign to prajurit.
+                                    Senjata newSenjata = new Senjata(idSenjata, prajurit, counter, this.initialAmmo);
+                                    prajurit.senjata = newSenjata;
+                                    senjatas.Add(newSenjata.idSenjata, newSenjata);
+                                } else if (state == State.EXERCISE) {
+                                    Senjata senjataPenembak = senjatas[idSenjata];
+                                    senjataPenembak.currentCounter = counter;
+                                    if (senjataPenembak.getRemainingAmmo() > 0) {
+                                        prajurit.state = Prajurit.State.HIT;
+                                        communication.send(prajurit.ipAddress, new JSONPacket("killed"));
+                                    }
                                 }
+                                parent.refreshTable();
+                            } else if (inPacket.getParameter("action").Equals("shoot"))
+                            {
+                                prajurit.state = Prajurit.State.SHOOT;
                             }
-                            parent.refreshTable();                            
-                        } else if (inPacket.getParameter("action").Equals("shoot"))
-                        {
-                            prajurit.state = Prajurit.State.SHOOT;
+                            parent.mapDrawer.updateMap(prajurit);
+                            parent.refreshTable();
                         }
-                        parent.mapDrawer.updateMap(prajurit);
-                        parent.refreshTable();
+                        else
+                        {
+                            parent.writeLog(LogLevel.Warn, "Update event is ignored when state is idle.");
+                        }
                     }
                     else
                     {
-                        parent.writeLog(LogLevel.Warn, "Update event is ignored when state is idle.");
+                        parent.writeLog(LogLevel.Warn, "Event update from " + address + " with game id " + inPacket.getParameter("gameid") + " is ignored");
                     }
                 }
                 else if (type.Equals("ping"))
