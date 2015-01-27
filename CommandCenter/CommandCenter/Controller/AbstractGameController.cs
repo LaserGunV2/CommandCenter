@@ -12,6 +12,7 @@ using CommandCenter.Model.Events;
 using CommandCenter.Model;
 using CommandCenter.Model.Protocol;
 using NLog;
+using System.Threading;
 
 namespace CommandCenter.Controller
 {
@@ -94,11 +95,7 @@ namespace CommandCenter.Controller
             this.state = State.IDLE;
 
             // Send endgame signal
-            JSONPacket outPacket = new JSONPacket("endgame");
-            foreach (Prajurit prajurit in prajurits)
-            {
-                communication.send(prajurit.ipAddress, outPacket);
-            }
+            new Task(() => { sendEndGameSignals(); }).Start();
 
             // Remove any references and members.
             this.recorder.stopRecording();
@@ -106,6 +103,16 @@ namespace CommandCenter.Controller
 
             parent.refreshTable();
             parent.writeLog(LogLevel.Info, "Permainan diakhiri");
+        }
+
+        private void sendEndGameSignals()
+        {
+            JSONPacket outPacket = new JSONPacket("endgame");
+            foreach (Prajurit prajurit in prajurits)
+            {
+                communication.send(prajurit.ipAddress, outPacket);
+                Thread.Sleep(100);
+            }
         }
 
         public virtual void handlePacket(IPAddress address, JSONPacket inPacket)
