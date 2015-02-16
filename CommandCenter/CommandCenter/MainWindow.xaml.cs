@@ -242,21 +242,32 @@ namespace CommandCenter
             }
         }
 
-        public void updateReplayProgress(double progress)
+        public void updateReplayProgress(double progress, string suffix)
         {
+            long milliseconds = (int)(progress * 1000);
+            long seconds = milliseconds / 1000;
+            long minutes = seconds / 60;
+            milliseconds %= 1000;
+            seconds %= 60;
+            string content = String.Format("{0}:{1,2:D2}.{2,3:D3}", minutes, seconds, milliseconds);
+            if (suffix != null)
+            {
+                content += " " + suffix;
+            }
+            
             replayProgressBar.Dispatcher.Invoke((Action)(() =>
             {
                 replayProgressBar.Value = progress;
             }));
             replayProgressLabel.Dispatcher.Invoke((Action)(() =>
             {
-                long milliseconds = (int)(progress * 1000);
-                long seconds = milliseconds / 1000;
-                long minutes = seconds / 60;
-                milliseconds %= 1000;
-                seconds %= 60;
-                replayProgressLabel.Content = String.Format("{0}:{1,2:D2}.{2,3:D3}", minutes, seconds, milliseconds);
+                replayProgressLabel.Content = content;
             }));
+        }
+
+        public void updateReplayProgress(double progress)
+        {
+            updateReplayProgress(progress, null);
         }
 
         private void playButton_Click(object sender, RoutedEventArgs e)

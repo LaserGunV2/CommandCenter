@@ -115,7 +115,7 @@ namespace CommandCenter.Controller
             }
         }
 
-        public virtual void handlePacket(IPAddress address, JSONPacket inPacket)
+        public virtual void handlePacket(IPAddress address, JSONPacket inPacket, bool updateUI)
         {
             try
             {
@@ -135,7 +135,10 @@ namespace CommandCenter.Controller
                                 Prajurit newPrajurit = new Prajurit(nomerUrut, inPacket.getParameter("nomerInduk"), address, "A", null);
                                 prajuritDatabase.retrieveNameFromDatabase(newPrajurit);
                                 prajurits.Add(newPrajurit);
-                                parent.refreshTable();
+                                if (updateUI)
+                                {
+                                    parent.refreshTable();
+                                }
                             } else {
                                 nomerUrut = nomerUrut + 1;
                             }
@@ -191,8 +194,11 @@ namespace CommandCenter.Controller
                             {
                                 prajurit.state = Prajurit.State.SHOOT;
                             }
-                            parent.mapDrawer.updateMap(prajurit);
-                            parent.refreshTable();
+                            if (updateUI)
+                            {
+                                parent.mapDrawer.updateMap(prajurit);
+                                parent.refreshTable();
+                            }
                         }
                         else
                         {

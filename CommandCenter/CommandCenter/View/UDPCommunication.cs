@@ -44,7 +44,7 @@ namespace CommandCenter.View
                         byte[] receivedBytes = client.Receive(ref endPoint);
                         parent.writeLog(LogLevel.Info, "Terima dari " + endPoint + ": " + Encoding.ASCII.GetString(receivedBytes));
                         JSONPacket inPacket = JSONPacket.createFromJSONBytes(receivedBytes);
-                        controller.handlePacket(endPoint.Address, inPacket);
+                        controller.handlePacket(endPoint.Address, inPacket, true);
                     }
                     catch (SocketException)
                     {

@@ -35,9 +35,9 @@ namespace CommandCenter.Controller
             return startRegistration(gameId, initialAmmo);
         }
 
-        public override void handlePacket(IPAddress address, JSONPacket inPacket)
+        public override void handlePacket(IPAddress address, JSONPacket inPacket, bool updateUI)
         {
-            base.handlePacket(address, inPacket);
+            base.handlePacket(address, inPacket, updateUI);
             if (!inPacket.getParameter("type").StartsWith("pantau/"))
             {
                 foreach (IPAddress watcher in watchers)

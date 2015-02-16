@@ -62,9 +62,13 @@ namespace CommandCenter.Controller
         private void executePacketAndScheduleNext()
         {
             eventTimer.Enabled = false;
+            bool updateUI = !(parent.skipRegistration && state == State.REGISTRATION);
             if (scheduledEvent != null)
             {
-                parent.updateReplayProgress(1e-3 * ((stopwatch.ElapsedMilliseconds + skippedMilliseconds) * parent.playSpeed));
+                if (updateUI)
+                {
+                    parent.updateReplayProgress(1e-3 * ((stopwatch.ElapsedMilliseconds + skippedMilliseconds) * parent.playSpeed));
+                }
                 if (scheduledEvent.packet.Equals(EventsRecorder.REGISTER))
                 {
                     startRegistration(player.getProperty(EventsRecorder.PROP_GAMEID), Int32.Parse(player.getProperty(EventsRecorder.PROP_AMMO)));
@@ -87,7 +91,7 @@ namespace CommandCenter.Controller
                     parent.writeLog(LogLevel.Info, "Pura-pura terima dari " + scheduledEvent.sender + ": " + scheduledEvent.packet);
                     parent.pesertaDataGrid.Dispatcher.Invoke((Action)(() =>
                     {
-                        this.handlePacket(scheduledEvent.sender, JSONPacket.createFromJSONBytes(Encoding.UTF8.GetBytes(scheduledEvent.packet)));
+                        this.handlePacket(scheduledEvent.sender, JSONPacket.createFromJSONBytes(Encoding.UTF8.GetBytes(scheduledEvent.packet)), updateUI);
                     }));            
 
                 }
@@ -119,7 +123,14 @@ namespace CommandCenter.Controller
 
         private void OnHeartbeatTimedEvent(Object source, ElapsedEventArgs e)
         {
-            parent.updateReplayProgress(1e-3 * ((stopwatch.ElapsedMilliseconds + skippedMilliseconds) * parent.playSpeed));
+            if (parent.skipRegistration && state == State.REGISTRATION)
+            {
+                parent.updateReplayProgress(1e-3 * ((stopwatch.ElapsedMilliseconds + skippedMilliseconds) * parent.playSpeed), "(>>)");
+            }
+            else
+            {
+                parent.updateReplayProgress(1e-3 * ((stopwatch.ElapsedMilliseconds + skippedMilliseconds) * parent.playSpeed));
+            }
         }
     }
 
