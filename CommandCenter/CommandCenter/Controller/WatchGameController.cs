@@ -67,6 +67,7 @@ namespace CommandCenter.Controller
                 if (Interface.OperationalStatus != OperationalStatus.Up) continue;
                 Console.WriteLine(Interface.Description);
                 UnicastIPAddressInformationCollection UnicastIPInfoCol = Interface.GetIPProperties().UnicastAddresses;
+                HashSet<string> broadcastAddresses = new HashSet<string>();
                 foreach (UnicastIPAddressInformation UnicatIPInfo in UnicastIPInfoCol)
                 {
                     byte[] ipAdressBytes = UnicatIPInfo.Address.GetAddressBytes();
@@ -85,10 +86,13 @@ namespace CommandCenter.Controller
                     {
                         ipBroadcastStr += broadcastAddress[i] + ".";
                     }
-                    IPAddress ipBroadcast = IPAddress.Parse(ipBroadcastStr.Substring(0, ipBroadcastStr.Length - 1));
-
+                    broadcastAddresses.Add(ipBroadcastStr.Substring(0, ipBroadcastStr.Length - 1));
+                }
+                foreach (string addressStr in broadcastAddresses) {
+                    IPAddress ipBroadcast = IPAddress.Parse(addressStr);
                     base.send(ipBroadcast, outPacket, UDPCommunication.IN_PORT);
                     parent.writeLog(LogLevel.Info, "Broadcast ke " + ipBroadcast.ToString());
+
                 }
             }
         }
