@@ -13,10 +13,12 @@ Requirements:
 * SQLite (Download di https://www.nuget.org/packages/system.data.sqlite)
 
 Langkah membuat installer:
+
 1. Install Inno Setup (http://www.jrsoftware.org/isinfo.php)
-1. Buka file `CommandCenter/CommandCenter/build.iss` dengan Inno Setup
-2. Ubah nilai `MyAppVersion` dengan versi yang akan dirilis
-3. Pilih compile. Installer akan berada di direktori `Output`.
+2. Buka file `CommandCenter/CommandCenter/build.iss` dengan Inno Setup
+3. Ubah nilai `MyAppVersion` dengan versi yang akan dirilis
+4. Pilih compile. Installer akan berada di direktori `Output`.
+5. Jangan lupa memasukkan file installer tersebut saat rilis.
 
 Informasi Lain:
 * Untuk Bing Map License Key, menggunakan account Windows Live dengan email: commandcenter@outlook.sg dan password: (nama solution command center pada project pertama)
@@ -28,7 +30,7 @@ Deployment
 
 ### Cara Otomatis
 
-Installer CommandCenter bisa didapat dari `CommandCenter/CommandCenter/Output/CommandCenterInstall.exe`.
+Installer CommandCenter bisa didapat dari paket rilis (`CommandCenterInstaller.exe`).
 Silahkan mengikuti langkah-langkah yang ditunjukkan pada wizard installer.
 
 ### Cara Manual
